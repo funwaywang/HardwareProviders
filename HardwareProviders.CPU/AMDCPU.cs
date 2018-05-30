@@ -8,18 +8,19 @@
 	
 */
 
+using HardwareProviders.CPU.Internals;
 using OpenHardwareMonitor.Hardware;
 
 namespace HardwareProviders.CPU
 {
-    internal abstract class Amdcpu : Cpu
+    public abstract class AmdCpu : Cpu
     {
         private const byte PciBus = 0;
         private const byte PciBaseDevice = 0x18;
         private const byte DeviceVendorIdRegister = 0;
         private const ushort AmdVendorId = 0x1022;
 
-        protected Amdcpu(int processorIndex, Cpuid[][] cpuid)
+        internal AmdCpu(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
         }

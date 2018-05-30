@@ -12,9 +12,9 @@ using System;
 using System.Text;
 using OpenHardwareMonitor.Hardware;
 
-namespace HardwareProviders.CPU
+namespace HardwareProviders.CPU.Internals
 {
-    public class Cpuid
+    internal class Cpuid
     {
         public const uint Cpuid0 = 0;
         public const uint CpuidExt = 0x80000000;

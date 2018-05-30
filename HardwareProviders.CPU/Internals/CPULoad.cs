@@ -11,7 +11,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace HardwareProviders.CPU
+namespace HardwareProviders.CPU.Internals
 {
     internal class CpuLoad
     {
@@ -26,7 +26,7 @@ namespace HardwareProviders.CPU
 
         public CpuLoad(Cpuid[][] cpuid)
         {
-            this._cpuid = cpuid;
+            _cpuid = cpuid;
             _coreLoads = new float[cpuid.Length];
             _totalLoad = 0;
             try
@@ -119,7 +119,7 @@ namespace HardwareProviders.CPU
                 if (newTotalTimes[i] - _totalTimes[i] < 100000)
                     return;
 
-            if (newIdleTimes == null || newTotalTimes == null)
+            if (newIdleTimes == null)
                 return;
 
             float total = 0;

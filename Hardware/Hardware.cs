@@ -55,7 +55,7 @@ namespace OpenHardwareMonitor.Hardware
                 sensor.Accept(visitor);
         }
 
-        protected virtual void ActivateSensor(ISensor sensor)
+        public virtual void ActivateSensor(ISensor sensor)
         {
             if (active.Add(sensor))
                 SensorAdded?.Invoke(sensor);

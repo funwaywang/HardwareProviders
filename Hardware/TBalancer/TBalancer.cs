@@ -96,7 +96,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
 
         public override HardwareType HardwareType => HardwareType.TBalancer;
 
-        protected override void ActivateSensor(ISensor sensor)
+        public override void ActivateSensor(ISensor sensor)
         {
             deactivating.Remove(sensor);
             base.ActivateSensor(sensor);

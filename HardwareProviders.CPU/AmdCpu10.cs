@@ -15,11 +15,12 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+using HardwareProviders.CPU.Internals;
 using OpenHardwareMonitor.Hardware;
 
 namespace HardwareProviders.CPU
 {
-    internal sealed class Amd10Cpu : Amdcpu
+    internal sealed class AmdCpu10 : AmdCpu
     {
         private const uint PerfCtl0 = 0xC0010000;
         private const uint PerfCtr0 = 0xC0010004;
@@ -44,11 +45,12 @@ namespace HardwareProviders.CPU
         private const uint ClockPowerTimingControl0Register = 0xD4;
 
         private const uint F15HM60HReportedTempCtrlOffset = 0xD8200CA4;
-        private readonly Sensor _busClock;
-        private readonly Sensor[] _coreClocks;
-        private readonly bool _corePerformanceBoostSupport;
 
-        private readonly Sensor _coreTemperature;
+
+        public Sensor CoreTemperature { get; }
+        public Sensor BusClock { get; }
+        public Sensor[] CoreClocks { get; }
+        public bool CorePerformanceBoostSupport { get; }
 
         private readonly uint _miscellaneousControlAddress;
         private readonly ushort _miscellaneousControlDeviceId;
@@ -57,11 +59,11 @@ namespace HardwareProviders.CPU
 
         private readonly double _timeStampCounterMultiplier;
 
-        public Amd10Cpu(int processorIndex, Cpuid[][] cpuid)
+        public AmdCpu10(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
             // AMD family 1Xh processors support only one temperature sensor
-            _coreTemperature = new Sensor(
+            CoreTemperature = new Sensor(
                 "Core" + (CoreCount > 1 ? " #1 - #" + CoreCount : ""), 0,
                 SensorType.Temperature, this, new[]
                 {
@@ -141,24 +143,24 @@ namespace HardwareProviders.CPU
             _miscellaneousControlAddress = GetPciAddress(
                 MiscellaneousControlFunction, _miscellaneousControlDeviceId);
 
-            _busClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
-            _coreClocks = new Sensor[CoreCount];
-            for (var i = 0; i < _coreClocks.Length; i++)
+            BusClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
+            CoreClocks = new Sensor[CoreCount];
+            for (var i = 0; i < CoreClocks.Length; i++)
             {
-                _coreClocks[i] = new Sensor(CoreString(i), i + 1, SensorType.Clock,
+                CoreClocks[i] = new Sensor(CoreString(i), i + 1, SensorType.Clock,
                     this);
                 if (HasTimeStampCounter)
-                    ActivateSensor(_coreClocks[i]);
+                    ActivateSensor(CoreClocks[i]);
             }
 
-            _corePerformanceBoostSupport = (cpuid[0][0].ExtData[7, 3] & (1 << 9)) > 0;
+            CorePerformanceBoostSupport = (cpuid[0][0].ExtData[7, 3] & (1 << 9)) > 0;
 
             // set affinity to the first thread for all frequency estimations     
             var mask = ThreadAffinity.Set(1UL << cpuid[0][0].Thread);
 
             // disable core performance boost  
             Ring0.Rdmsr(Hwcr, out var hwcrEax, out var hwcrEdx);
-            if (_corePerformanceBoostSupport)
+            if (CorePerformanceBoostSupport)
                 Ring0.Wrmsr(Hwcr, hwcrEax | (1 << 25), hwcrEdx);
 
             Ring0.Rdmsr(PerfCtl0, out var ctlEax, out var ctlEdx);
@@ -171,7 +173,7 @@ namespace HardwareProviders.CPU
             Ring0.Wrmsr(PerfCtr0, ctrEax, ctrEdx);
 
             // restore core performance boost
-            if (_corePerformanceBoostSupport)
+            if (CorePerformanceBoostSupport)
                 Ring0.Wrmsr(Hwcr, hwcrEax, hwcrEdx);
 
             // restore the thread affinity.
@@ -251,30 +253,7 @@ namespace HardwareProviders.CPU
             };
         }
 
-        public override string GetReport()
-        {
-            var r = new StringBuilder();
-            r.Append(base.GetReport());
-
-            r.Append("Miscellaneous Control Address: 0x");
-            r.AppendLine(_miscellaneousControlAddress.ToString("X",
-                CultureInfo.InvariantCulture));
-            r.Append("Time Stamp Counter Multiplier: ");
-            r.AppendLine(_timeStampCounterMultiplier.ToString(
-                CultureInfo.InvariantCulture));
-            if (Family == 0x14)
-            {
-                uint value = 0;
-                Ring0.ReadPciConfig(_miscellaneousControlAddress,
-                    ClockPowerTimingControl0Register, out value);
-                r.Append("PCI Register D18F3xD4: ");
-                r.AppendLine(value.ToString("X8", CultureInfo.InvariantCulture));
-            }
-
-            r.AppendLine();
-
-            return r.ToString();
-        }
+        public override string GetReport() => "";
 
         private double GetCoreMultiplier(uint cofvidEax)
         {
@@ -386,9 +365,9 @@ namespace HardwareProviders.CPU
                         value = F15HM60HReportedTempCtrlOffset;
                         Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), 0xB8, value);
                         Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), 0xBC, out value);
-                        _coreTemperature.Value = ((value >> 21) & 0x7FF) * 0.125f +
-                                                _coreTemperature.Parameters[0].Value;
-                        ActivateSensor(_coreTemperature);
+                        CoreTemperature.Value = ((value >> 21) & 0x7FF) * 0.125f +
+                                                CoreTemperature.Parameters[0].Value;
+                        ActivateSensor(CoreTemperature);
                         return;
                     }
 
@@ -398,29 +377,29 @@ namespace HardwareProviders.CPU
                         if (Family == 0x15 && (value & 0x30000) == 0x30000)
                         {
                             if ((Model & 0xF0) == 0x00)
-                                _coreTemperature.Value = ((value >> 21) & 0x7FC) / 8.0f +
-                                                        _coreTemperature.Parameters[0].Value - 49;
+                                CoreTemperature.Value = ((value >> 21) & 0x7FC) / 8.0f +
+                                                        CoreTemperature.Parameters[0].Value - 49;
                             else
-                                _coreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
-                                                        _coreTemperature.Parameters[0].Value - 49;
+                                CoreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
+                                                        CoreTemperature.Parameters[0].Value - 49;
                         }
                         else if (Family == 0x16 &&
                                  ((value & 0x30000) == 0x30000 || (value & 0x80000) == 0x80000))
                         {
-                            _coreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
-                                                    _coreTemperature.Parameters[0].Value - 49;
+                            CoreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
+                                                    CoreTemperature.Parameters[0].Value - 49;
                         }
                         else
                         {
-                            _coreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
-                                                    _coreTemperature.Parameters[0].Value;
+                            CoreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
+                                                    CoreTemperature.Parameters[0].Value;
                         }
 
-                        ActivateSensor(_coreTemperature);
+                        ActivateSensor(CoreTemperature);
                     }
                     else
                     {
-                        DeactivateSensor(_coreTemperature);
+                        DeactivateSensor(CoreTemperature);
                     }
                 }
             }
@@ -429,13 +408,13 @@ namespace HardwareProviders.CPU
                 var s = ReadFirstLine(_temperatureStream);
                 try
                 {
-                    _coreTemperature.Value = 0.001f *
+                    CoreTemperature.Value = 0.001f *
                                             long.Parse(s, CultureInfo.InvariantCulture);
-                    ActivateSensor(_coreTemperature);
+                    ActivateSensor(CoreTemperature);
                 }
                 catch
                 {
-                    DeactivateSensor(_coreTemperature);
+                    DeactivateSensor(CoreTemperature);
                 }
             }
 
@@ -443,7 +422,7 @@ namespace HardwareProviders.CPU
             {
                 double newBusClock = 0;
 
-                for (var i = 0; i < _coreClocks.Length; i++)
+                for (var i = 0; i < CoreClocks.Length; i++)
                 {
                     Thread.Sleep(1);
 
@@ -453,7 +432,7 @@ namespace HardwareProviders.CPU
                     {
                         var multiplier = GetCoreMultiplier(curEax);
 
-                        _coreClocks[i].Value =
+                        CoreClocks[i].Value =
                             (float) (multiplier * TimeStampCounterFrequency /
                                      _timeStampCounterMultiplier);
                         newBusClock =
@@ -461,14 +440,14 @@ namespace HardwareProviders.CPU
                     }
                     else
                     {
-                        _coreClocks[i].Value = (float) TimeStampCounterFrequency;
+                        CoreClocks[i].Value = (float) TimeStampCounterFrequency;
                     }
                 }
 
                 if (newBusClock > 0)
                 {
-                    _busClock.Value = (float) newBusClock;
-                    ActivateSensor(_busClock);
+                    BusClock.Value = (float) newBusClock;
+                    ActivateSensor(BusClock);
                 }
             }
         }

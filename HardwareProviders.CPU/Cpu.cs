@@ -13,21 +13,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using HardwareProviders.CPU.Internals;
 using OpenHardwareMonitor.Hardware;
 
 namespace HardwareProviders.CPU
 {
     public class Cpu : Hardware
     {
-        protected readonly int CoreCount;
-        private readonly Sensor[] _coreLoads;
-
-        protected readonly Cpuid[][] Cpuid;
+        internal readonly Cpuid[][] Cpuid;
 
         private readonly CpuLoad _cpuLoad;
         private readonly double _estimatedTimeStampCounterFrequency;
         private readonly double _estimatedTimeStampCounterFrequencyError;
-
         protected readonly uint Family;
 
         private readonly bool _isInvariantTimeStampCounter;
@@ -35,21 +32,17 @@ namespace HardwareProviders.CPU
 
         protected readonly int ProcessorIndex;
         protected readonly uint Stepping;
-        private readonly Sensor _totalLoad;
 
-
-        private readonly Vendor _vendor;
         private long _lastTime;
-
         private ulong _lastTimeStampCount;
 
-        public Cpu(int processorIndex, Cpuid[][] cpuid)
+        internal Cpu(int processorIndex, Cpuid[][] cpuid)
             : base(cpuid[0][0].Name, CreateIdentifier(cpuid[0][0].Vendor,
                 processorIndex))
         {
             Cpuid = cpuid;
 
-            _vendor = cpuid[0][0].Vendor;
+            Vendor = cpuid[0][0].Vendor;
 
             Family = cpuid[0][0].Family;
             Model = cpuid[0][0].Model;
@@ -79,18 +72,18 @@ namespace HardwareProviders.CPU
             else
                 _isInvariantTimeStampCounter = false;
 
-            _totalLoad = CoreCount > 1 ? new Sensor("CPU Total", 0, SensorType.Load, this) : null;
-            _coreLoads = new Sensor[CoreCount];
-            for (var i = 0; i < _coreLoads.Length; i++)
-                _coreLoads[i] = new Sensor(CoreString(i), i + 1,
+            TotalLoad = CoreCount > 1 ? new Sensor("CPU Total", 0, SensorType.Load, this) : null;
+            CoreLoads = new Sensor[CoreCount];
+            for (var i = 0; i < CoreLoads.Length; i++)
+                CoreLoads[i] = new Sensor(CoreString(i), i + 1,
                     SensorType.Load, this);
             _cpuLoad = new CpuLoad(cpuid);
             if (_cpuLoad.IsAvailable)
             {
-                foreach (var sensor in _coreLoads)
+                foreach (var sensor in CoreLoads)
                     ActivateSensor(sensor);
-                if (_totalLoad != null)
-                    ActivateSensor(_totalLoad);
+                if (TotalLoad != null)
+                    ActivateSensor(TotalLoad);
             }
 
             if (HasTimeStampCounter)
@@ -110,6 +103,11 @@ namespace HardwareProviders.CPU
 
             TimeStampCounterFrequency = _estimatedTimeStampCounterFrequency;
         }
+
+        public int CoreCount { get; protected set; }
+        public Sensor[] CoreLoads { get; }
+        public Sensor TotalLoad { get; }
+        public Vendor Vendor { get; }
 
         public override HardwareType HardwareType => HardwareType.CPU;
 
@@ -234,7 +232,7 @@ namespace HardwareProviders.CPU
                         switch (threads[0].Family)
                         {
                             case 0x0F:
-                                yield return new Amd0Fcpu(index, coreThreads);
+                                yield return new AmdCpu0(index, coreThreads);
                                 break;
                             case 0x10:
                             case 0x11:
@@ -242,10 +240,10 @@ namespace HardwareProviders.CPU
                             case 0x14:
                             case 0x15:
                             case 0x16:
-                                yield return new Amd10Cpu(index, coreThreads);
+                                yield return new AmdCpu10(index, coreThreads);
                                 break;
                             case 0x17:
-                                yield return new Amd17Cpu(index, coreThreads);
+                                yield return new AmdCpu17(index, coreThreads);
                                 break;
                             default:
                                 yield return new Cpu(index, coreThreads);
@@ -361,10 +359,10 @@ namespace HardwareProviders.CPU
             if (_cpuLoad.IsAvailable)
             {
                 _cpuLoad.Update();
-                for (var i = 0; i < _coreLoads.Length; i++)
-                    _coreLoads[i].Value = _cpuLoad.GetCoreLoad(i);
-                if (_totalLoad != null)
-                    _totalLoad.Value = _cpuLoad.GetTotalLoad();
+                for (var i = 0; i < CoreLoads.Length; i++)
+                    CoreLoads[i].Value = _cpuLoad.GetCoreLoad(i);
+                if (TotalLoad != null)
+                    TotalLoad.Value = _cpuLoad.GetTotalLoad();
             }
         }
     }

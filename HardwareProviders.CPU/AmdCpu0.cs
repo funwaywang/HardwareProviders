@@ -9,30 +9,30 @@
 
 */
 
-using System.Globalization;
-using System.Text;
 using System.Threading;
+using HardwareProviders.CPU.Internals;
 using OpenHardwareMonitor.Hardware;
 
 namespace HardwareProviders.CPU
 {
-    internal sealed class Amd0Fcpu : Amdcpu
+    internal sealed class AmdCpu0 : AmdCpu
     {
         private const uint FidvidStatus = 0xC0010042;
 
         private const byte MiscellaneousControlFunction = 3;
         private const ushort MiscellaneousControlDeviceId = 0x1103;
         private const uint ThermtripStatusRegister = 0xE4;
-        private readonly Sensor _busClock;
-        private readonly Sensor[] _coreClocks;
 
-        private readonly Sensor[] _coreTemperatures;
+        public Sensor BusClock { get; }
+        public Sensor[] CoreClocks { get; }
+        public Sensor[] CoreTemperatures { get; }
+
         private readonly uint _miscellaneousControlAddress;
 
         private readonly byte _thermSenseCoreSelCpu0;
         private readonly byte _thermSenseCoreSelCpu1;
 
-        public Amd0Fcpu(int processorIndex, Cpuid[][] cpuid)
+        public AmdCpu0(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
             var offset = -49.0f;
@@ -59,9 +59,9 @@ namespace HardwareProviders.CPU
             if (cpuid[0][0].ExtData.GetLength(0) > 7 &&
                 (cpuid[0][0].ExtData[7, 3] & 1) != 0)
             {
-                _coreTemperatures = new Sensor[CoreCount];
+                CoreTemperatures = new Sensor[CoreCount];
                 for (var i = 0; i < CoreCount; i++)
-                    _coreTemperatures[i] =
+                    CoreTemperatures[i] =
                         new Sensor("Core #" + (i + 1), i, SensorType.Temperature,
                             this, new[]
                             {
@@ -72,20 +72,20 @@ namespace HardwareProviders.CPU
             }
             else
             {
-                _coreTemperatures = new Sensor[0];
+                CoreTemperatures = new Sensor[0];
             }
 
             _miscellaneousControlAddress = GetPciAddress(
                 MiscellaneousControlFunction, MiscellaneousControlDeviceId);
 
-            _busClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
-            _coreClocks = new Sensor[CoreCount];
-            for (var i = 0; i < _coreClocks.Length; i++)
+            BusClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
+            CoreClocks = new Sensor[CoreCount];
+            for (var i = 0; i < CoreClocks.Length; i++)
             {
-                _coreClocks[i] = new Sensor(CoreString(i), i + 1, SensorType.Clock,
+                CoreClocks[i] = new Sensor(CoreString(i), i + 1, SensorType.Clock,
                     this);
                 if (HasTimeStampCounter)
-                    ActivateSensor(_coreClocks[i]);
+                    ActivateSensor(CoreClocks[i]);
             }
 
             Update();
@@ -96,76 +96,61 @@ namespace HardwareProviders.CPU
             return new[] {FidvidStatus};
         }
 
-        public override string GetReport()
-        {
-            var r = new StringBuilder();
-            r.Append(base.GetReport());
-
-            r.Append("Miscellaneous Control Address: 0x");
-            r.AppendLine(_miscellaneousControlAddress.ToString("X",
-                CultureInfo.InvariantCulture));
-            r.AppendLine();
-
-            return r.ToString();
-        }
+        public override string GetReport() => "";
 
         public override void Update()
         {
             base.Update();
 
             if (_miscellaneousControlAddress != Ring0.InvalidPciAddress)
-                for (uint i = 0; i < _coreTemperatures.Length; i++)
+                for (uint i = 0; i < CoreTemperatures.Length; i++)
                     if (Ring0.WritePciConfig(
                         _miscellaneousControlAddress, ThermtripStatusRegister,
                         i > 0 ? _thermSenseCoreSelCpu1 : _thermSenseCoreSelCpu0))
                     {
-                        uint value;
                         if (Ring0.ReadPciConfig(
                             _miscellaneousControlAddress, ThermtripStatusRegister,
-                            out value))
+                            out var value))
                         {
-                            _coreTemperatures[i].Value = ((value >> 16) & 0xFF) +
-                                                        _coreTemperatures[i].Parameters[0].Value;
-                            ActivateSensor(_coreTemperatures[i]);
+                            CoreTemperatures[i].Value = ((value >> 16) & 0xFF) +
+                                                         CoreTemperatures[i].Parameters[0].Value;
+                            ActivateSensor(CoreTemperatures[i]);
                         }
                         else
                         {
-                            DeactivateSensor(_coreTemperatures[i]);
+                            DeactivateSensor(CoreTemperatures[i]);
                         }
                     }
 
-            if (HasTimeStampCounter)
+            if (!HasTimeStampCounter) return;
+
+            double newBusClock = 0;
+
+            for (var i = 0; i < CoreClocks.Length; i++)
             {
-                double newBusClock = 0;
+                Thread.Sleep(1);
 
-                for (var i = 0; i < _coreClocks.Length; i++)
+                if (Ring0.RdmsrTx(FidvidStatus, out var eax, out _,
+                    1UL << Cpuid[i][0].Thread))
                 {
-                    Thread.Sleep(1);
-
-                    if (Ring0.RdmsrTx(FidvidStatus, out var eax, out _,
-                        1UL << Cpuid[i][0].Thread))
-                    {
-                        // CurrFID can be found in eax bits 0-5, MaxFID in 16-21
-                        // 8-13 hold StartFID, we don't use that here.
-                        var curMp = 0.5 * ((eax & 0x3F) + 8);
-                        var maxMp = 0.5 * (((eax >> 16) & 0x3F) + 8);
-                        _coreClocks[i].Value =
-                            (float) (curMp * TimeStampCounterFrequency / maxMp);
-                        newBusClock = (float) (TimeStampCounterFrequency / maxMp);
-                    }
-                    else
-                    {
-                        // Fail-safe value - if the code above fails, we'll use this instead
-                        _coreClocks[i].Value = (float) TimeStampCounterFrequency;
-                    }
+                    // CurrFID can be found in eax bits 0-5, MaxFID in 16-21
+                    // 8-13 hold StartFID, we don't use that here.
+                    var curMp = 0.5 * ((eax & 0x3F) + 8);
+                    var maxMp = 0.5 * (((eax >> 16) & 0x3F) + 8);
+                    CoreClocks[i].Value =
+                        (float) (curMp * TimeStampCounterFrequency / maxMp);
+                    newBusClock = (float) (TimeStampCounterFrequency / maxMp);
                 }
-
-                if (newBusClock > 0)
+                else
                 {
-                    _busClock.Value = (float) newBusClock;
-                    ActivateSensor(_busClock);
+                    // Fail-safe value - if the code above fails, we'll use this instead
+                    CoreClocks[i].Value = (float) TimeStampCounterFrequency;
                 }
             }
+
+            if (!(newBusClock > 0)) return;
+            BusClock.Value = (float) newBusClock;
+            ActivateSensor(BusClock);
         }
     }
 }
