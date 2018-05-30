@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace OpenHardwareMonitor.Hardware.HDD
 {
-    internal class HarddriveGroup : IGroup
+    public class HarddriveGroup : IGroup
     {
         private const int MAX_DRIVES = 32;
 

@@ -53,7 +53,6 @@
     <Compile Include="Hardware\HDD\SSDSandforce.cs" />
     <Compile Include="Hardware\IControl.cs" />
     <Compile Include="Hardware\IOControlCode.cs" />
-    <Compile Include="Hardware\Computer.cs" />
     <Compile Include="Hardware\CPU\AMDCPU.cs" />
     <Compile Include="Hardware\CPU\GenericCPU.cs" />
     <Compile Include="Hardware\CPU\AMD0FCPU.cs" />

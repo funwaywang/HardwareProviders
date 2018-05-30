@@ -14,7 +14,7 @@ using System.Text;
 
 namespace OpenHardwareMonitor.Hardware.Nvidia
 {
-    internal class NvidiaGroup : IGroup
+    public class NvidiaGroup : IGroup
     {
         private readonly List<Hardware> hardware = new List<Hardware>();
         private readonly StringBuilder report = new StringBuilder();

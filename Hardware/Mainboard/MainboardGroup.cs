@@ -10,7 +10,7 @@
 
 namespace OpenHardwareMonitor.Hardware.Mainboard
 {
-    internal class MainboardGroup : IGroup
+    public class MainboardGroup : IGroup
     {
         private readonly Mainboard[] mainboards;
 

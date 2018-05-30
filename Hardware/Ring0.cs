@@ -18,7 +18,7 @@ using System.Threading;
 
 namespace OpenHardwareMonitor.Hardware
 {
-    internal static class Ring0
+    public static class Ring0
     {
         private const uint OLS_TYPE = 40000;
 

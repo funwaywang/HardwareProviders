@@ -16,7 +16,7 @@ using System.Threading;
 
 namespace OpenHardwareMonitor.Hardware.TBalancer
 {
-    internal class TBalancerGroup : IGroup
+    public class TBalancerGroup : IGroup
     {
         private readonly List<TBalancer> hardware = new List<TBalancer>();
         private readonly StringBuilder report = new StringBuilder();

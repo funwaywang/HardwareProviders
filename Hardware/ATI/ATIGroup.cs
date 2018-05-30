@@ -15,7 +15,7 @@ using System.Text;
 
 namespace OpenHardwareMonitor.Hardware.ATI
 {
-    internal class ATIGroup : IGroup
+    public class ATIGroup : IGroup
     {
         private readonly List<ATIGPU> hardware = new List<ATIGPU>();
         private readonly StringBuilder report = new StringBuilder();

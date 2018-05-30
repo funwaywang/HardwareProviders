@@ -19,7 +19,7 @@ using Microsoft.Win32;
 
 namespace OpenHardwareMonitor.Hardware.Heatmaster
 {
-    internal class HeatmasterGroup : IGroup
+    public class HeatmasterGroup : IGroup
     {
         private readonly List<Heatmaster> hardware = new List<Heatmaster>();
         private readonly StringBuilder report = new StringBuilder();

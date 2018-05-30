@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 
 namespace OpenHardwareMonitor.Hardware
 {
-    internal static class Opcode
+    public static class Opcode
     {
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate bool CpuidDelegate(uint index, uint ecxValue,

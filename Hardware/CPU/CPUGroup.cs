@@ -15,7 +15,7 @@ using System.Text;
 
 namespace OpenHardwareMonitor.Hardware.CPU
 {
-    internal class CPUGroup : IGroup
+    public class CPUGroup : IGroup
     {
         private readonly List<GenericCPU> hardware = new List<GenericCPU>();
 

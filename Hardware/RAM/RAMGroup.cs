@@ -10,7 +10,7 @@
 
 namespace OpenHardwareMonitor.Hardware.RAM
 {
-    internal class RAMGroup : IGroup
+    public class RAMGroup : IGroup
     {
         private readonly Hardware[] hardware;
 
