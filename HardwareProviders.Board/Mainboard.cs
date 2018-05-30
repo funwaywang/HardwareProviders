@@ -16,7 +16,6 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
 {
     internal class Mainboard : IHardware
     {
-        private readonly LMSensors lmSensors;
         private readonly LPCIO lpcio;
         private readonly SMBIOS smbios;
         private readonly Hardware[] superIOHardware;
@@ -109,8 +108,6 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
 
         public void Close()
         {
-            if (lmSensors != null)
-                lmSensors.Close();
             foreach (var hardware in superIOHardware)
                 hardware.Close();
         }

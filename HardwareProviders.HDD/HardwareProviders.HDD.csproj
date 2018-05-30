@@ -50,7 +50,19 @@
     <Compile Include="HDDGeneric.cs" />
     <Compile Include="ISmart.cs" />
     <Compile Include="NamePrefixAttribute.cs" />
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="WinSmart\AccessMode.cs" />
+    <Compile Include="WinSmart\CommandBlockRegisters.cs" />
+    <Compile Include="WinSmart\CreationMode.cs" />
+    <Compile Include="WinSmart\DriveCommand.cs" />
+    <Compile Include="WinSmart\DriveCommandParameter.cs" />
+    <Compile Include="WinSmart\DriveCommandResult.cs" />
+    <Compile Include="WinSmart\DriveIdentifyResult.cs" />
+    <Compile Include="WinSmart\DriverStatus.cs" />
+    <Compile Include="WinSmart\DriveSmartReadDataResult.cs" />
+    <Compile Include="WinSmart\DriveSmartReadThresholdsResult.cs" />
+    <Compile Include="WinSmart\FileAttribute.cs" />
+    <Compile Include="WinSmart\Identify.cs" />
+    <Compile Include="WinSmart\NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequireSmartAttribute.cs" />
     <Compile Include="SmartAttribute.cs" />
@@ -61,7 +73,10 @@
     <Compile Include="SSDPlextor.cs" />
     <Compile Include="SSDSamsung.cs" />
     <Compile Include="SSDSandforce.cs" />
-    <Compile Include="WindowsSmart.cs" />
+    <Compile Include="WinSmart\RegisterCommand.cs" />
+    <Compile Include="WinSmart\RegisterFeature.cs" />
+    <Compile Include="WinSmart\ShareMode.cs" />
+    <Compile Include="WinSmart\WindowsSmart.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenHardwareMonitorLib.csproj">
