@@ -76,33 +76,29 @@ namespace HardwareProviders.CPU.Internals.Ryzen
 
             // THM_TCON_CUR_TMP 
             // CUR_TEMP [31:21] 
-            uint temperature = 0;
             Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister,
                 F17HM01HThmTconCurTmp);
-            Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4, out temperature);
+            Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4, out var temperature);
 
             // SVI0_TFN_PLANE0 [0] 
             // SVI0_TFN_PLANE1 [1] 
-            uint smusvi0Tfn = 0;
             Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister,
                 F17HM01HSvi + 0x8);
-            Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4, out smusvi0Tfn);
+            Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4, out var smusvi0Tfn);
 
             // SVI0_PLANE0_VDDCOR [24:16] 
             // SVI0_PLANE0_IDDCOR [7:0] 
-            uint smusvi0TelPlane0 = 0;
             Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister,
                 F17HM01HSvi + 0xc);
             Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4,
-                out smusvi0TelPlane0);
+                out var smusvi0TelPlane0);
 
             // SVI0_PLANE1_VDDCOR [24:16] 
             // SVI0_PLANE1_IDDCOR [7:0] 
-            uint smusvi0TelPlane1 = 0;
             Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister,
                 F17HM01HSvi + 0x10);
             Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4,
-                out smusvi0TelPlane1);
+                out var smusvi0TelPlane1);
 
             Ring0.ThreadAffinitySet(mask);
 

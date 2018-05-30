@@ -31,10 +31,6 @@ namespace HardwareProviders.CPU
         private const uint PerfCtl0 = 0xC0010000;
         private const uint PerfCtr0 = 0xC0010004;
         private const uint Hwcr = 0xC0010015;
-
-        private const uint MsrPstateL = 0xC0010061;
-        private const uint MsrPstateC = 0xC0010062;
-        private const uint MsrPstateS = 0xC0010063;
         private const uint MsrPstate0 = 0xC0010064;
 
 
@@ -83,10 +79,7 @@ namespace HardwareProviders.CPU
             Update();
         }
 
-        protected override uint[] GetMsRs()
-        {
-            return new[] {PerfCtl0, PerfCtr0, Hwcr, MsrPstate0, CofvidStatus};
-        }
+        protected override uint[] GetMsRs() => new[] {PerfCtl0, PerfCtr0, Hwcr, MsrPstate0, CofvidStatus};
 
         public override string GetReport() => "";
 

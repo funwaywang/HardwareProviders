@@ -104,9 +104,17 @@ namespace HardwareProviders.CPU
             TimeStampCounterFrequency = _estimatedTimeStampCounterFrequency;
         }
 
+
         public int CoreCount { get; protected set; }
+
         public Sensor[] CoreLoads { get; }
         public Sensor TotalLoad { get; }
+        public Sensor PackageTemperature { get; protected set; }
+        public Sensor BusClock { get; protected set; }
+        public Sensor[] CoreClocks { get; protected set; }
+        public Sensor[] CoreTemperatures { get; protected set; }
+        public Sensor[] PowerSensors { get; protected set; }
+
         public Vendor Vendor { get; }
 
         public override HardwareType HardwareType => HardwareType.CPU;
@@ -117,10 +125,7 @@ namespace HardwareProviders.CPU
 
         public double TimeStampCounterFrequency { get; private set; }
 
-        protected string CoreString(int i)
-        {
-            return CoreCount == 1 ? "CPU Core" : "CPU Core #" + (i + 1);
-        }
+        protected string CoreString(int i) => CoreCount == 1 ? "CPU Core" : "CPU Core #" + (i + 1);
 
         private static Identifier CreateIdentifier(Vendor vendor,
             int processorIndex)
@@ -197,16 +202,9 @@ namespace HardwareProviders.CPU
             error = beginError + endError;
         }
 
-        protected virtual uint[] GetMsRs()
-        {
-            return null;
-        }
+        protected virtual uint[] GetMsRs() => null;
 
-        public override string GetReport()
-        {
-            var r = new StringBuilder();
-            return r.ToString();
-        }
+        public override string GetReport() => "";
 
         public static IEnumerable<Cpu> Discover()
         {

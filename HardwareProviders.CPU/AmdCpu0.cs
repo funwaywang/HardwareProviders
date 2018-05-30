@@ -23,10 +23,6 @@ namespace HardwareProviders.CPU
         private const ushort MiscellaneousControlDeviceId = 0x1103;
         private const uint ThermtripStatusRegister = 0xE4;
 
-        public Sensor BusClock { get; }
-        public Sensor[] CoreClocks { get; }
-        public Sensor[] CoreTemperatures { get; }
-
         private readonly uint _miscellaneousControlAddress;
 
         private readonly byte _thermSenseCoreSelCpu0;

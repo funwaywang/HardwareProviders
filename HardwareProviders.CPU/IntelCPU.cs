@@ -30,11 +30,6 @@ namespace HardwareProviders.CPU
 
 
         public IntelMicroarchitecture Microarchitecture { get; }
-        public Sensor PackageTemperature { get; }
-        public Sensor BusClock { get; }
-        public Sensor[] CoreClocks { get; }
-        public Sensor[] CoreTemperatures { get; }
-        public Sensor[] PowerSensors { get; }
 
         private readonly string[] _powerSensorLabels =
             {"CPU Package", "CPU Cores", "CPU Graphics", "CPU DRAM"};

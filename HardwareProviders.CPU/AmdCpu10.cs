@@ -46,10 +46,6 @@ namespace HardwareProviders.CPU
 
         private const uint F15HM60HReportedTempCtrlOffset = 0xD8200CA4;
 
-
-        public Sensor CoreTemperature { get; }
-        public Sensor BusClock { get; }
-        public Sensor[] CoreClocks { get; }
         public bool CorePerformanceBoostSupport { get; }
 
         private readonly uint _miscellaneousControlAddress;
@@ -62,8 +58,10 @@ namespace HardwareProviders.CPU
         public AmdCpu10(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
+
             // AMD family 1Xh processors support only one temperature sensor
-            CoreTemperature = new Sensor(
+            CoreTemperatures = new Sensor[1];
+            CoreTemperatures[0] = new Sensor(
                 "Core" + (CoreCount > 1 ? " #1 - #" + CoreCount : ""), 0,
                 SensorType.Temperature, this, new[]
                 {
@@ -365,9 +363,9 @@ namespace HardwareProviders.CPU
                         value = F15HM60HReportedTempCtrlOffset;
                         Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), 0xB8, value);
                         Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), 0xBC, out value);
-                        CoreTemperature.Value = ((value >> 21) & 0x7FF) * 0.125f +
-                                                CoreTemperature.Parameters[0].Value;
-                        ActivateSensor(CoreTemperature);
+                        CoreTemperatures[0].Value = ((value >> 21) & 0x7FF) * 0.125f +
+                                                    CoreTemperatures[0].Parameters[0].Value;
+                        ActivateSensor(CoreTemperatures[0]);
                         return;
                     }
 
@@ -377,29 +375,29 @@ namespace HardwareProviders.CPU
                         if (Family == 0x15 && (value & 0x30000) == 0x30000)
                         {
                             if ((Model & 0xF0) == 0x00)
-                                CoreTemperature.Value = ((value >> 21) & 0x7FC) / 8.0f +
-                                                        CoreTemperature.Parameters[0].Value - 49;
+                                CoreTemperatures[0].Value = ((value >> 21) & 0x7FC) / 8.0f +
+                                                            CoreTemperatures[0].Parameters[0].Value - 49;
                             else
-                                CoreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
-                                                        CoreTemperature.Parameters[0].Value - 49;
+                                CoreTemperatures[0].Value = ((value >> 21) & 0x7FF) / 8.0f +
+                                                            CoreTemperatures[0].Parameters[0].Value - 49;
                         }
                         else if (Family == 0x16 &&
                                  ((value & 0x30000) == 0x30000 || (value & 0x80000) == 0x80000))
                         {
-                            CoreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
-                                                    CoreTemperature.Parameters[0].Value - 49;
+                            CoreTemperatures[0].Value = ((value >> 21) & 0x7FF) / 8.0f +
+                                                        CoreTemperatures[0].Parameters[0].Value - 49;
                         }
                         else
                         {
-                            CoreTemperature.Value = ((value >> 21) & 0x7FF) / 8.0f +
-                                                    CoreTemperature.Parameters[0].Value;
+                            CoreTemperatures[0].Value = ((value >> 21) & 0x7FF) / 8.0f +
+                                                        CoreTemperatures[0].Parameters[0].Value;
                         }
 
-                        ActivateSensor(CoreTemperature);
+                        ActivateSensor(CoreTemperatures[0]);
                     }
                     else
                     {
-                        DeactivateSensor(CoreTemperature);
+                        DeactivateSensor(CoreTemperatures[0]);
                     }
                 }
             }
@@ -408,13 +406,13 @@ namespace HardwareProviders.CPU
                 var s = ReadFirstLine(_temperatureStream);
                 try
                 {
-                    CoreTemperature.Value = 0.001f *
+                    CoreTemperatures[0].Value = 0.001f *
                                             long.Parse(s, CultureInfo.InvariantCulture);
-                    ActivateSensor(CoreTemperature);
+                    ActivateSensor(CoreTemperatures[0]);
                 }
                 catch
                 {
-                    DeactivateSensor(CoreTemperature);
+                    DeactivateSensor(CoreTemperatures[0]);
                 }
             }
 
