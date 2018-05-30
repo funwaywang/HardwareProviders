@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 
 namespace OpenHardwareMonitor.Hardware
 {
-    internal static class ThreadAffinity
+    public static class ThreadAffinity
     {
         public static ulong Set(ulong mask)
         {
