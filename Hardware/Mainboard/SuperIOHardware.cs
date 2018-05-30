@@ -41,7 +41,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
         public SuperIOHardware(Mainboard mainboard, ISuperIO superIO,
             Manufacturer manufacturer, Model model, ISettings settings)
             : base(ChipName.GetName(superIO.Chip), new Identifier("lpc",
-                superIO.Chip.ToString().ToLowerInvariant()), settings)
+                superIO.Chip.ToString().ToLowerInvariant()))
         {
             this.mainboard = mainboard;
             this.superIO = superIO;

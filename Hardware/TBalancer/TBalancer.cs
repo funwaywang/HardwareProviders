@@ -41,7 +41,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
 
         public TBalancer(int portIndex, byte protocolVersion, ISettings settings)
             : base("T-Balancer bigNG", new Identifier("bigng",
-                portIndex.ToString(CultureInfo.InvariantCulture)), settings)
+                portIndex.ToString(CultureInfo.InvariantCulture)))
         {
             this.portIndex = portIndex;
             this.protocolVersion = protocolVersion;

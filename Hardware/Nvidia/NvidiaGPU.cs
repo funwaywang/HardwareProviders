@@ -35,7 +35,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
         public NvidiaGPU(int adapterIndex, NvPhysicalGpuHandle handle,
             NvDisplayHandle? displayHandle, ISettings settings)
             : base(GetName(handle), new Identifier("nvidiagpu",
-                adapterIndex.ToString(CultureInfo.InvariantCulture)), settings)
+                adapterIndex.ToString(CultureInfo.InvariantCulture)))
         {
             this.adapterIndex = adapterIndex;
             this.handle = handle;

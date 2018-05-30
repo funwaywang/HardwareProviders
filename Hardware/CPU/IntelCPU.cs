@@ -50,8 +50,8 @@ namespace OpenHardwareMonitor.Hardware.CPU
         private readonly uint[] lastEnergyConsumed;
         private readonly DateTime[] lastEnergyTime;
 
-        public IntelCPU(int processorIndex, CPUID[][] cpuid, ISettings settings)
-            : base(processorIndex, cpuid, settings)
+        public IntelCPU(int processorIndex, CPUID[][] cpuid)
+            : base(processorIndex, cpuid)
         {
             // set tjMax
             float[] tjMax;

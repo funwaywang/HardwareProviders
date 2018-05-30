@@ -41,9 +41,9 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
         private ulong lastTimeStampCount;
 
-        public GenericCPU(int processorIndex, CPUID[][] cpuid, ISettings settings)
+        public GenericCPU(int processorIndex, CPUID[][] cpuid)
             : base(cpuid[0][0].Name, CreateIdentifier(cpuid[0][0].Vendor,
-                processorIndex), settings)
+                processorIndex))
         {
             this.cpuid = cpuid;
 

@@ -56,8 +56,8 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
         private readonly double timeStampCounterMultiplier;
 
-        public AMD10CPU(int processorIndex, CPUID[][] cpuid, ISettings settings)
-            : base(processorIndex, cpuid, settings)
+        public AMD10CPU(int processorIndex, CPUID[][] cpuid)
+            : base(processorIndex, cpuid)
         {
             // AMD family 1Xh processors support only one temperature sensor
             coreTemperature = new Sensor(

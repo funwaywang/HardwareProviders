@@ -29,8 +29,8 @@ namespace OpenHardwareMonitor.Hardware.CPU
         private int _sensorTemperatures;
         private int _sensorVoltage;
 
-        public AMD17CPU(int processorIndex, CPUID[][] cpuid, ISettings settings)
-            : base(processorIndex, cpuid, settings)
+        public AMD17CPU(int processorIndex, CPUID[][] cpuid)
+            : base(processorIndex, cpuid)
         {
             // add all numa nodes 
             // Register ..1E_ECX, [10:8] + 1 

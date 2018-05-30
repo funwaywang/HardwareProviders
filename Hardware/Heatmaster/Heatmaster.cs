@@ -37,9 +37,9 @@ namespace OpenHardwareMonitor.Hardware.Heatmaster
         private readonly Sensor[] temperatures;
         private SerialPort serialPort;
 
-        public Heatmaster(string portName, ISettings settings)
+        public Heatmaster(string portName)
             : base("Heatmaster", new Identifier("heatmaster",
-                portName.TrimStart('/').ToLowerInvariant()), settings)
+                portName.TrimStart('/').ToLowerInvariant()))
         {
             this.portName = portName;
             try

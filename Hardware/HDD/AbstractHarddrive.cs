@@ -52,7 +52,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
             string firmwareRevision, int index,
             IEnumerable<SmartAttribute> smartAttributes, ISettings settings)
             : base(name, new Identifier("hdd",
-                index.ToString(CultureInfo.InvariantCulture)), settings)
+                index.ToString(CultureInfo.InvariantCulture)))
         {
             this.firmwareRevision = firmwareRevision;
             this.smart = smart;

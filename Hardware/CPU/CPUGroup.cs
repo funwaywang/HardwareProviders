@@ -39,7 +39,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 switch (threads[0].Vendor)
                 {
                     case Vendor.Intel:
-                        hardware.Add(new IntelCPU(index, coreThreads, settings));
+                        hardware.Add(new IntelCPU(index, coreThreads));
                         break;
                     case Vendor.AMD:
                         switch (threads[0].Family)
@@ -53,19 +53,19 @@ namespace OpenHardwareMonitor.Hardware.CPU
                             case 0x14:
                             case 0x15:
                             case 0x16:
-                                hardware.Add(new AMD10CPU(index, coreThreads, settings));
+                                hardware.Add(new AMD10CPU(index, coreThreads));
                                 break;
                             case 0x17:
-                                hardware.Add(new AMD17CPU(index, coreThreads, settings));
+                                hardware.Add(new AMD17CPU(index, coreThreads));
                                 break;
                             default:
-                                hardware.Add(new GenericCPU(index, coreThreads, settings));
+                                hardware.Add(new GenericCPU(index, coreThreads));
                                 break;
                         }
 
                         break;
                     default:
-                        hardware.Add(new GenericCPU(index, coreThreads, settings));
+                        hardware.Add(new GenericCPU(index, coreThreads));
                         break;
                 }
 

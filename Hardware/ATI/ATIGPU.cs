@@ -28,7 +28,7 @@ namespace OpenHardwareMonitor.Hardware.ATI
         public ATIGPU(string name, int adapterIndex, int busNumber,
             int deviceNumber, ISettings settings)
             : base(name, new Identifier("atigpu",
-                adapterIndex.ToString(CultureInfo.InvariantCulture)), settings)
+                adapterIndex.ToString(CultureInfo.InvariantCulture)))
         {
             this.adapterIndex = adapterIndex;
             BusNumber = busNumber;

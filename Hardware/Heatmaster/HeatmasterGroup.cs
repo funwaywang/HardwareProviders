@@ -122,7 +122,7 @@ namespace OpenHardwareMonitor.Hardware.Heatmaster
                 if (isValid)
                 {
                     report.AppendLine("Status: OK");
-                    hardware.Add(new Heatmaster(portNames[i], settings));
+                    hardware.Add(new Heatmaster(portNames[i]));
                 }
 
                 report.AppendLine();

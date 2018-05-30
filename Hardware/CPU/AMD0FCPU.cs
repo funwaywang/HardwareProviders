@@ -32,7 +32,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
         private readonly byte thermSenseCoreSelCPU1;
 
         public AMD0FCPU(int processorIndex, CPUID[][] cpuid, ISettings settings)
-            : base(processorIndex, cpuid, settings)
+            : base(processorIndex, cpuid)
         {
             var offset = -49.0f;
 
