@@ -45,18 +45,43 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
         public bool IsAvailable { get; }
 
+
+        [DllImport("ntdll.dll")]
+        public static extern int NtQuerySystemInformation(SystemInformationClass informationClass, [Out] SystemProcessorPerformanceInformation[] informations, int structSize, out IntPtr returnLength);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SystemProcessorPerformanceInformation
+        {
+            public long IdleTime;
+            public long KernelTime;
+            public long UserTime;
+            public long Reserved0;
+            public long Reserved1;
+            public ulong Reserved2;
+        }
+
+        public enum SystemInformationClass
+        {
+            SystemBasicInformation = 0,
+            SystemCpuInformation = 1,
+            SystemPerformanceInformation = 2,
+            SystemTimeOfDayInformation = 3,
+            SystemProcessInformation = 5,
+            SystemProcessorPerformanceInformation = 8
+        }
+
+
         private static bool GetTimes(out long[] idle, out long[] total)
         {
-            var informations = new
-                NativeMethods.SystemProcessorPerformanceInformation[64];
+            var informations = new SystemProcessorPerformanceInformation[64];
 
-            var size = Marshal.SizeOf(typeof(NativeMethods.SystemProcessorPerformanceInformation));
+            var size = Marshal.SizeOf(typeof(SystemProcessorPerformanceInformation));
 
             idle = null;
             total = null;
 
-            if (NativeMethods.NtQuerySystemInformation(
-                    NativeMethods.SystemInformationClass.SystemProcessorPerformanceInformation,
+            if (NtQuerySystemInformation(
+                    CPULoad.SystemInformationClass.SystemProcessorPerformanceInformation,
                     informations, informations.Length * size, out var returnLength) != 0)
                 return false;
 

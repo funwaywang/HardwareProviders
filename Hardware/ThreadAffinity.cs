@@ -15,6 +15,14 @@ namespace OpenHardwareMonitor.Hardware
 {
     public static class ThreadAffinity
     {
+        private const string KERNEL = "kernel32.dll";
+
+        [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
+        static extern UIntPtr SetThreadAffinityMask(IntPtr handle, UIntPtr mask);
+
+        [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
+        static extern IntPtr GetCurrentThread();
+
         public static ulong Set(ulong mask)
         {
             if (mask == 0)
@@ -30,30 +38,7 @@ namespace OpenHardwareMonitor.Hardware
                 throw new ArgumentOutOfRangeException(nameof(mask));
             }
 
-            return (ulong) NativeMethods.SetThreadAffinityMask(
-                NativeMethods.GetCurrentThread(), uIntPtrMask);
-        }
-
-        private static class NativeMethods
-        {
-            private const string KERNEL = "kernel32.dll";
-
-            private const string LIBC = "libc";
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            public static extern UIntPtr
-                SetThreadAffinityMask(IntPtr handle, UIntPtr mask);
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            public static extern IntPtr GetCurrentThread();
-
-            [DllImport(LIBC)]
-            public static extern int sched_getaffinity(int pid, IntPtr maskSize,
-                ref ulong mask);
-
-            [DllImport(LIBC)]
-            public static extern int sched_setaffinity(int pid, IntPtr maskSize,
-                ref ulong mask);
+            return (ulong) SetThreadAffinityMask(GetCurrentThread(), uIntPtrMask);
         }
     }
 }

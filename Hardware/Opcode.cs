@@ -15,6 +15,14 @@ namespace OpenHardwareMonitor.Hardware
 {
     public static class Opcode
     {
+        private const string KERNEL = "kernel32.dll";
+
+        [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
+        public static extern IntPtr VirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
+
+        [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
+        public static extern bool VirtualFree(IntPtr lpAddress, UIntPtr dwSize, FreeType dwFreeType);
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate bool CpuidDelegate(uint index, uint ecxValue,
             out uint eax, out uint ebx, out uint ecx, out uint edx);
@@ -162,9 +170,7 @@ namespace OpenHardwareMonitor.Hardware
             size = (ulong) (rdtscCode.Length + cpuidCode.Length);
 
             // Windows
-            codeBuffer = NativeMethods.VirtualAlloc(IntPtr.Zero,
-                (UIntPtr)size, AllocationType.COMMIT | AllocationType.RESERVE,
-                MemoryProtection.EXECUTE_READWRITE);
+            codeBuffer = VirtualAlloc(IntPtr.Zero, (UIntPtr)size, AllocationType.COMMIT | AllocationType.RESERVE, MemoryProtection.EXECUTE_READWRITE);
 
             Marshal.Copy(rdtscCode, 0, codeBuffer, rdtscCode.Length);
 
@@ -184,7 +190,7 @@ namespace OpenHardwareMonitor.Hardware
             Cpuid = null;
 
             // Windows
-            NativeMethods.VirtualFree(codeBuffer, UIntPtr.Zero,FreeType.RELEASE);
+            VirtualFree(codeBuffer, UIntPtr.Zero,FreeType.RELEASE);
         }
 
         public static bool CpuidTx(uint index, uint ecxValue,
