@@ -94,6 +94,8 @@
     <Compile Include="Hardware\Mainboard\MainboardGroup.cs" />
     <Compile Include="Hardware\Mainboard\Manufacturer.cs" />
     <Compile Include="Hardware\Mainboard\Model.cs" />
+    <Compile Include="Hardware\SensorType.cs" />
+    <Compile Include="Hardware\SensorValue.cs" />
     <Compile Include="Hardware\SMBIOS.cs" />
     <Compile Include="Hardware\Mainboard\SuperIOHardware.cs" />
     <Compile Include="Hardware\Nvidia\NVAPI.cs" />

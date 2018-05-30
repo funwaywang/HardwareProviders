@@ -35,7 +35,6 @@ namespace OpenHardwareMonitor.WMI {
 
       SensorType = sensor.SensorType.ToString();
       Identifier = sensor.Identifier.ToString();
-      Parent = sensor.Hardware.Identifier.ToString();
 
       this.sensor = sensor;
     }

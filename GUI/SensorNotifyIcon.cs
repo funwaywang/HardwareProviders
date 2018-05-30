@@ -305,14 +305,6 @@ namespace OpenHardwareMonitor.GUI {
           UnitManager.CelsiusToFahrenheit(sensor.Value));
       }
 
-      string hardwareName = sensor.Hardware.Name;
-      hardwareName = hardwareName.Substring(0, 
-        Math.Min(63 - formattedValue.Length, hardwareName.Length));
-      string text = hardwareName + formattedValue;
-      if (text.Length > 63)
-        text = null;
-
-      notifyIcon.Text = text;
       notifyIcon.Visible = true;         
     }
   }

@@ -320,23 +320,6 @@ namespace OpenHardwareMonitor.GUI {
         return;
       } else {
         // get the right hardware
-        IHardware hardware = sensor.Hardware;
-        while (hardware.Parent != null)
-          hardware = hardware.Parent;
-
-        // get the sensor list associated with the hardware
-        IList<ISensor> list;
-        if (!sensors.TryGetValue(hardware, out list)) {
-          list = new List<ISensor>();
-          sensors.Add(hardware, list);
-        }
-
-        // insert the sensor at the right position
-        int i = 0;
-        while (i < list.Count && (list[i].SensorType < sensor.SensorType || 
-          (list[i].SensorType == sensor.SensorType && 
-           list[i].Index < sensor.Index))) i++;
-        list.Insert(i, sensor);
 
         settings.SetValue(
           new Identifier(sensor.Identifier, "gadget").ToString(), true);

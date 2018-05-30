@@ -8,44 +8,13 @@
 	
 */
 
-using System;
 using System.Collections.Generic;
 using OpenHardwareMonitor.Collections;
 
 namespace OpenHardwareMonitor.Hardware
 {
-    public enum SensorType
-    {
-        Voltage, // V
-        Clock, // MHz
-        Temperature, // °C
-        Load, // %
-        Fan, // RPM
-        Flow, // L/h
-        Control, // %
-        Level, // %
-        Factor, // 1
-        Power, // W
-        Data, // GB = 2^30 Bytes    
-        SmallData // MB = 2^20 Bytes
-    }
-
-    public struct SensorValue
-    {
-        public SensorValue(float value, DateTime time)
-        {
-            Value = value;
-            Time = time;
-        }
-
-        public float Value { get; }
-        public DateTime Time { get; }
-    }
-
     public interface ISensor : IElement
     {
-        IHardware Hardware { get; }
-
         SensorType SensorType { get; }
         Identifier Identifier { get; }
 
@@ -59,8 +28,6 @@ namespace OpenHardwareMonitor.Hardware
         float? Value { get; }
         float? Min { get; }
         float? Max { get; }
-
-        IEnumerable<SensorValue> Values { get; }
 
         IControl Control { get; }
 

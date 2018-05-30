@@ -19,15 +19,7 @@ namespace OpenHardwareMonitor.Hardware
     {
         private readonly Hardware hardware;
         private readonly ReadOnlyArray<IParameter> parameters;
-        private readonly ISettings settings;
-
-        private readonly RingCollection<SensorValue>
-            values = new RingCollection<SensorValue>();
-
-        private int count;
         private float? currentValue;
-
-        private float sum;
 
         public Sensor(string name, int index, SensorType sensorType,
             Hardware hardware) :
@@ -58,8 +50,6 @@ namespace OpenHardwareMonitor.Hardware
             Name =  name;
         }
 
-        public IHardware Hardware => hardware;
-
         public SensorType SensorType { get; }
 
         public Identifier Identifier => new Identifier(hardware.Identifier,
@@ -79,22 +69,6 @@ namespace OpenHardwareMonitor.Hardware
             get => currentValue;
             set
             {
-                var now = DateTime.UtcNow;
-                while (values.Count > 0 && (now - values.First.Time).TotalDays > 1)
-                    values.Remove();
-
-                if (value.HasValue)
-                {
-                    sum += value.Value;
-                    count++;
-                    if (count == 4)
-                    {
-                        AppendValue(sum / count, now);
-                        sum = 0;
-                        count = 0;
-                    }
-                }
-
                 currentValue = value;
                 if (Min > value || !Min.HasValue)
                     Min = value;
@@ -106,6 +80,8 @@ namespace OpenHardwareMonitor.Hardware
         public float? Min { get; private set; }
         public float? Max { get; private set; }
 
+        public IControl Control { get; internal set; }
+
         public void ResetMin()
         {
             Min = null;
@@ -115,8 +91,6 @@ namespace OpenHardwareMonitor.Hardware
         {
             Max = null;
         }
-
-        public IEnumerable<SensorValue> Values => values;
 
         public void Accept(IVisitor visitor)
         {
@@ -129,20 +103,6 @@ namespace OpenHardwareMonitor.Hardware
         {
             foreach (var parameter in parameters)
                 parameter.Accept(visitor);
-        }
-
-        public IControl Control { get; internal set; }
-
-        private void AppendValue(float value, DateTime time)
-        {
-            if (values.Count >= 2 && values.Last.Value == value &&
-                values[values.Count - 2].Value == value)
-            {
-                values.Last = new SensorValue(value, time);
-                return;
-            }
-
-            values.Append(new SensorValue(value, time));
         }
     }
 }
