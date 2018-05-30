@@ -78,13 +78,13 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 isInvariantTimeStampCounter = false;
 
             if (coreCount > 1)
-                totalLoad = new Sensor("CPU Total", 0, SensorType.Load, this, settings);
+                totalLoad = new Sensor("CPU Total", 0, SensorType.Load, this);
             else
                 totalLoad = null;
             coreLoads = new Sensor[coreCount];
             for (var i = 0; i < coreLoads.Length; i++)
                 coreLoads[i] = new Sensor(CoreString(i), i + 1,
-                    SensorType.Load, this, settings);
+                    SensorType.Load, this);
             cpuLoad = new CPULoad(cpuid);
             if (cpuLoad.IsAvailable)
             {

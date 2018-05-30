@@ -74,7 +74,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                 if (index < superIO.Controls.Length)
                 {
                     var sensor = new Sensor(ctrl.Name, index, SensorType.Control,
-                        this, settings);
+                        this);
                     var control = new Control(sensor, settings, 0, 100);
                     control.ControlModeChanged += cc =>
                     {
@@ -126,7 +126,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                 if (fan.Index < superIO.Fans.Length)
                 {
                     var sensor = new Sensor(fan.Name, fan.Index, SensorType.Fan,
-                        this, settings);
+                        this);
                     fans.Add(sensor);
                 }
         }
@@ -141,7 +141,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                         SensorType.Temperature, this, new[]
                         {
                             new ParameterDescription("Offset [°C]", "Temperature offset.", 0)
-                        }, settings);
+                        });
                     temperatures.Add(sensor);
                 }
         }
@@ -162,7 +162,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                                                                 formula, voltage.Rf),
                             new ParameterDescription("Vf [V]", "Reference voltage.\n" +
                                                                formula, voltage.Vf)
-                        }, settings);
+                        });
                     voltages.Add(sensor);
                 }
         }

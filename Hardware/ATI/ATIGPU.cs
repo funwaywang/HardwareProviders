@@ -34,13 +34,13 @@ namespace OpenHardwareMonitor.Hardware.ATI
             BusNumber = busNumber;
             DeviceNumber = deviceNumber;
 
-            temperature = new Sensor("GPU Core", 0, SensorType.Temperature, this, settings);
-            fan = new Sensor("GPU Fan", 0, SensorType.Fan, this, settings);
-            coreClock = new Sensor("GPU Core", 0, SensorType.Clock, this, settings);
-            memoryClock = new Sensor("GPU Memory", 1, SensorType.Clock, this, settings);
-            coreVoltage = new Sensor("GPU Core", 0, SensorType.Voltage, this, settings);
-            coreLoad = new Sensor("GPU Core", 0, SensorType.Load, this, settings);
-            controlSensor = new Sensor("GPU Fan", 0, SensorType.Control, this, settings);
+            temperature = new Sensor("GPU Core", 0, SensorType.Temperature, this);
+            fan = new Sensor("GPU Fan", 0, SensorType.Fan, this);
+            coreClock = new Sensor("GPU Core", 0, SensorType.Clock, this);
+            memoryClock = new Sensor("GPU Memory", 1, SensorType.Clock, this);
+            coreVoltage = new Sensor("GPU Core", 0, SensorType.Voltage, this);
+            coreLoad = new Sensor("GPU Core", 0, SensorType.Load, this);
+            controlSensor = new Sensor("GPU Fan", 0, SensorType.Control, this);
 
             var afsi = new ADLFanSpeedInfo();
             if (ADL.ADL_Overdrive5_FanSpeedInfo_Get(adapterIndex, 0, ref afsi)

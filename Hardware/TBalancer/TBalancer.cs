@@ -53,23 +53,23 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
             var offset = 0;
             for (var i = 0; i < digitalTemperatures.Length; i++)
                 digitalTemperatures[i] = new Sensor("Digital Sensor " + i,
-                    offset + i, SensorType.Temperature, this, parameter, settings);
+                    offset + i, SensorType.Temperature, this, parameter);
             offset += digitalTemperatures.Length;
 
             for (var i = 0; i < analogTemperatures.Length; i++)
                 analogTemperatures[i] = new Sensor("Analog Sensor " + (i + 1),
-                    offset + i, SensorType.Temperature, this, parameter, settings);
+                    offset + i, SensorType.Temperature, this, parameter);
             offset += analogTemperatures.Length;
 
             for (var i = 0; i < sensorhubTemperatures.Length; i++)
                 sensorhubTemperatures[i] = new Sensor("Sensorhub Sensor " + i,
-                    offset + i, SensorType.Temperature, this, parameter, settings);
+                    offset + i, SensorType.Temperature, this, parameter);
             offset += sensorhubTemperatures.Length;
 
             for (var i = 0; i < miniNGTemperatures.Length; i++)
                 miniNGTemperatures[i] = new Sensor("miniNG #" + (i / 2 + 1) +
                                                    " Sensor " + (i % 2 + 1), offset + i, SensorType.Temperature,
-                    this, parameter, settings);
+                    this, parameter);
             offset += miniNGTemperatures.Length;
 
             for (var i = 0; i < sensorhubFlows.Length; i++)
@@ -78,16 +78,15 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
                     {
                         new ParameterDescription("Impulse Rate",
                             "The impulse rate of the flowmeter in pulses/L", 509)
-                    }, settings);
+                    });
 
             for (var i = 0; i < controls.Length; i++)
                 controls[i] = new Sensor("Fan Channel " + i, i, SensorType.Control,
-                    this, settings);
+                    this);
 
             for (var i = 0; i < miniNGControls.Length; i++)
                 miniNGControls[i] = new Sensor("miniNG #" + (i / 2 + 1) +
-                                               " Fan Channel " + (i % 2 + 1), 4 + i, SensorType.Control, this,
-                    settings);
+                                               " Fan Channel " + (i % 2 + 1), 4 + i, SensorType.Control, this);
 
             alternativeRequest = DelayedAlternativeRequest;
 
@@ -143,7 +142,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
                 if (miniNGFans[number * 2 + i] == null)
                     miniNGFans[number * 2 + i] =
                         new Sensor("miniNG #" + (number + 1) + " Fan Channel " + (i + 1),
-                            4 + number * 2 + i, SensorType.Fan, this, settings);
+                            4 + number * 2 + i, SensorType.Fan, this);
 
                 var sensor = miniNGFans[number * 2 + i];
 
@@ -239,7 +238,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
                             {
                                 new ParameterDescription("MaxRPM",
                                     "Maximum revolutions per minute (RPM) of the fan.", maxRPM)
-                            }, settings);
+                            });
 
                     float value;
                     if ((data[136] & (1 << i)) == 0) // pwm mode

@@ -70,7 +70,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
                 }
 
                 temperatures[i] = new Sensor(name, i, SensorType.Temperature, this,
-                    new ParameterDescription[0], settings);
+                    new ParameterDescription[0]);
                 ActivateSensor(temperatures[i]);
             }
 
@@ -79,26 +79,26 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
                 NVAPI.NvAPI_GPU_GetTachReading(handle, out value) == NvStatus.OK)
                 if (value >= 0)
                 {
-                    fan = new Sensor("GPU", 0, SensorType.Fan, this, settings);
+                    fan = new Sensor("GPU", 0, SensorType.Fan, this);
                     ActivateSensor(fan);
                 }
 
             clocks = new Sensor[3];
-            clocks[0] = new Sensor("GPU Core", 0, SensorType.Clock, this, settings);
-            clocks[1] = new Sensor("GPU Memory", 1, SensorType.Clock, this, settings);
-            clocks[2] = new Sensor("GPU Shader", 2, SensorType.Clock, this, settings);
+            clocks[0] = new Sensor("GPU Core", 0, SensorType.Clock, this);
+            clocks[1] = new Sensor("GPU Memory", 1, SensorType.Clock, this);
+            clocks[2] = new Sensor("GPU Shader", 2, SensorType.Clock, this);
             for (var i = 0; i < clocks.Length; i++)
                 ActivateSensor(clocks[i]);
 
             loads = new Sensor[3];
-            loads[0] = new Sensor("GPU Core", 0, SensorType.Load, this, settings);
-            loads[1] = new Sensor("GPU Memory Controller", 1, SensorType.Load, this, settings);
-            loads[2] = new Sensor("GPU Video Engine", 2, SensorType.Load, this, settings);
-            memoryLoad = new Sensor("GPU Memory", 3, SensorType.Load, this, settings);
-            memoryFree = new Sensor("GPU Memory Free", 1, SensorType.SmallData, this, settings);
-            memoryUsed = new Sensor("GPU Memory Used", 2, SensorType.SmallData, this, settings);
-            memoryAvail = new Sensor("GPU Memory Total", 3, SensorType.SmallData, this, settings);
-            control = new Sensor("GPU Fan", 0, SensorType.Control, this, settings);
+            loads[0] = new Sensor("GPU Core", 0, SensorType.Load, this);
+            loads[1] = new Sensor("GPU Memory Controller", 1, SensorType.Load, this);
+            loads[2] = new Sensor("GPU Video Engine", 2, SensorType.Load, this);
+            memoryLoad = new Sensor("GPU Memory", 3, SensorType.Load, this);
+            memoryFree = new Sensor("GPU Memory Free", 1, SensorType.SmallData, this);
+            memoryUsed = new Sensor("GPU Memory Used", 2, SensorType.SmallData, this);
+            memoryAvail = new Sensor("GPU Memory Total", 3, SensorType.SmallData, this);
+            control = new Sensor("GPU Fan", 0, SensorType.Control, this);
 
             var coolerSettings = GetCoolerSettings();
             if (coolerSettings.Count > 0)

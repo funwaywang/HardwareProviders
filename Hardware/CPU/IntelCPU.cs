@@ -268,7 +268,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
                             new ParameterDescription("TSlope [°C]",
                                 "Temperature slope of the digital thermal sensor.\n" +
                                 "Temperature = TjMax - TSlope * Value.", 1)
-                        }, settings);
+                        });
                     ActivateSensor(coreTemperatures[i]);
                 }
             }
@@ -291,16 +291,16 @@ namespace OpenHardwareMonitor.Hardware.CPU
                         new ParameterDescription("TSlope [°C]",
                             "Temperature slope of the digital thermal sensor.\n" +
                             "Temperature = TjMax - TSlope * Value.", 1)
-                    }, settings);
+                    });
                 ActivateSensor(packageTemperature);
             }
 
-            busClock = new Sensor("Bus Speed", 0, SensorType.Clock, this, settings);
+            busClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
             coreClocks = new Sensor[coreCount];
             for (var i = 0; i < coreClocks.Length; i++)
             {
                 coreClocks[i] =
-                    new Sensor(CoreString(i), i + 1, SensorType.Clock, this, settings);
+                    new Sensor(CoreString(i), i + 1, SensorType.Clock, this);
                 if (HasTimeStampCounter && microarchitecture != Microarchitecture.Unknown)
                     ActivateSensor(coreClocks[i]);
             }
@@ -340,7 +340,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
                         lastEnergyTime[i] = DateTime.UtcNow;
                         lastEnergyConsumed[i] = eax;
                         powerSensors[i] = new Sensor(powerSensorLabels[i], i,
-                            SensorType.Power, this, settings);
+                            SensorType.Power, this);
                         ActivateSensor(powerSensors[i]);
                     }
             }

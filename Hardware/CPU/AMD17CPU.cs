@@ -141,13 +141,11 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 _hw = (AMD17CPU) hw;
                 Nodes = new List<NumaNode>();
 
-                _packagePower = new Sensor("Package Power", _hw._sensorPower++, SensorType.Power, _hw, _hw.settings);
-                _coreTemperatureTctl = new Sensor("Core (Tctl)", _hw._sensorTemperatures++, SensorType.Temperature, _hw,
-                    _hw.settings);
-                _coreTemperatureTdie = new Sensor("Core (Tdie)", _hw._sensorTemperatures++, SensorType.Temperature, _hw,
-                    _hw.settings);
-                _coreVoltage = new Sensor("Core (SVI2)", _hw._sensorVoltage++, SensorType.Voltage, _hw, _hw.settings);
-                _socVoltage = new Sensor("SoC (SVI2)", _hw._sensorVoltage++, SensorType.Voltage, _hw, _hw.settings);
+                _packagePower = new Sensor("Package Power", _hw._sensorPower++, SensorType.Power, _hw);
+                _coreTemperatureTctl = new Sensor("Core (Tctl)", _hw._sensorTemperatures++, SensorType.Temperature, _hw);
+                _coreTemperatureTdie = new Sensor("Core (Tdie)", _hw._sensorTemperatures++, SensorType.Temperature, _hw);
+                _coreVoltage = new Sensor("Core (SVI2)", _hw._sensorVoltage++, SensorType.Voltage, _hw);
+                _socVoltage = new Sensor("SoC (SVI2)", _hw._sensorVoltage++, SensorType.Voltage, _hw);
 
                 _hw.ActivateSensor(_packagePower);
                 _hw.ActivateSensor(_coreTemperatureTctl);
@@ -369,12 +367,10 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 Threads = new List<CPUID>();
                 CoreId = id;
                 _hw = (AMD17CPU) hw;
-                _clock = new Sensor("Core #" + CoreId, _hw._sensorClock++, SensorType.Clock, _hw, _hw.settings);
-                _multiplier = new Sensor("Core #" + CoreId, _hw._sensorMulti++, SensorType.Factor, _hw, _hw.settings);
-                _power = new Sensor("Core #" + CoreId + " (SMU)", _hw._sensorPower++, SensorType.Power, _hw,
-                    _hw.settings);
-                _vcore = new Sensor("Core #" + CoreId + " VID", _hw._sensorVoltage++, SensorType.Voltage, _hw,
-                    _hw.settings);
+                _clock = new Sensor("Core #" + CoreId, _hw._sensorClock++, SensorType.Clock, _hw);
+                _multiplier = new Sensor("Core #" + CoreId, _hw._sensorMulti++, SensorType.Factor, _hw);
+                _power = new Sensor("Core #" + CoreId + " (SMU)", _hw._sensorPower++, SensorType.Power, _hw);
+                _vcore = new Sensor("Core #" + CoreId + " VID", _hw._sensorVoltage++, SensorType.Voltage, _hw);
 
                 _hw.ActivateSensor(_clock);
                 _hw.ActivateSensor(_multiplier);

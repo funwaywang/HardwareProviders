@@ -233,8 +233,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
                     {
                         var sensor = new Sensor(attribute.SensorName,
                             attribute.SensorChannel, attribute.DefaultHiddenSensor,
-                            attribute.SensorType.Value, this, attribute.ParameterDescriptions,
-                            settings);
+                            attribute.SensorType.Value, this, attribute.ParameterDescriptions);
 
                         sensors.Add(attribute, sensor);
                         ActivateSensor(sensor);
@@ -246,7 +245,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
             if (driveInfos.Length > 0)
             {
                 usageSensor =
-                    new Sensor("Used Space", 0, SensorType.Load, this, settings);
+                    new Sensor("Used Space", 0, SensorType.Load, this);
                 ActivateSensor(usageSensor);
             }
         }

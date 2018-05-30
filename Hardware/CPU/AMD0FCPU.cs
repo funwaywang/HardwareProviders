@@ -67,7 +67,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
                                 new ParameterDescription("Offset [°C]",
                                     "Temperature offset of the thermal sensor.\n" +
                                     "Temperature = Value + Offset.", offset)
-                            }, settings);
+                            });
             }
             else
             {
@@ -77,12 +77,12 @@ namespace OpenHardwareMonitor.Hardware.CPU
             miscellaneousControlAddress = GetPciAddress(
                 MISCELLANEOUS_CONTROL_FUNCTION, MISCELLANEOUS_CONTROL_DEVICE_ID);
 
-            busClock = new Sensor("Bus Speed", 0, SensorType.Clock, this, settings);
+            busClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
             coreClocks = new Sensor[coreCount];
             for (var i = 0; i < coreClocks.Length; i++)
             {
                 coreClocks[i] = new Sensor(CoreString(i), i + 1, SensorType.Clock,
-                    this, settings);
+                    this);
                 if (HasTimeStampCounter)
                     ActivateSensor(coreClocks[i]);
             }

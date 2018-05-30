@@ -34,22 +34,21 @@ namespace OpenHardwareMonitor.Hardware
         private float sum;
 
         public Sensor(string name, int index, SensorType sensorType,
-            Hardware hardware, ISettings settings) :
-            this(name, index, sensorType, hardware, null, settings)
+            Hardware hardware) :
+            this(name, index, sensorType, hardware, (ParameterDescription[]) null)
         {
         }
 
         public Sensor(string name, int index, SensorType sensorType,
-            Hardware hardware, ParameterDescription[] parameterDescriptions,
-            ISettings settings) :
+            Hardware hardware, ParameterDescription[] parameterDescriptions) :
             this(name, index, false, sensorType, hardware,
-                parameterDescriptions, settings)
+                parameterDescriptions)
         {
         }
 
         public Sensor(string name, int index, bool defaultHidden,
             SensorType sensorType, Hardware hardware,
-            ParameterDescription[] parameterDescriptions, ISettings settings)
+            ParameterDescription[] parameterDescriptions)
         {
             Index = index;
             IsDefaultHidden = defaultHidden;
@@ -60,14 +59,8 @@ namespace OpenHardwareMonitor.Hardware
                 parameters[i] = new Parameter(parameterDescriptions[i], this);
             this.parameters = parameters;
 
-            this.settings = settings;
             defaultName = name;
-            this.name = settings.GetValue(
-                new Identifier(Identifier, "name").ToString(), name);
-
-            GetSensorValuesFromSettings();
-
-            hardware.Closing += delegate { SetSensorValuesToSettings(); };
+            this.name =  name;
         }
 
         public IHardware Hardware => hardware;
@@ -87,7 +80,6 @@ namespace OpenHardwareMonitor.Hardware
                     name = value;
                 else
                     name = defaultName;
-                settings.SetValue(new Identifier(Identifier, "name").ToString(), name);
             }
         }
 
@@ -155,74 +147,6 @@ namespace OpenHardwareMonitor.Hardware
         }
 
         public IControl Control { get; internal set; }
-
-        private void SetSensorValuesToSettings()
-        {
-            using (var m = new MemoryStream())
-            {
-                using (var c = new GZipStream(m, CompressionMode.Compress))
-                using (var b = new BufferedStream(c, 65536))
-                using (var writer = new BinaryWriter(b))
-                {
-                    long t = 0;
-                    foreach (var sensorValue in values)
-                    {
-                        var v = sensorValue.Time.ToBinary();
-                        writer.Write(v - t);
-                        t = v;
-                        writer.Write(sensorValue.Value);
-                    }
-
-                    writer.Flush();
-                }
-
-                settings.SetValue(new Identifier(Identifier, "values").ToString(),
-                    Convert.ToBase64String(m.ToArray()));
-            }
-        }
-
-        private void GetSensorValuesFromSettings()
-        {
-            var name = new Identifier(Identifier, "values").ToString();
-            var s = settings.GetValue(name, null);
-
-            try
-            {
-                var array = Convert.FromBase64String(s);
-                s = null;
-                var now = DateTime.UtcNow;
-                using (var m = new MemoryStream(array))
-                using (var c = new GZipStream(m, CompressionMode.Decompress))
-                using (var reader = new BinaryReader(c))
-                {
-                    try
-                    {
-                        long t = 0;
-                        while (true)
-                        {
-                            t += reader.ReadInt64();
-                            var time = DateTime.FromBinary(t);
-                            if (time > now)
-                                break;
-                            var value = reader.ReadSingle();
-                            AppendValue(value, time);
-                        }
-                    }
-                    catch (EndOfStreamException)
-                    {
-                    }
-                }
-            }
-            catch
-            {
-            }
-
-            if (values.Count > 0)
-                AppendValue(float.NaN, DateTime.UtcNow);
-
-            // remove the value string from the settings to reduce memory usage
-            settings.Remove(name);
-        }
 
         private void AppendValue(float value, DateTime time)
         {

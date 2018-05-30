@@ -66,7 +66,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
             : base(smart, name, firmwareRevision, index, smartAttributes, settings)
         {
             writeAmplification = new Sensor("Write Amplification", 1,
-                SensorType.Factor, this, settings);
+                SensorType.Factor, this);
         }
 
         public override void UpdateAdditionalSensors(DriveAttributeValue[] values)

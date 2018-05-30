@@ -65,7 +65,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 SensorType.Temperature, this, new[]
                 {
                     new ParameterDescription("Offset [°C]", "Temperature offset.", 0)
-                }, settings);
+                });
 
             switch (family)
             {
@@ -140,12 +140,12 @@ namespace OpenHardwareMonitor.Hardware.CPU
             miscellaneousControlAddress = GetPciAddress(
                 MISCELLANEOUS_CONTROL_FUNCTION, miscellaneousControlDeviceId);
 
-            busClock = new Sensor("Bus Speed", 0, SensorType.Clock, this, settings);
+            busClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
             coreClocks = new Sensor[coreCount];
             for (var i = 0; i < coreClocks.Length; i++)
             {
                 coreClocks[i] = new Sensor(CoreString(i), i + 1, SensorType.Clock,
-                    this, settings);
+                    this);
                 if (HasTimeStampCounter)
                     ActivateSensor(coreClocks[i]);
             }

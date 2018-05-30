@@ -22,15 +22,13 @@ namespace OpenHardwareMonitor.Hardware.RAM
         public GenericRAM(string name, ISettings settings)
             : base(name, new Identifier("ram"), settings)
         {
-            loadSensor = new Sensor("Memory", 0, SensorType.Load, this, settings);
+            loadSensor = new Sensor("Memory", 0, SensorType.Load, this);
             ActivateSensor(loadSensor);
 
-            usedMemory = new Sensor("Used Memory", 0, SensorType.Data, this,
-                settings);
+            usedMemory = new Sensor("Used Memory", 0, SensorType.Data, this);
             ActivateSensor(usedMemory);
 
-            availableMemory = new Sensor("Available Memory", 1, SensorType.Data, this,
-                settings);
+            availableMemory = new Sensor("Available Memory", 1, SensorType.Data, this);
             ActivateSensor(availableMemory);
         }
 
