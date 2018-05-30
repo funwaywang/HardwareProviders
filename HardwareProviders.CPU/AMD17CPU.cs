@@ -8,16 +8,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.CPU
+namespace HardwareProviders.CPU
 {
-    internal sealed class AMD17CPU : AMDCPU
+    internal sealed class Amd17Cpu : Amdcpu
     {
         // register index names for CPUID[] 
-        private const int EAX = 0;
-        private const int EBX = 1;
-        private const int ECX = 2;
-        private const int EDX = 3;
+        private const int Eax = 0;
+        private const int Ebx = 1;
+        private const int Ecx = 2;
+        private const int Edx = 3;
 
         private readonly Processor _ryzen;
         private int _sensorClock;
@@ -29,13 +30,13 @@ namespace OpenHardwareMonitor.Hardware.CPU
         private int _sensorTemperatures;
         private int _sensorVoltage;
 
-        public AMD17CPU(int processorIndex, CPUID[][] cpuid)
+        public Amd17Cpu(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
             // add all numa nodes 
             // Register ..1E_ECX, [10:8] + 1 
             _ryzen = new Processor(this);
-            var NodesPerProcessor = 1 + (int) ((cpuid[0][0].ExtData[0x1e, ECX] >> 8) & 0x7);
+            var nodesPerProcessor = 1 + (int) ((cpuid[0][0].ExtData[0x1e, Ecx] >> 8) & 0x7);
 
             // add all numa nodes
             foreach (var cpu in cpuid)
@@ -44,13 +45,13 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
                 // coreID 
                 // Register ..1E_EBX, [7:0] 
-                var core_id = (int) (thread.ExtData[0x1e, EBX] & 0xff);
+                var coreId = (int) (thread.ExtData[0x1e, Ebx] & 0xff);
 
                 // nodeID 
                 // Register ..1E_ECX, [7:0] 
-                var node_id = (int) (thread.ExtData[0x1e, ECX] & 0xff);
+                var nodeId = (int) (thread.ExtData[0x1e, Ecx] & 0xff);
 
-                _ryzen.AppendThread(null, node_id, core_id);
+                _ryzen.AppendThread(null, nodeId, coreId);
             }
 
             // add all threads to numa nodes and specific core 
@@ -60,21 +61,21 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
                 // coreID 
                 // Register ..1E_EBX, [7:0] 
-                var core_id = (int) (thread.ExtData[0x1e, EBX] & 0xff);
+                var coreId = (int) (thread.ExtData[0x1e, Ebx] & 0xff);
 
                 // nodeID 
                 // Register ..1E_ECX, [7:0] 
-                var node_id = (int) (thread.ExtData[0x1e, ECX] & 0xff);
+                var nodeId = (int) (thread.ExtData[0x1e, Ecx] & 0xff);
 
-                _ryzen.AppendThread(thread, node_id, core_id);
+                _ryzen.AppendThread(thread, nodeId, coreId);
             }
 
             Update();
         }
 
-        protected override uint[] GetMSRs()
+        protected override uint[] GetMsRs()
         {
-            return new[] {PERF_CTL_0, PERF_CTR_0, HWCR, MSR_PSTATE_0, COFVID_STATUS};
+            return new[] {PerfCtl0, PerfCtr0, Hwcr, MsrPstate0, CofvidStatus};
         }
 
         public override string GetReport()
@@ -130,7 +131,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
             private readonly Sensor _coreTemperatureTctl;
             private readonly Sensor _coreTemperatureTdie;
             private readonly Sensor _coreVoltage;
-            private readonly AMD17CPU _hw;
+            private readonly Amd17Cpu _hw;
             private DateTime _lastPwrTime = new DateTime(0);
             private uint _lastPwrValue;
             private readonly Sensor _packagePower;
@@ -138,7 +139,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
             public Processor(Hardware hw)
             {
-                _hw = (AMD17CPU) hw;
+                _hw = (Amd17Cpu) hw;
                 Nodes = new List<NumaNode>();
 
                 _packagePower = new Sensor("Package Power", _hw._sensorPower++, SensorType.Power, _hw);
@@ -176,46 +177,46 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 // TU [19:16] 
                 // ESU [12:8] -> Unit 15.3 micro Joule per increment 
                 // PU [3:0] 
-                Ring0.Rdmsr(MSR_PWR_UNIT, out eax, out edx);
+                Ring0.Rdmsr(MsrPwrUnit, out eax, out edx);
                 var tu = (int) ((eax >> 16) & 0xf);
                 var esu = (int) ((eax >> 12) & 0xf);
                 var pu = (int) (eax & 0xf);
 
                 // MSRC001_029B 
                 // total_energy [31:0] 
-                var sample_time = DateTime.Now;
-                Ring0.Rdmsr(MSR_PKG_ENERGY_STAT, out eax, out edx);
-                var total_energy = eax;
+                var sampleTime = DateTime.Now;
+                Ring0.Rdmsr(MsrPkgEnergyStat, out eax, out edx);
+                var totalEnergy = eax;
 
                 // THM_TCON_CUR_TMP 
                 // CUR_TEMP [31:21] 
                 uint temperature = 0;
-                Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), FAMILY_17H_PCI_CONTROL_REGISTER,
-                    F17H_M01H_THM_TCON_CUR_TMP);
-                Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), FAMILY_17H_PCI_CONTROL_REGISTER + 4, out temperature);
+                Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister,
+                    F17HM01HThmTconCurTmp);
+                Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4, out temperature);
 
                 // SVI0_TFN_PLANE0 [0] 
                 // SVI0_TFN_PLANE1 [1] 
-                uint smusvi0_tfn = 0;
-                Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), FAMILY_17H_PCI_CONTROL_REGISTER,
-                    F17H_M01H_SVI + 0x8);
-                Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), FAMILY_17H_PCI_CONTROL_REGISTER + 4, out smusvi0_tfn);
+                uint smusvi0Tfn = 0;
+                Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister,
+                    F17HM01HSvi + 0x8);
+                Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4, out smusvi0Tfn);
 
                 // SVI0_PLANE0_VDDCOR [24:16] 
                 // SVI0_PLANE0_IDDCOR [7:0] 
-                uint smusvi0_tel_plane0 = 0;
-                Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), FAMILY_17H_PCI_CONTROL_REGISTER,
-                    F17H_M01H_SVI + 0xc);
-                Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), FAMILY_17H_PCI_CONTROL_REGISTER + 4,
-                    out smusvi0_tel_plane0);
+                uint smusvi0TelPlane0 = 0;
+                Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister,
+                    F17HM01HSvi + 0xc);
+                Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4,
+                    out smusvi0TelPlane0);
 
                 // SVI0_PLANE1_VDDCOR [24:16] 
                 // SVI0_PLANE1_IDDCOR [7:0] 
-                uint smusvi0_tel_plane1 = 0;
-                Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), FAMILY_17H_PCI_CONTROL_REGISTER,
-                    F17H_M01H_SVI + 0x10);
-                Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), FAMILY_17H_PCI_CONTROL_REGISTER + 4,
-                    out smusvi0_tel_plane1);
+                uint smusvi0TelPlane1 = 0;
+                Ring0.WritePciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister,
+                    F17HM01HSvi + 0x10);
+                Ring0.ReadPciConfig(Ring0.GetPciAddress(0, 0, 0), Family17HPciControlRegister + 4,
+                    out smusvi0TelPlane1);
 
                 Ring0.ThreadAffinitySet(mask);
 
@@ -224,21 +225,21 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 // esu = 15.3 micro Joule per increment 
                 if (_lastPwrTime.Ticks == 0)
                 {
-                    _lastPwrTime = sample_time;
-                    _lastPwrValue = total_energy;
+                    _lastPwrTime = sampleTime;
+                    _lastPwrValue = totalEnergy;
                 }
 
                 // ticks diff 
-                var time = sample_time - _lastPwrTime;
+                var time = sampleTime - _lastPwrTime;
                 long pwr;
-                if (_lastPwrValue <= total_energy)
-                    pwr = total_energy - _lastPwrValue;
+                if (_lastPwrValue <= totalEnergy)
+                    pwr = totalEnergy - _lastPwrValue;
                 else
-                    pwr = 0xffffffff - _lastPwrValue + total_energy;
+                    pwr = 0xffffffff - _lastPwrValue + totalEnergy;
 
                 // update for next sample 
-                _lastPwrTime = sample_time;
-                _lastPwrValue = total_energy;
+                _lastPwrTime = sampleTime;
+                _lastPwrValue = totalEnergy;
 
                 var energy = 15.3e-6 * pwr;
                 energy /= time.TotalSeconds;
@@ -260,27 +261,27 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 _coreTemperatureTdie.Value = temperature * 0.001f + offset;
 
                 // voltage 
-                var VIDStep = 0.00625;
+                var vidStep = 0.00625;
                 double vcc;
-                uint svi0_plane_x_vddcor;
-                uint svi0_plane_x_iddcor;
+                uint svi0PlaneXVddcor;
+                uint svi0PlaneXIddcor;
 
                 //Core
-                if ((smusvi0_tfn & 0x01) == 0)
+                if ((smusvi0Tfn & 0x01) == 0)
                 {
-                    svi0_plane_x_vddcor = (smusvi0_tel_plane0 >> 16) & 0xff;
-                    svi0_plane_x_iddcor = smusvi0_tel_plane0 & 0xff;
-                    vcc = 1.550 - VIDStep * svi0_plane_x_vddcor;
+                    svi0PlaneXVddcor = (smusvi0TelPlane0 >> 16) & 0xff;
+                    svi0PlaneXIddcor = smusvi0TelPlane0 & 0xff;
+                    vcc = 1.550 - vidStep * svi0PlaneXVddcor;
                     _coreVoltage.Value = (float) vcc;
                 }
 
                 // SoC 
                 // not every zen cpu has this voltage 
-                if ((smusvi0_tfn & 0x02) == 0)
+                if ((smusvi0Tfn & 0x02) == 0)
                 {
-                    svi0_plane_x_vddcor = (smusvi0_tel_plane1 >> 16) & 0xff;
-                    svi0_plane_x_iddcor = smusvi0_tel_plane1 & 0xff;
-                    vcc = 1.550 - VIDStep * svi0_plane_x_vddcor;
+                    svi0PlaneXVddcor = (smusvi0TelPlane1 >> 16) & 0xff;
+                    svi0PlaneXIddcor = smusvi0TelPlane1 & 0xff;
+                    vcc = 1.550 - vidStep * svi0PlaneXVddcor;
                     _socVoltage.Value = (float) vcc;
                     _hw.ActivateSensor(_socVoltage);
                 }
@@ -288,20 +289,20 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
             #endregion
 
-            public void AppendThread(CPUID thread, int numa_id, int core_id)
+            public void AppendThread(Cpuid thread, int numaId, int coreId)
             {
                 NumaNode node = null;
                 foreach (var n in Nodes)
-                    if (n.NodeId == numa_id)
+                    if (n.NodeId == numaId)
                         node = n;
                 if (node == null)
                 {
-                    node = new NumaNode(_hw, numa_id);
+                    node = new NumaNode(_hw, numaId);
                     Nodes.Add(node);
                 }
 
                 if (thread != null)
-                    node.AppendThread(thread, core_id);
+                    node.AppendThread(thread, coreId);
             }
         }
 
@@ -311,27 +312,27 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
         private class NumaNode
         {
-            private readonly AMD17CPU _hw;
+            private readonly Amd17Cpu _hw;
 
             public NumaNode(Hardware hw, int id)
             {
                 Cores = new List<Core>();
                 NodeId = id;
-                _hw = (AMD17CPU) hw;
+                _hw = (Amd17Cpu) hw;
             }
 
             public int NodeId { get; }
             public List<Core> Cores { get; }
 
-            public void AppendThread(CPUID thread, int core_id)
+            public void AppendThread(Cpuid thread, int coreId)
             {
                 Core core = null;
                 foreach (var c in Cores)
-                    if (c.CoreId == core_id)
+                    if (c.CoreId == coreId)
                         core = c;
                 if (core == null)
                 {
-                    core = new Core(_hw, core_id);
+                    core = new Core(_hw, coreId);
                     Cores.Add(core);
                 }
 
@@ -355,7 +356,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
         private class Core
         {
             private readonly Sensor _clock;
-            private readonly AMD17CPU _hw;
+            private readonly Amd17Cpu _hw;
             private DateTime _lastPwrTime = new DateTime(0);
             private uint _lastPwrValue;
             private readonly Sensor _multiplier;
@@ -364,9 +365,9 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
             public Core(Hardware hw, int id)
             {
-                Threads = new List<CPUID>();
+                Threads = new List<Cpuid>();
                 CoreId = id;
-                _hw = (AMD17CPU) hw;
+                _hw = (Amd17Cpu) hw;
                 _clock = new Sensor("Core #" + CoreId, _hw._sensorClock++, SensorType.Clock, _hw);
                 _multiplier = new Sensor("Core #" + CoreId, _hw._sensorMulti++, SensorType.Factor, _hw);
                 _power = new Sensor("Core #" + CoreId + " (SMU)", _hw._sensorPower++, SensorType.Power, _hw);
@@ -379,7 +380,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
             }
 
             public int CoreId { get; }
-            public List<CPUID> Threads { get; }
+            public List<Cpuid> Threads { get; }
 
             #region UpdateSensors
 
@@ -396,27 +397,27 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 // TU [19:16] 
                 // ESU [12:8] -> Unit 15.3 micro Joule per increment 
                 // PU [3:0] 
-                Ring0.Rdmsr(MSR_PWR_UNIT, out eax, out edx);
+                Ring0.Rdmsr(MsrPwrUnit, out eax, out edx);
                 var tu = (int) ((eax >> 16) & 0xf);
                 var esu = (int) ((eax >> 12) & 0xf);
                 var pu = (int) (eax & 0xf);
 
                 // MSRC001_029A 
                 // total_energy [31:0] 
-                var sample_time = DateTime.Now;
-                Ring0.Rdmsr(MSR_CORE_ENERGY_STAT, out eax, out edx);
-                var total_energy = eax;
+                var sampleTime = DateTime.Now;
+                Ring0.Rdmsr(MsrCoreEnergyStat, out eax, out edx);
+                var totalEnergy = eax;
 
                 // MSRC001_0293 
                 // CurHwPstate [24:22] 
                 // CurCpuVid [21:14] 
                 // CurCpuDfsId [13:8] 
                 // CurCpuFid [7:0] 
-                Ring0.Rdmsr(MSR_HARDWARE_PSTATE_STATUS, out eax, out edx);
-                var CurHwPstate = (int) ((eax >> 22) & 0x3);
-                var CurCpuVid = (int) ((eax >> 14) & 0xff);
-                var CurCpuDfsId = (int) ((eax >> 8) & 0x3f);
-                var CurCpuFid = (int) (eax & 0xff);
+                Ring0.Rdmsr(MsrHardwarePstateStatus, out eax, out edx);
+                var curHwPstate = (int) ((eax >> 22) & 0x3);
+                var curCpuVid = (int) ((eax >> 14) & 0xff);
+                var curCpuDfsId = (int) ((eax >> 8) & 0x3f);
+                var curCpuFid = (int) (eax & 0xff);
 
                 // MSRC001_0064 + x 
                 // IddDiv [31:30] 
@@ -432,14 +433,14 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
                 // clock 
                 // CoreCOF is (Core::X86::Msr::PStateDef[CpuFid[7:0]] / Core::X86::Msr::PStateDef[CpuDfsId]) * 200 
-                _clock.Value = (float) (CurCpuFid / (double) CurCpuDfsId * 200.0);
+                _clock.Value = (float) (curCpuFid / (double) curCpuDfsId * 200.0);
 
                 // multiplier 
-                _multiplier.Value = (float) (CurCpuFid / (double) CurCpuDfsId * 2.0);
+                _multiplier.Value = (float) (curCpuFid / (double) curCpuDfsId * 2.0);
 
                 // Voltage 
-                var VIDStep = 0.00625;
-                var vcc = 1.550 - VIDStep * CurCpuVid;
+                var vidStep = 0.00625;
+                var vcc = 1.550 - vidStep * curCpuVid;
                 _vcore.Value = (float) vcc;
 
                 // power consumption 
@@ -447,21 +448,21 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 // esu = 15.3 micro Joule per increment 
                 if (_lastPwrTime.Ticks == 0)
                 {
-                    _lastPwrTime = sample_time;
-                    _lastPwrValue = total_energy;
+                    _lastPwrTime = sampleTime;
+                    _lastPwrValue = totalEnergy;
                 }
 
                 // ticks diff 
-                var time = sample_time - _lastPwrTime;
+                var time = sampleTime - _lastPwrTime;
                 long pwr;
-                if (_lastPwrValue <= total_energy)
-                    pwr = total_energy - _lastPwrValue;
+                if (_lastPwrValue <= totalEnergy)
+                    pwr = totalEnergy - _lastPwrValue;
                 else
-                    pwr = 0xffffffff - _lastPwrValue + total_energy;
+                    pwr = 0xffffffff - _lastPwrValue + totalEnergy;
 
                 // update for next sample 
-                _lastPwrTime = sample_time;
-                _lastPwrValue = total_energy;
+                _lastPwrTime = sampleTime;
+                _lastPwrValue = totalEnergy;
 
                 var energy = 15.3e-6 * pwr;
                 energy /= time.TotalSeconds;
@@ -476,24 +477,24 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
         #region amd zen registers 
 
-        private const uint PERF_CTL_0 = 0xC0010000;
-        private const uint PERF_CTR_0 = 0xC0010004;
-        private const uint HWCR = 0xC0010015;
+        private const uint PerfCtl0 = 0xC0010000;
+        private const uint PerfCtr0 = 0xC0010004;
+        private const uint Hwcr = 0xC0010015;
 
-        private const uint MSR_PSTATE_L = 0xC0010061;
-        private const uint MSR_PSTATE_C = 0xC0010062;
-        private const uint MSR_PSTATE_S = 0xC0010063;
-        private const uint MSR_PSTATE_0 = 0xC0010064;
+        private const uint MsrPstateL = 0xC0010061;
+        private const uint MsrPstateC = 0xC0010062;
+        private const uint MsrPstateS = 0xC0010063;
+        private const uint MsrPstate0 = 0xC0010064;
 
-        private const uint MSR_PWR_UNIT = 0xC0010299;
-        private const uint MSR_CORE_ENERGY_STAT = 0xC001029A;
-        private const uint MSR_PKG_ENERGY_STAT = 0xC001029B;
-        private const uint MSR_HARDWARE_PSTATE_STATUS = 0xC0010293;
-        private const uint COFVID_STATUS = 0xC0010071;
-        private const uint FAMILY_17H_PCI_CONTROL_REGISTER = 0x60;
-        private const uint FAMILY_17H_MODEL_01_MISC_CONTROL_DEVICE_ID = 0x1463;
-        private const uint F17H_M01H_THM_TCON_CUR_TMP = 0x00059800;
-        private const uint F17H_M01H_SVI = 0x0005A000;
+        private const uint MsrPwrUnit = 0xC0010299;
+        private const uint MsrCoreEnergyStat = 0xC001029A;
+        private const uint MsrPkgEnergyStat = 0xC001029B;
+        private const uint MsrHardwarePstateStatus = 0xC0010293;
+        private const uint CofvidStatus = 0xC0010071;
+        private const uint Family17HPciControlRegister = 0x60;
+        private const uint Family17HModel01MiscControlDeviceId = 0x1463;
+        private const uint F17HM01HThmTconCurTmp = 0x00059800;
+        private const uint F17HM01HSvi = 0x0005A000;
 
         #endregion
     }

@@ -11,35 +11,35 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace OpenHardwareMonitor.Hardware.CPU
+namespace HardwareProviders.CPU
 {
-    internal class CPULoad
+    internal class CpuLoad
     {
-        private readonly float[] coreLoads;
+        private readonly float[] _coreLoads;
 
-        private readonly CPUID[][] cpuid;
+        private readonly Cpuid[][] _cpuid;
 
-        private long[] idleTimes;
+        private long[] _idleTimes;
 
-        private float totalLoad;
-        private long[] totalTimes;
+        private float _totalLoad;
+        private long[] _totalTimes;
 
-        public CPULoad(CPUID[][] cpuid)
+        public CpuLoad(Cpuid[][] cpuid)
         {
-            this.cpuid = cpuid;
-            coreLoads = new float[cpuid.Length];
-            totalLoad = 0;
+            this._cpuid = cpuid;
+            _coreLoads = new float[cpuid.Length];
+            _totalLoad = 0;
             try
             {
-                GetTimes(out idleTimes, out totalTimes);
+                GetTimes(out _idleTimes, out _totalTimes);
             }
             catch (Exception)
             {
-                idleTimes = null;
-                totalTimes = null;
+                _idleTimes = null;
+                _totalTimes = null;
             }
 
-            if (idleTimes != null)
+            if (_idleTimes != null)
                 IsAvailable = true;
         }
 
@@ -81,7 +81,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
             total = null;
 
             if (NtQuerySystemInformation(
-                    CPULoad.SystemInformationClass.SystemProcessorPerformanceInformation,
+                    CpuLoad.SystemInformationClass.SystemProcessorPerformanceInformation,
                     informations, informations.Length * size, out var returnLength) != 0)
                 return false;
 
@@ -99,24 +99,24 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
         public float GetTotalLoad()
         {
-            return totalLoad;
+            return _totalLoad;
         }
 
         public float GetCoreLoad(int core)
         {
-            return coreLoads[core];
+            return _coreLoads[core];
         }
 
         public void Update()
         {
-            if (idleTimes == null)
+            if (_idleTimes == null)
                 return;
 
             if (!GetTimes(out var newIdleTimes, out var newTotalTimes))
                 return;
 
-            for (var i = 0; i < Math.Min(newTotalTimes.Length, totalTimes.Length); i++)
-                if (newTotalTimes[i] - totalTimes[i] < 100000)
+            for (var i = 0; i < Math.Min(newTotalTimes.Length, _totalTimes.Length); i++)
+                if (newTotalTimes[i] - _totalTimes[i] < 100000)
                     return;
 
             if (newIdleTimes == null || newTotalTimes == null)
@@ -124,26 +124,26 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
             float total = 0;
             var count = 0;
-            for (var i = 0; i < cpuid.Length; i++)
+            for (var i = 0; i < _cpuid.Length; i++)
             {
                 float value = 0;
-                for (var j = 0; j < cpuid[i].Length; j++)
+                for (var j = 0; j < _cpuid[i].Length; j++)
                 {
-                    long index = cpuid[i][j].Thread;
-                    if (index < newIdleTimes.Length && index < totalTimes.Length)
+                    long index = _cpuid[i][j].Thread;
+                    if (index < newIdleTimes.Length && index < _totalTimes.Length)
                     {
                         var idle =
-                            (newIdleTimes[index] - idleTimes[index]) /
-                            (float) (newTotalTimes[index] - totalTimes[index]);
+                            (newIdleTimes[index] - _idleTimes[index]) /
+                            (float) (newTotalTimes[index] - _totalTimes[index]);
                         value += idle;
                         total += idle;
                         count++;
                     }
                 }
 
-                value = 1.0f - value / cpuid[i].Length;
+                value = 1.0f - value / _cpuid[i].Length;
                 value = value < 0 ? 0 : value;
-                coreLoads[i] = value * 100;
+                _coreLoads[i] = value * 100;
             }
 
             if (count > 0)
@@ -156,10 +156,10 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 total = 0;
             }
 
-            totalLoad = total * 100;
+            _totalLoad = total * 100;
 
-            totalTimes = newTotalTimes;
-            idleTimes = newIdleTimes;
+            _totalTimes = newTotalTimes;
+            _idleTimes = newIdleTimes;
         }
     }
 }

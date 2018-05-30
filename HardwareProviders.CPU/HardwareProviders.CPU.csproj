@@ -50,12 +50,12 @@
     <Compile Include="AMD10CPU.cs" />
     <Compile Include="AMD17CPU.cs" />
     <Compile Include="AMDCPU.cs" />
-    <Compile Include="CPUGroup.cs" />
     <Compile Include="CPUID.cs" />
     <Compile Include="CPULoad.cs" />
-    <Compile Include="GenericCPU.cs" />
+    <Compile Include="Cpu.cs" />
     <Compile Include="IntelCPU.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Vendor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenHardwareMonitorLib.csproj">

@@ -10,40 +10,32 @@
 
 using System;
 using System.Text;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.CPU
+namespace HardwareProviders.CPU
 {
-    public enum Vendor
+    public class Cpuid
     {
-        Unknown,
-        Intel,
-        AMD
-    }
+        public const uint Cpuid0 = 0;
+        public const uint CpuidExt = 0x80000000;
 
-    public class CPUID
-    {
-        public const uint CPUID_0 = 0;
-        public const uint CPUID_EXT = 0x80000000;
+        private readonly uint _coreMaskWith;
 
-        private readonly uint coreMaskWith;
+        private readonly uint _threadMaskWith;
 
-        private readonly uint threadMaskWith;
-
-        public CPUID(int thread)
+        public Cpuid(int thread)
         {
             Thread = thread;
-
-            uint maxCpuid = 0;
-            uint maxCpuidExt = 0;
-
-            uint eax, ebx, ecx, edx;
 
             if (thread >= 64)
                 throw new ArgumentOutOfRangeException(nameof(thread));
             var mask = 1UL << thread;
 
-            if (Opcode.CpuidTx(CPUID_0, 0,
-                out eax, out ebx, out ecx, out edx, mask))
+
+            uint maxCpuid;
+            uint maxCpuidExt;
+            if (Opcode.CpuidTx(Cpuid0, 0,
+                out var eax, out var ebx, out var ecx, out var edx, mask))
             {
                 if (eax > 0)
                     maxCpuid = eax;
@@ -61,19 +53,18 @@ namespace OpenHardwareMonitor.Hardware.CPU
                         Vendor = Vendor.Intel;
                         break;
                     case "AuthenticAMD":
-                        Vendor = Vendor.AMD;
+                        Vendor = Vendor.Amd;
                         break;
                     default:
                         Vendor = Vendor.Unknown;
                         break;
                 }
 
-                eax = ebx = ecx = edx = 0;
-                if (Opcode.CpuidTx(CPUID_EXT, 0,
+                if (Opcode.CpuidTx(CpuidExt, 0,
                     out eax, out ebx, out ecx, out edx, mask))
                 {
-                    if (eax > CPUID_EXT)
-                        maxCpuidExt = eax - CPUID_EXT;
+                    if (eax > CpuidExt)
+                        maxCpuidExt = eax - CpuidExt;
                     else
                         return;
                 }
@@ -92,19 +83,19 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
             Data = new uint[maxCpuid + 1, 4];
             for (uint i = 0; i < maxCpuid + 1; i++)
-                Opcode.CpuidTx(CPUID_0 + i, 0,
+                Opcode.CpuidTx(Cpuid0 + i, 0,
                     out Data[i, 0], out Data[i, 1],
                     out Data[i, 2], out Data[i, 3], mask);
 
             ExtData = new uint[maxCpuidExt + 1, 4];
             for (uint i = 0; i < maxCpuidExt + 1; i++)
-                Opcode.CpuidTx(CPUID_EXT + i, 0,
+                Opcode.CpuidTx(CpuidExt + i, 0,
                     out ExtData[i, 0], out ExtData[i, 1],
                     out ExtData[i, 2], out ExtData[i, 3], mask);
 
             var nameBuilder = new StringBuilder();
             for (uint i = 2; i <= 4; i++)
-                if (Opcode.CpuidTx(CPUID_EXT + i, 0,
+                if (Opcode.CpuidTx(CpuidExt + i, 0,
                     out eax, out ebx, out ecx, out edx, mask))
                 {
                     AppendRegister(nameBuilder, eax);
@@ -145,18 +136,18 @@ namespace OpenHardwareMonitor.Hardware.CPU
                         maxCoreIdPerPackage = ((Data[4, 0] >> 26) & 0x3F) + 1;
                     else
                         maxCoreIdPerPackage = 1;
-                    threadMaskWith =
+                    _threadMaskWith =
                         NextLog2(maxCoreAndThreadIdPerPackage / maxCoreIdPerPackage);
-                    coreMaskWith = NextLog2(maxCoreIdPerPackage);
+                    _coreMaskWith = NextLog2(maxCoreIdPerPackage);
                     break;
-                case Vendor.AMD:
+                case Vendor.Amd:
                     uint corePerPackage;
                     if (maxCpuidExt >= 8)
                         corePerPackage = (ExtData[8, 2] & 0xFF) + 1;
                     else
                         corePerPackage = 1;
-                    threadMaskWith = 0;
-                    coreMaskWith = NextLog2(corePerPackage);
+                    _threadMaskWith = 0;
+                    _coreMaskWith = NextLog2(corePerPackage);
 
                     if (Family == 0x17)
                     {
@@ -164,34 +155,34 @@ namespace OpenHardwareMonitor.Hardware.CPU
                         // cores per DIE 
                         // we need this for Ryzen 5 (4 cores, 8 threads) ans Ryzen 6 (6 cores, 12 threads) 
                         // Ryzen 5: [core0][core1][dummy][dummy][core2][core3] (Core0 EBX = 00080800, Core2 EBX = 08080800) 
-                        var max_cores_per_die = (ExtData[8, 2] >> 12) & 0xF;
-                        switch (max_cores_per_die)
+                        var maxCoresPerDie = (ExtData[8, 2] >> 12) & 0xF;
+                        switch (maxCoresPerDie)
                         {
                             case 0x04: // Ryzen 
-                                coreMaskWith = NextLog2(16);
+                                _coreMaskWith = NextLog2(16);
                                 break;
                             case 0x05: // Threadripper 
-                                coreMaskWith = NextLog2(32);
+                                _coreMaskWith = NextLog2(32);
                                 break;
                             case 0x06: // Epic 
-                                coreMaskWith = NextLog2(64);
+                                _coreMaskWith = NextLog2(64);
                                 break;
                         }
                     }
 
                     break;
                 default:
-                    threadMaskWith = 0;
-                    coreMaskWith = 0;
+                    _threadMaskWith = 0;
+                    _coreMaskWith = 0;
                     break;
             }
 
-            ProcessorId = ApicId >> (int) (coreMaskWith + threadMaskWith);
-            CoreId = (ApicId >> (int) threadMaskWith)
-                     - (ProcessorId << (int) coreMaskWith);
+            ProcessorId = ApicId >> (int) (_coreMaskWith + _threadMaskWith);
+            CoreId = (ApicId >> (int) _threadMaskWith)
+                     - (ProcessorId << (int) _coreMaskWith);
             ThreadId = ApicId
-                       - (ProcessorId << (int) (coreMaskWith + threadMaskWith))
-                       - (CoreId << (int) threadMaskWith);
+                       - (ProcessorId << (int) (_coreMaskWith + _threadMaskWith))
+                       - (CoreId << (int) _threadMaskWith);
         }
 
         public string Name { get; } = "";

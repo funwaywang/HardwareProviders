@@ -16,244 +16,244 @@ namespace OpenHardwareMonitor.Hardware.HDD
     /// </summary>
     public static class SmartNames
     {
-        public static string AirflowTemperature => "Airflow Temperature";
+        public const string AirflowTemperature = "Airflow Temperature";
 
-        public static string Temperature => "Temperature";
+        public const string Temperature = "Temperature";
 
-        public static string RetiredBlockCount => "Retired Block Count";
+        public const string RetiredBlockCount = "Retired Block Count";
 
-        public static string ProgramFailCount => "Program Fail Count";
+        public const string ProgramFailCount = "Program Fail Count";
 
-        public static string EraseFailCount => "Erase Fail Count";
+        public const string EraseFailCount = "Erase Fail Count";
 
-        public static string UnexpectedPowerLossCount => "Unexpected Power Loss Count";
+        public const string UnexpectedPowerLossCount = "Unexpected Power Loss Count";
 
-        public static string WearRangeDelta => "Wear Range Delta";
+        public const string WearRangeDelta = "Wear Range Delta";
 
-        public static string AlternativeProgramFailCount => "Alternative Program Fail Count";
+        public const string AlternativeProgramFailCount = "Alternative Program Fail Count";
 
-        public static string AlternativeEraseFailCount => "Alternative Erase Fail Count";
+        public const string AlternativeEraseFailCount = "Alternative Erase Fail Count";
 
-        public static string UnrecoverableEcc => "Unrecoverable ECC";
+        public const string UnrecoverableEcc = "Unrecoverable ECC";
 
-        public static string ReallocationEventCount => "Reallocation Event Count";
+        public const string ReallocationEventCount = "Reallocation Event Count";
 
-        public static string RemainingLife => "Remaining Life";
+        public const string RemainingLife = "Remaining Life";
 
-        public static string AvailableReservedSpace => "Available Reserved Space";
+        public const string AvailableReservedSpace = "Available Reserved Space";
 
-        public static string CalibrationRetryCount => "Calibration Retry Count";
+        public const string CalibrationRetryCount = "Calibration Retry Count";
 
-        public static string CommandTimeout => "Command Timeout";
+        public const string CommandTimeout = "Command Timeout";
 
-        public static string CurrentPendingSectorCount => "Current Pending Sector Count";
+        public const string CurrentPendingSectorCount = "Current Pending Sector Count";
 
-        public static string DataAddressMarkErrors => "Data Address Mark errors";
+        public const string DataAddressMarkErrors = "Data Address Mark errors";
 
-        public static string DiskShift => "Disk Shift";
+        public const string DiskShift = "Disk Shift";
 
-        public static string DriveTemperature => "Drive Temperature";
+        public const string DriveTemperature = "Drive Temperature";
 
-        public static string EmergencyRetractCycleCount => "Emergency Retract Cycle Count";
+        public const string EmergencyRetractCycleCount = "Emergency Retract Cycle Count";
 
-        public static string EndToEndError => "End-to-End error";
+        public const string EndToEndError = "End-to-End error";
 
-        public static string EnduranceRemaining => "Endurance Remaining";
+        public const string EnduranceRemaining = "Endurance Remaining";
 
-        public static string FlyingHeight => "Flying Height";
+        public const string FlyingHeight = "Flying Height";
 
-        public static string FreeFallProtection => "Free Fall Protection";
+        public const string FreeFallProtection = "Free Fall Protection";
 
-        public static string GmrHeadAmplitude => "GMR Head Amplitude";
+        public const string GmrHeadAmplitude = "GMR Head Amplitude";
 
-        public static string GSenseErrorRate => "G-sense Error Rate";
+        public const string GSenseErrorRate = "G-sense Error Rate";
 
-        public static string HardwareEccRecovered => "Hardware ECC Recovered";
+        public const string HardwareEccRecovered = "Hardware ECC Recovered";
 
-        public static string HeadFlyingHours => "Head Flying Hours";
+        public const string HeadFlyingHours = "Head Flying Hours";
 
-        public static string HeadStability => "Head Stability";
+        public const string HeadStability = "Head Stability";
 
-        public static string HighFlyWrites => "High Fly Writes";
+        public const string HighFlyWrites = "High Fly Writes";
 
-        public static string InducedOpVibrationDetection => "Induced Op-Vibration Detection";
+        public const string InducedOpVibrationDetection = "Induced Op-Vibration Detection";
 
-        public static string LoadedHours => "Loaded Hours";
+        public const string LoadedHours = "Loaded Hours";
 
-        public static string LoadFriction => "Load Friction";
+        public const string LoadFriction = "Load Friction";
 
-        public static string LoadInTime => "Load 'In'-time";
+        public const string LoadInTime = "Load 'In'-time";
 
-        public static string LoadUnloadCycleCount => "Load/Unload Cycle Count";
+        public const string LoadUnloadCycleCount = "Load/Unload Cycle Count";
 
-        public static string LoadUnloadCycleCountFujitsu => "Load/Unload Cycle Count (Fujitus)";
+        public const string LoadUnloadCycleCountFujitsu = "Load/Unload Cycle Count (Fujitus)";
 
-        public static string LoadUnloadRetryCount => "Load/Unload Retry Count";
+        public const string LoadUnloadRetryCount = "Load/Unload Retry Count";
 
-        public static string MediaWearoutIndicator => "Media Wearout Indicator";
+        public const string MediaWearoutIndicator = "Media Wearout Indicator";
 
-        public static string MultiZoneErrorRate => "Multi-Zone Error Rate";
+        public const string MultiZoneErrorRate = "Multi-Zone Error Rate";
 
-        public static string OfflineSeekPerformance => "Offline Seek Performance";
+        public const string OfflineSeekPerformance = "Offline Seek Performance";
 
-        public static string PowerCycleCount => "Power Cycle Count";
+        public const string PowerCycleCount = "Power Cycle Count";
 
-        public static string PowerOffRetractCycle => "Power-Off Retract Cycle";
+        public const string PowerOffRetractCycle = "Power-Off Retract Cycle";
 
-        public static string PowerOnHours => "Power-On Hours (POH)";
+        public const string PowerOnHours = "Power-On Hours (POH)";
 
-        public static string ReadChannelMargin => "Read Channel Margin";
+        public const string ReadChannelMargin = "Read Channel Margin";
 
-        public static string ReadErrorRate => "Read Error Rate";
+        public const string ReadErrorRate = "Read Error Rate";
 
-        public static string ReadErrorRetryRate => "Read Error Retry Rate";
+        public const string ReadErrorRetryRate = "Read Error Retry Rate";
 
-        public static string ReallocatedSectorsCount => "Reallocated Sectors Count";
+        public const string ReallocatedSectorsCount = "Reallocated Sectors Count";
 
-        public static string ReportedUncorrectableErrors => "Reported Uncorrectable Errors";
+        public const string ReportedUncorrectableErrors = "Reported Uncorrectable Errors";
 
-        public static string RunOutCancel => "Run Out Cancel";
+        public const string RunOutCancel = "Run Out Cancel";
 
-        public static string SataDownshiftErrorCount => "SATA Downshift Error Count";
+        public const string SataDownshiftErrorCount = "SATA Downshift Error Count";
 
-        public static string SeekErrorRate => "Seek Error Rate";
+        public const string SeekErrorRate = "Seek Error Rate";
 
-        public static string SeekTimePerformance => "Seek Time Performance";
+        public const string SeekTimePerformance = "Seek Time Performance";
 
-        public static string ShockDuringWrite => "Shock During Write";
+        public const string ShockDuringWrite = "Shock During Write";
 
-        public static string SoftEccCorrection => "Soft ECC Correction";
+        public const string SoftEccCorrection = "Soft ECC Correction";
 
-        public static string SoftReadErrorRate => "Soft Read Error Rate";
+        public const string SoftReadErrorRate = "Soft Read Error Rate";
 
-        public static string SpinBuzz => "Spin Buzz";
+        public const string SpinBuzz = "Spin Buzz";
 
-        public static string SpinHighCurrent => "Spin High Current";
+        public const string SpinHighCurrent = "Spin High Current";
 
-        public static string SpinRetryCount => "Spin Retry Count";
+        public const string SpinRetryCount = "Spin Retry Count";
 
-        public static string SpinUpTime => "Spin-Up Time";
+        public const string SpinUpTime = "Spin-Up Time";
 
-        public static string StartStopCount => "Start/Stop Count";
+        public const string StartStopCount = "Start/Stop Count";
 
-        public static string TaCounterDetected => "TA Counter Detected";
+        public const string TaCounterDetected = "TA Counter Detected";
 
-        public static string TemperatureDifferenceFrom100 => "Temperature Difference from 100";
+        public const string TemperatureDifferenceFrom100 = "Temperature Difference from 100";
 
-        public static string ThermalAsperityRate => "Thermal Asperity Rate (TAR)";
+        public const string ThermalAsperityRate = "Thermal Asperity Rate (TAR)";
 
-        public static string ThroughputPerformance => "Throughput Performance";
+        public const string ThroughputPerformance = "Throughput Performance";
 
-        public static string TorqueAmplificationCount => "Torque Amplification Count";
+        public const string TorqueAmplificationCount = "Torque Amplification Count";
 
-        public static string TotalLbasRead => "Total LBAs Read";
+        public const string TotalLbasRead = "Total LBAs Read";
 
-        public static string TotalLbasWritten => "Total LBAs Written";
+        public const string TotalLbasWritten = "Total LBAs Written";
 
-        public static string TransferErrorRate => "Transfer Error Rate";
+        public const string TransferErrorRate = "Transfer Error Rate";
 
-        public static string UltraDmaCrcErrorCount => "UltraDMA CRC Error Count";
+        public const string UltraDmaCrcErrorCount = "UltraDMA CRC Error Count";
 
-        public static string UncorrectableSectorCount => "Uncorrectable Sector Count";
+        public const string UncorrectableSectorCount = "Uncorrectable Sector Count";
 
-        public static string Unknown => "Unknown";
+        public const string Unknown = "Unknown";
 
-        public static string VibrationDuringWrite => "Vibration During Write";
+        public const string VibrationDuringWrite = "Vibration During Write";
 
-        public static string WriteErrorRate => "Write Error Rate";
+        public const string WriteErrorRate = "Write Error Rate";
 
-        public static string RecalibrationRetries => "Recalibration Retries";
+        public const string RecalibrationRetries = "Recalibration Retries";
 
-        public static string LoadCycleCount => "Load Cycle Count";
+        public const string LoadCycleCount = "Load Cycle Count";
 
-        public static string AlternativeGSenseErrorRate => "Alternative G-Sense Error Rate";
+        public const string AlternativeGSenseErrorRate = "Alternative G-Sense Error Rate";
 
-        public static string InitialBadBlockCount => "Initial Bad Block Count";
+        public const string InitialBadBlockCount = "Initial Bad Block Count";
 
-        public static string ProgramFailure => "Program Failure";
+        public const string ProgramFailure = "Program Failure";
 
-        public static string EraseFailure => "Erase Failure";
+        public const string EraseFailure = "Erase Failure";
 
-        public static string ReadFailure => "Read Failure";
+        public const string ReadFailure = "Read Failure";
 
-        public static string SectorsRead => "Sectors Read";
+        public const string SectorsRead = "Sectors Read";
 
-        public static string SectorsWritten => "Sectors Written";
+        public const string SectorsWritten = "Sectors Written";
 
-        public static string ReadCommands => "Read Commands";
+        public const string ReadCommands = "Read Commands";
 
-        public static string WriteCommands => "Write Commands";
+        public const string WriteCommands = "Write Commands";
 
-        public static string BitErrors => "Bit Errors";
+        public const string BitErrors = "Bit Errors";
 
-        public static string CorrectedErrors => "Corrected Errors";
+        public const string CorrectedErrors = "Corrected Errors";
 
-        public static string BadBlockFullFlag => "Bad Block Full Flag";
+        public const string BadBlockFullFlag = "Bad Block Full Flag";
 
-        public static string MaxCellCycles => "Max Cell Cycles";
+        public const string MaxCellCycles = "Max Cell Cycles";
 
-        public static string MinErase => "Min Erase";
+        public const string MinErase = "Min Erase";
 
-        public static string MaxErase => "Max Erase";
+        public const string MaxErase = "Max Erase";
 
-        public static string AverageEraseCount => "Average Erase Count";
+        public const string AverageEraseCount = "Average Erase Count";
 
-        public static string UnknownUnique => "Unknown Unique";
+        public const string UnknownUnique = "Unknown Unique";
 
-        public static string SataErrorCountCrc => "SATA Error Count CRC";
+        public const string SataErrorCountCrc = "SATA Error Count CRC";
 
-        public static string SataErrorCountHandshake => "SATA Error Count Handshake";
+        public const string SataErrorCountHandshake = "SATA Error Count Handshake";
 
-        public static string UnsafeShutdownCount => "Unsafe Shutdown Count";
+        public const string UnsafeShutdownCount = "Unsafe Shutdown Count";
 
-        public static string HostWrites => "Host Writes";
+        public const string HostWrites = "Host Writes";
 
-        public static string HostReads => "Host Reads";
+        public const string HostReads = "Host Reads";
 
-        public static string MediaWearOutIndicator => "Media Wear Out Indicator";
+        public const string MediaWearOutIndicator = "Media Wear Out Indicator";
 
-        public static string ProgramFailCountChip => "Program Fail Count (Chip)";
+        public const string ProgramFailCountChip = "Program Fail Count (Chip)";
 
-        public static string EraseFailCountChip => "Erase Fail Count (Chip)";
+        public const string EraseFailCountChip = "Erase Fail Count (Chip)";
 
-        public static string WearLevelingCount => "Wear Leveling Count";
+        public const string WearLevelingCount = "Wear Leveling Count";
 
-        public static string UsedReservedBlockCountChip => "Used Reserved Block Count (Chip)";
+        public const string UsedReservedBlockCountChip = "Used Reserved Block Count (Chip)";
 
-        public static string UsedReservedBlockCountTotal => "Used Reserved Block Count (Total)";
+        public const string UsedReservedBlockCountTotal = "Used Reserved Block Count (Total)";
 
-        public static string ProgramFailCountTotal => "Program Fail Count (Total)";
+        public const string ProgramFailCountTotal = "Program Fail Count (Total)";
 
-        public static string EraseFailCountTotal => "Erase Fail Count (Total)";
+        public const string EraseFailCountTotal = "Erase Fail Count (Total)";
 
-        public static string RuntimeBadBlockTotal => "Runtime Bad Block Total";
+        public const string RuntimeBadBlockTotal = "Runtime Bad Block Total";
 
-        public static string UncorrectableErrorCount => "Uncorrectable Error Count";
+        public const string UncorrectableErrorCount = "Uncorrectable Error Count";
 
-        public static string TemperatureExceedCount => "Temperature Exceed Count";
+        public const string TemperatureExceedCount = "Temperature Exceed Count";
 
-        public static string ECCRate => "ECC Rate";
+        public const string ECCRate = "ECC Rate";
 
-        public static string OffLineUncorrectableErrorCount => "Off-Line Uncorrectable Error Count";
+        public const string OffLineUncorrectableErrorCount = "Off-Line Uncorrectable Error Count";
 
-        public static string CRCErrorCount => "CRC Error Count";
+        public const string CRCErrorCount = "CRC Error Count";
 
-        public static string SupercapStatus => "Supercap Status";
+        public const string SupercapStatus = "Supercap Status";
 
-        public static string ExceptionModeStatus => "Exception Mode Status";
+        public const string ExceptionModeStatus = "Exception Mode Status";
 
-        public static string ControllerWritesToNAND => "Controller Writes to NAND";
+        public const string ControllerWritesToNAND = "Controller Writes to NAND";
 
-        public static string HostWritesToController => "Host Writes to Controller";
+        public const string HostWritesToController = "Host Writes to Controller";
 
-        public static string RawReadErrorRate => "Raw Read Error Rate";
+        public const string RawReadErrorRate = "Raw Read Error Rate";
 
-        public static string NewFailingBlockCount => "New Failing Block Count";
+        public const string NewFailingBlockCount = "New Failing Block Count";
 
-        public static string Non4kAlignedAccess => "Non-4k Aligned Access";
+        public const string Non4kAlignedAccess = "Non-4k Aligned Access";
 
-        public static string FactoryBadBlockCount => "Factory Bad Block Count";
+        public const string FactoryBadBlockCount = "Factory Bad Block Count";
 
-        public static string PowerRecoveryCount => "Power Recovery Count";
+        public const string PowerRecoveryCount = "Power Recovery Count";
     }
 }

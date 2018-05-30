@@ -8,16 +8,18 @@
 	
 */
 
-namespace OpenHardwareMonitor.Hardware.CPU
-{
-    internal abstract class AMDCPU : GenericCPU
-    {
-        private const byte PCI_BUS = 0;
-        private const byte PCI_BASE_DEVICE = 0x18;
-        private const byte DEVICE_VENDOR_ID_REGISTER = 0;
-        private const ushort AMD_VENDOR_ID = 0x1022;
+using OpenHardwareMonitor.Hardware;
 
-        public AMDCPU(int processorIndex, CPUID[][] cpuid)
+namespace HardwareProviders.CPU
+{
+    internal abstract class Amdcpu : Cpu
+    {
+        private const byte PciBus = 0;
+        private const byte PciBaseDevice = 0x18;
+        private const byte DeviceVendorIdRegister = 0;
+        private const ushort AmdVendorId = 0x1022;
+
+        protected Amdcpu(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
         }
@@ -25,16 +27,15 @@ namespace OpenHardwareMonitor.Hardware.CPU
         protected uint GetPciAddress(byte function, ushort deviceId)
         {
             // assemble the pci address
-            var address = Ring0.GetPciAddress(PCI_BUS,
-                (byte) (PCI_BASE_DEVICE + processorIndex), function);
+            var address = Ring0.GetPciAddress(PciBus,
+                (byte) (PciBaseDevice + ProcessorIndex), function);
 
             // verify that we have the correct bus, device and function
-            uint deviceVendor;
             if (!Ring0.ReadPciConfig(
-                address, DEVICE_VENDOR_ID_REGISTER, out deviceVendor))
+                address, DeviceVendorIdRegister, out var deviceVendor))
                 return Ring0.InvalidPciAddress;
 
-            if (deviceVendor != ((deviceId << 16) | AMD_VENDOR_ID))
+            if (deviceVendor != ((deviceId << 16) | AmdVendorId))
                 return Ring0.InvalidPciAddress;
 
             return address;

@@ -13,8 +13,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Security.Permissions;
+using HardwareProviders.CPU;
 using OpenHardwareMonitor.Hardware.ATI;
-using OpenHardwareMonitor.Hardware.CPU;
 using OpenHardwareMonitor.Hardware.HDD;
 using OpenHardwareMonitor.Hardware.Heatmaster;
 using OpenHardwareMonitor.Hardware.Mainboard;
@@ -66,9 +66,9 @@ namespace OpenHardwareMonitor.Hardware
                 if (open && value != cpuEnabled)
                 {
                     if (value)
-                        Add(new CPUGroup());
+                        Add(new CpuGroup(Cpu.Discover()));
                     else
-                        RemoveType<CPUGroup>();
+                        RemoveType<CpuGroup>();
                 }
 
                 cpuEnabled = value;
@@ -307,7 +307,7 @@ namespace OpenHardwareMonitor.Hardware
                 Add(new MainboardGroup());
 
             if (cpuEnabled)
-                Add(new CPUGroup());
+                Add(new CpuGroup(Cpu.Discover()));
 
             if (ramEnabled)
                 Add(new RAMGroup());
