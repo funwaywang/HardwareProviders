@@ -14,9 +14,9 @@ namespace OpenHardwareMonitor.Hardware.RAM
     {
         private readonly Hardware[] hardware;
 
-        public RAMGroup(SMBIOS smbios, ISettings settings)
+        public RAMGroup(ISettings settings)
         {
-            hardware = new Hardware[] {new GenericRAM("Generic Memory", settings)};
+            hardware = new Hardware[] {new GenericRAM("Generic Memory")};
         }
 
         public string GetReport()

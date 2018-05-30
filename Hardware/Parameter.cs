@@ -36,15 +36,13 @@ namespace OpenHardwareMonitor.Hardware
 
         public Parameter(ParameterDescription description, ISensor sensor)
         {
-            Sensor = sensor;
             this.description = description;
             Value = description.DefaultValue;
+
+            Identifier = new Identifier(sensor.Identifier, "parameter", Name.Replace(" ", "").ToLowerInvariant());
         }
 
-        public ISensor Sensor { get; }
-
-        public Identifier Identifier => new Identifier(Sensor.Identifier, "parameter",
-            Name.Replace(" ", "").ToLowerInvariant());
+        public Identifier Identifier { get; }
 
         public string Name => description.Name;
 

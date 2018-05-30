@@ -39,7 +39,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
         private FT_HANDLE handle;
         private byte[] primaryData = new byte[0];
 
-        public TBalancer(int portIndex, byte protocolVersion, ISettings settings)
+        public TBalancer(int portIndex, byte protocolVersion)
             : base("T-Balancer bigNG", new Identifier("bigng",
                 portIndex.ToString(CultureInfo.InvariantCulture)))
         {

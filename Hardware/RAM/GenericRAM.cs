@@ -19,7 +19,7 @@ namespace OpenHardwareMonitor.Hardware.RAM
         private readonly Sensor loadSensor;
         private readonly Sensor usedMemory;
 
-        public GenericRAM(string name, ISettings settings)
+        public GenericRAM(string name)
             : base(name, new Identifier("ram"))
         {
             loadSensor = new Sensor("Memory", 0, SensorType.Load, this);

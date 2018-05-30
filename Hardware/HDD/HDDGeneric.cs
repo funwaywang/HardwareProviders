@@ -121,8 +121,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
                     })
             };
 
-        public GenericHarddisk(ISmart smart, string name, string firmwareRevision,
-            int index, ISettings settings)
+        public GenericHarddisk(ISmart smart, string name, string firmwareRevision,int index)
             : base(smart, name, firmwareRevision, index, smartAttributes)
         {
         }

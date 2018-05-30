@@ -21,7 +21,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
         private readonly List<TBalancer> hardware = new List<TBalancer>();
         private readonly StringBuilder report = new StringBuilder();
 
-        public TBalancerGroup(ISettings settings)
+        public TBalancerGroup()
         {
             uint numDevices;
             try
@@ -156,7 +156,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
                 if (isValid)
                 {
                     report.AppendLine("Status: OK");
-                    hardware.Add(new TBalancer(i, protocolVersion, settings));
+                    hardware.Add(new TBalancer(i, protocolVersion));
                 }
 
                 if (i < numDevices - 1)

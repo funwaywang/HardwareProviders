@@ -12,7 +12,6 @@ namespace OpenHardwareMonitor.Hardware
 {
     public interface IParameter : IElement
     {
-        ISensor Sensor { get; }
         Identifier Identifier { get; }
 
         string Name { get; }

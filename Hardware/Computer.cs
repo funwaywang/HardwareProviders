@@ -98,7 +98,7 @@ namespace OpenHardwareMonitor.Hardware
                 if (open && value != ramEnabled)
                 {
                     if (value)
-                        Add(new RAMGroup(smbios, settings));
+                        Add(new RAMGroup(settings));
                     else
                         RemoveType<RAMGroup>();
                 }
@@ -143,7 +143,7 @@ namespace OpenHardwareMonitor.Hardware
                 {
                     if (value)
                     {
-                        Add(new TBalancerGroup(settings));
+                        Add(new TBalancerGroup());
                         Add(new HeatmasterGroup());
                     }
                     else
@@ -325,7 +325,7 @@ namespace OpenHardwareMonitor.Hardware
                 Add(new CPUGroup(settings));
 
             if (ramEnabled)
-                Add(new RAMGroup(smbios, settings));
+                Add(new RAMGroup(settings));
 
             if (gpuEnabled)
             {
@@ -335,7 +335,7 @@ namespace OpenHardwareMonitor.Hardware
 
             if (fanControllerEnabled)
             {
-                Add(new TBalancerGroup(settings));
+                Add(new TBalancerGroup());
                 Add(new HeatmasterGroup());
             }
 

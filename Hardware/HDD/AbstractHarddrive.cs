@@ -92,8 +92,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
 
         public override HardwareType HardwareType => HardwareType.HDD;
 
-        public static AbstractHarddrive CreateInstance(ISmart smart,
-            int driveIndex, ISettings settings)
+        public static AbstractHarddrive CreateInstance(ISmart smart, int driveIndex, ISettings settings)
         {
             var deviceHandle = smart.OpenDrive(driveIndex);
 
@@ -191,8 +190,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
                 // check if there is a matching name prefix for this type
                 foreach (var prefix in namePrefixes)
                     if (name.StartsWith(prefix.Prefix, StringComparison.InvariantCulture))
-                        return Activator.CreateInstance(type, smart, name, firmwareRevision,
-                            driveIndex, settings) as AbstractHarddrive;
+                        return Activator.CreateInstance(type, smart, name, firmwareRevision, driveIndex) as AbstractHarddrive;
             }
 
             // no matching type has been found

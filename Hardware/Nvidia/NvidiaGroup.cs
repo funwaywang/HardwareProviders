@@ -72,9 +72,8 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
                     {
                         var handlesFromDisplay =
                             new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
-                        uint countFromDisplay;
                         if (NVAPI.NvAPI_GetPhysicalGPUsFromDisplay(displayHandle,
-                                handlesFromDisplay, out countFromDisplay) == NvStatus.OK)
+                                handlesFromDisplay, out var countFromDisplay) == NvStatus.OK)
                             for (var j = 0; j < countFromDisplay; j++)
                                 if (!displayHandles.ContainsKey(handlesFromDisplay[j]))
                                     displayHandles.Add(handlesFromDisplay[j], displayHandle);
@@ -87,8 +86,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
 
             for (var i = 0; i < count; i++)
             {
-                NvDisplayHandle displayHandle;
-                displayHandles.TryGetValue(handles[i], out displayHandle);
+                displayHandles.TryGetValue(handles[i], out var displayHandle);
                 hardware.Add(new NvidiaGPU(i, handles[i], displayHandle, settings));
             }
 

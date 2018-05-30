@@ -46,27 +46,22 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
             this.mainboard = mainboard;
             this.superIO = superIO;
 
-            IList<Voltage> v;
-            IList<Temperature> t;
-            IList<Fan> f;
-            IList<Ctrl> c;
             GetBoardSpecificConfiguration(superIO, manufacturer, model,
-                out v, out t, out f, out c,
+                out IList<Voltage> voltages, out IList<Temperature> temperatures, out IList<Fan> fans, out IList<Ctrl> controls,
                 out readVoltage, out readTemperature, out readFan, out readControl,
                 out postUpdate, out mutex);
 
-            CreateVoltageSensors(superIO, settings, v);
-            CreateTemperatureSensors(superIO, settings, t);
-            CreateFanSensors(superIO, settings, f);
-            CreateControlSensors(superIO, settings, c);
+            CreateVoltageSensors(superIO, voltages);
+            CreateTemperatureSensors(superIO, temperatures);
+            CreateFanSensors(superIO, fans);
+            CreateControlSensors(superIO, settings, controls);
         }
 
         public override HardwareType HardwareType => HardwareType.SuperIO;
 
         public override IHardware Parent => mainboard;
 
-        private void CreateControlSensors(ISuperIO superIO, ISettings settings,
-            IList<Ctrl> c)
+        private void CreateControlSensors(ISuperIO superIO, ISettings settings, IEnumerable<Ctrl> c)
         {
             foreach (var ctrl in c)
             {
@@ -108,8 +103,6 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                         case ControlMode.Software:
                             superIO.SetControl(index, (byte) (control.SoftwareValue * 2.55));
                             break;
-                        default:
-                            break;
                     }
 
                     sensor.Control = control;
@@ -119,8 +112,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
             }
         }
 
-        private void CreateFanSensors(ISuperIO superIO, ISettings settings,
-            IList<Fan> f)
+        private void CreateFanSensors(ISuperIO superIO, IEnumerable<Fan> f)
         {
             foreach (var fan in f)
                 if (fan.Index < superIO.Fans.Length)
@@ -131,8 +123,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                 }
         }
 
-        private void CreateTemperatureSensors(ISuperIO superIO, ISettings settings,
-            IList<Temperature> t)
+        private void CreateTemperatureSensors(ISuperIO superIO, IEnumerable<Temperature> t)
         {
             foreach (var temperature in t)
                 if (temperature.Index < superIO.Temperatures.Length)
@@ -146,8 +137,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                 }
         }
 
-        private void CreateVoltageSensors(ISuperIO superIO, ISettings settings,
-            IList<Voltage> v)
+        private void CreateVoltageSensors(ISuperIO superIO, IEnumerable<Voltage> v)
         {
             const string formula = "Voltage = value + (value - Vf) * Ri / Rf.";
             foreach (var voltage in v)
