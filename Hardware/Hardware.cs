@@ -17,14 +17,10 @@ namespace OpenHardwareMonitor.Hardware
     {
         protected readonly ListSet<ISensor> active = new ListSet<ISensor>();
 
-        protected readonly string name;
-        private string customName;
-
-        public Hardware(string name, Identifier identifier)
+        protected Hardware(string name, Identifier identifier)
         {
             Identifier = identifier;
-            this.name = name;
-            customName = name;
+            Name = name;
         }
 
         public IHardware[] SubHardware => new IHardware[0];
@@ -33,14 +29,9 @@ namespace OpenHardwareMonitor.Hardware
 
         public virtual ISensor[] Sensors => active.ToArray();
 
-        public string Name
-        {
-            get => customName;
-            set { customName = !string.IsNullOrEmpty(value) ? value : name; }
-        }
+        public string Name { get; set; }
 
         public Identifier Identifier { get; }
-
 
         public abstract HardwareType HardwareType { get; }
 
@@ -67,23 +58,20 @@ namespace OpenHardwareMonitor.Hardware
         protected virtual void ActivateSensor(ISensor sensor)
         {
             if (active.Add(sensor))
-                if (SensorAdded != null)
-                    SensorAdded(sensor);
+                SensorAdded?.Invoke(sensor);
         }
 
         protected virtual void DeactivateSensor(ISensor sensor)
         {
             if (active.Remove(sensor))
-                if (SensorRemoved != null)
-                    SensorRemoved(sensor);
+                SensorRemoved?.Invoke(sensor);
         }
 
         public event HardwareEventHandler Closing;
 
         public virtual void Close()
         {
-            if (Closing != null)
-                Closing(this);
+            Closing?.Invoke(this);
         }
 
 #pragma warning disable 67

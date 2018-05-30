@@ -9,7 +9,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace OpenHardwareMonitor.Hardware
@@ -19,10 +18,13 @@ namespace OpenHardwareMonitor.Hardware
         private const char Separator = '/';
         private readonly string identifier;
 
+        public Identifier(string s)
+        {
+            identifier = s;
+        }
+
         public Identifier(params string[] identifiers)
         {
-            CheckIdentifiers(identifiers);
-
             var s = new StringBuilder();
             for (var i = 0; i < identifiers.Length; i++)
             {
@@ -35,8 +37,6 @@ namespace OpenHardwareMonitor.Hardware
 
         public Identifier(Identifier identifier, params string[] extensions)
         {
-            CheckIdentifiers(extensions);
-
             var s = new StringBuilder();
             s.Append(identifier);
             for (var i = 0; i < extensions.Length; i++)
@@ -54,13 +54,6 @@ namespace OpenHardwareMonitor.Hardware
                 return 1;
             return string.Compare(identifier, other.identifier,
                 StringComparison.Ordinal);
-        }
-
-        private static void CheckIdentifiers(IEnumerable<string> identifiers)
-        {
-            foreach (var s in identifiers)
-                if (s.Contains(" ") || s.Contains(Separator.ToString()))
-                    throw new ArgumentException("Invalid identifier");
         }
 
         public override string ToString()

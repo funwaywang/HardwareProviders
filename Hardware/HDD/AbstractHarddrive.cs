@@ -313,7 +313,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
 
             r.AppendLine(GetType().Name);
             r.AppendLine();
-            r.AppendLine("Drive name: " + name);
+            r.AppendLine("Drive name: " + Name);
             r.AppendLine("Firmware version: " + firmwareRevision);
             r.AppendLine();
 

@@ -246,7 +246,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
             }
 
             r.AppendLine();
-            r.AppendFormat("Name: {0}{1}", name, Environment.NewLine);
+            r.AppendFormat("Name: {0}{1}", Name, Environment.NewLine);
             r.AppendFormat("Number of Cores: {0}{1}", coreCount,
                 Environment.NewLine);
             r.AppendFormat("Threads per Core: {0}{1}", cpuid[0].Length,

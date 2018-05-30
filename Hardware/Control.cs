@@ -54,8 +54,7 @@ namespace OpenHardwareMonitor.Hardware
                 if (mode != value)
                 {
                     mode = value;
-                    if (ControlModeChanged != null)
-                        ControlModeChanged(this);
+                    ControlModeChanged?.Invoke(this);
                     settings.SetValue(new Identifier(Identifier, "mode").ToString(),
                         ((int) mode).ToString(CultureInfo.InvariantCulture));
                 }
@@ -70,8 +69,7 @@ namespace OpenHardwareMonitor.Hardware
                 if (softwareValue != value)
                 {
                     softwareValue = value;
-                    if (SoftwareControlValueChanged != null)
-                        SoftwareControlValueChanged(this);
+                    SoftwareControlValueChanged?.Invoke(this);
                     settings.SetValue(new Identifier(Identifier,
                             "value").ToString(),
                         value.ToString(CultureInfo.InvariantCulture));

@@ -17,7 +17,6 @@ namespace OpenHardwareMonitor.Hardware
 {
     internal class Sensor : ISensor
     {
-        private readonly string defaultName;
         private readonly Hardware hardware;
         private readonly ReadOnlyArray<IParameter> parameters;
         private readonly ISettings settings;
@@ -27,7 +26,6 @@ namespace OpenHardwareMonitor.Hardware
 
         private int count;
         private float? currentValue;
-        private string name;
 
         private float sum;
 
@@ -54,11 +52,10 @@ namespace OpenHardwareMonitor.Hardware
             this.hardware = hardware;
             var parameters = new Parameter[parameterDescriptions == null ? 0 : parameterDescriptions.Length];
             for (var i = 0; i < parameters.Length; i++)
-                parameters[i] = new Parameter(parameterDescriptions[i], this);
+                parameters[i] = new Parameter(parameterDescriptions[i]);
             this.parameters = parameters;
 
-            defaultName = name;
-            this.name =  name;
+            Name =  name;
         }
 
         public IHardware Hardware => hardware;
@@ -69,17 +66,7 @@ namespace OpenHardwareMonitor.Hardware
             SensorType.ToString().ToLowerInvariant(),
             Index.ToString(CultureInfo.InvariantCulture));
 
-        public string Name
-        {
-            get => name;
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                    name = value;
-                else
-                    name = defaultName;
-            }
-        }
+        public string Name { get; set; }
 
         public int Index { get; }
 

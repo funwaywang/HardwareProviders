@@ -9,7 +9,6 @@
 */
 
 using System;
-using System.Globalization;
 
 namespace OpenHardwareMonitor.Hardware
 {
@@ -34,12 +33,12 @@ namespace OpenHardwareMonitor.Hardware
     {
         private readonly ParameterDescription description;
 
-        public Parameter(ParameterDescription description, ISensor sensor)
+        public Parameter(ParameterDescription description)
         {
             this.description = description;
             Value = description.DefaultValue;
 
-            Identifier = new Identifier(sensor.Identifier, "parameter", Name.Replace(" ", "").ToLowerInvariant());
+            Identifier = new Identifier("parameter", Name.Replace(" ", "").ToLowerInvariant());
         }
 
         public Identifier Identifier { get; }
