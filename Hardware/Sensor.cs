@@ -57,7 +57,7 @@ namespace OpenHardwareMonitor.Hardware
             this.hardware = hardware;
             var parameters = new Parameter[parameterDescriptions == null ? 0 : parameterDescriptions.Length];
             for (var i = 0; i < parameters.Length; i++)
-                parameters[i] = new Parameter(parameterDescriptions[i], this, settings);
+                parameters[i] = new Parameter(parameterDescriptions[i], this);
             this.parameters = parameters;
 
             this.settings = settings;

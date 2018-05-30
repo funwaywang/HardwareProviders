@@ -18,7 +18,5 @@ namespace OpenHardwareMonitor.Hardware
         string Name { get; }
         string Description { get; }
         float Value { get; set; }
-        float DefaultValue { get; }
-        bool IsDefault { get; set; }
     }
 }

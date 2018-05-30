@@ -56,7 +56,6 @@ namespace OpenHardwareMonitor.GUI {
       public ParameterRow(IParameter parameter){
         this.parameter = parameter;
         this.value = parameter.Value;
-        this.isDefault = parameter.IsDefault;
       }
 
       public string Name {
@@ -77,8 +76,6 @@ namespace OpenHardwareMonitor.GUI {
         get { return isDefault; }
         set {
           isDefault = value;
-          if (value)
-            this.value = parameter.DefaultValue;
           NotifyPropertyChanged("Default");
           NotifyPropertyChanged("Value");
         }
@@ -114,7 +111,6 @@ namespace OpenHardwareMonitor.GUI {
     private void okButton_Click(object sender, EventArgs e) {
       foreach (ParameterRow row in parameterRows) {
         if (row.Default) {
-          row.parameter.IsDefault = true;
         } else {
           row.parameter.Value = row.Value;
         }

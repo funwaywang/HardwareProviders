@@ -395,11 +395,6 @@ namespace OpenHardwareMonitor.Hardware
                         innerSpace, sensor.Name, sensor.Identifier);
                     foreach (var parameter in sensor.Parameters)
                     {
-                        var innerInnerSpace = innerSpace + "|  ";
-                        w.WriteLine("{0}+- {1} : {2}",
-                            innerInnerSpace, parameter.Name,
-                            string.Format(CultureInfo.InvariantCulture, "{0} : {1}",
-                                parameter.DefaultValue, parameter.Value));
                     }
                 }
             }

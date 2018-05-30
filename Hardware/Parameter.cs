@@ -32,25 +32,13 @@ namespace OpenHardwareMonitor.Hardware
 
     internal class Parameter : IParameter
     {
-        private readonly ISettings settings;
         private readonly ParameterDescription description;
-        private bool isDefault;
-        private float value;
 
-        public Parameter(ParameterDescription description, ISensor sensor,
-            ISettings settings)
+        public Parameter(ParameterDescription description, ISensor sensor)
         {
             Sensor = sensor;
             this.description = description;
-            this.settings = settings;
-            isDefault = !settings.Contains(Identifier.ToString());
-            value = description.DefaultValue;
-            if (!isDefault)
-                if (!float.TryParse(settings.GetValue(Identifier.ToString(), "0"),
-                    NumberStyles.Float,
-                    CultureInfo.InvariantCulture,
-                    out value))
-                    value = description.DefaultValue;
+            Value = description.DefaultValue;
         }
 
         public ISensor Sensor { get; }
@@ -62,38 +50,12 @@ namespace OpenHardwareMonitor.Hardware
 
         public string Description => description.Description;
 
-        public float Value
-        {
-            get => value;
-            set
-            {
-                isDefault = false;
-                this.value = value;
-                settings.SetValue(Identifier.ToString(), value.ToString(
-                    CultureInfo.InvariantCulture));
-            }
-        }
-
-        public float DefaultValue => description.DefaultValue;
-
-        public bool IsDefault
-        {
-            get => isDefault;
-            set
-            {
-                isDefault = value;
-                if (value)
-                {
-                    this.value = description.DefaultValue;
-                    settings.Remove(Identifier.ToString());
-                }
-            }
-        }
+        public float Value { get; set; }
 
         public void Accept(IVisitor visitor)
         {
             if (visitor == null)
-                throw new ArgumentNullException("visitor");
+                throw new ArgumentNullException(nameof(visitor));
             visitor.VisitParameter(this);
         }
 
