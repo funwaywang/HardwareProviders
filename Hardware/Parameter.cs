@@ -37,11 +37,7 @@ namespace OpenHardwareMonitor.Hardware
         {
             this.description = description;
             Value = description.DefaultValue;
-
-            Identifier = new Identifier("parameter", Name.Replace(" ", "").ToLowerInvariant());
         }
-
-        public Identifier Identifier { get; }
 
         public string Name => description.Name;
 
