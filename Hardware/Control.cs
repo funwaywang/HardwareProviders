@@ -16,32 +16,17 @@ namespace OpenHardwareMonitor.Hardware
 
     internal class Control : IControl
     {
-        private readonly ISettings settings;
         private ControlMode mode;
         private float softwareValue;
 
-        public Control(ISensor sensor, ISettings settings, float minSoftwareValue,
-            float maxSoftwareValue)
+        public Control(ISensor sensor, float minSoftwareValue, float maxSoftwareValue)
         {
             Identifier = new Identifier(sensor.Identifier, "control");
-            this.settings = settings;
             MinSoftwareValue = minSoftwareValue;
             MaxSoftwareValue = maxSoftwareValue;
 
-            if (!float.TryParse(settings.GetValue(
-                    new Identifier(Identifier, "value").ToString(), "0"),
-                NumberStyles.Float, CultureInfo.InvariantCulture,
-                out softwareValue))
-                softwareValue = 0;
-            int mode;
-            if (!int.TryParse(settings.GetValue(
-                    new Identifier(Identifier, "mode").ToString(),
-                    ((int) ControlMode.Undefined).ToString(CultureInfo.InvariantCulture)),
-                NumberStyles.Integer, CultureInfo.InvariantCulture,
-                out mode))
-                this.mode = ControlMode.Undefined;
-            else
-                this.mode = (ControlMode) mode;
+            softwareValue = 0;
+            mode = ControlMode.Undefined;
         }
 
         public Identifier Identifier { get; }
@@ -55,8 +40,6 @@ namespace OpenHardwareMonitor.Hardware
                 {
                     mode = value;
                     ControlModeChanged?.Invoke(this);
-                    settings.SetValue(new Identifier(Identifier, "mode").ToString(),
-                        ((int) mode).ToString(CultureInfo.InvariantCulture));
                 }
             }
         }
@@ -70,9 +53,6 @@ namespace OpenHardwareMonitor.Hardware
                 {
                     softwareValue = value;
                     SoftwareControlValueChanged?.Invoke(this);
-                    settings.SetValue(new Identifier(Identifier,
-                            "value").ToString(),
-                        value.ToString(CultureInfo.InvariantCulture));
                 }
             }
         }

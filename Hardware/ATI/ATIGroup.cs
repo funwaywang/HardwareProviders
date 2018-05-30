@@ -98,7 +98,7 @@ namespace OpenHardwareMonitor.Hardware.ATI
                                             adapterInfo[i].AdapterName.Trim(),
                                             adapterInfo[i].AdapterIndex,
                                             adapterInfo[i].BusNumber,
-                                            adapterInfo[i].DeviceNumber, settings));
+                                            adapterInfo[i].DeviceNumber));
                                 }
 
                                 report.AppendLine();

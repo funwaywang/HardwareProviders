@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 
 namespace OpenHardwareMonitor.Hardware.HDD
 {
-    internal class WindowsSmart : ISmart
+    internal partial class WindowsSmart : ISmart
     {
         private const byte SMART_LBA_MID = 0x4F;
         private const byte SMART_LBA_HI = 0xC2;
@@ -402,49 +402,6 @@ namespace OpenHardwareMonitor.Hardware.HDD
             public uint BufferSize;
             public DriverStatus DriverStatus;
             public Identify Identify;
-        }
-
-        protected static class NativeMethods
-        {
-            private const string KERNEL = "kernel32.dll";
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi,
-                CharSet = CharSet.Unicode)]
-            public static extern IntPtr CreateFile(string fileName,
-                AccessMode desiredAccess, ShareMode shareMode, IntPtr securityAttributes,
-                CreationMode creationDisposition, FileAttribute flagsAndAttributes,
-                IntPtr templateFilehandle);
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            public static extern int CloseHandle(IntPtr handle);
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool DeviceIoControl(IntPtr handle,
-                DriveCommand command, ref DriveCommandParameter parameter,
-                int parameterSize, out DriveSmartReadDataResult result, int resultSize,
-                out uint bytesReturned, IntPtr overlapped);
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool DeviceIoControl(IntPtr handle,
-                DriveCommand command, ref DriveCommandParameter parameter,
-                int parameterSize, out DriveSmartReadThresholdsResult result,
-                int resultSize, out uint bytesReturned, IntPtr overlapped);
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool DeviceIoControl(IntPtr handle,
-                DriveCommand command, ref DriveCommandParameter parameter,
-                int parameterSize, out DriveCommandResult result, int resultSize,
-                out uint bytesReturned, IntPtr overlapped);
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool DeviceIoControl(IntPtr handle,
-                DriveCommand command, ref DriveCommandParameter parameter,
-                int parameterSize, out DriveIdentifyResult result, int resultSize,
-                out uint bytesReturned, IntPtr overlapped);
         }
     }
 }

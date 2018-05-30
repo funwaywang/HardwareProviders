@@ -66,7 +66,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
             superIOHardware = new Hardware[superIO.Length];
             for (var i = 0; i < superIO.Length; i++)
                 superIOHardware[i] = new SuperIOHardware(this, superIO[i],
-                    manufacturer, model, settings);
+                    manufacturer, model);
         }
 
         public string Name

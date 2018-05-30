@@ -48,17 +48,16 @@ namespace OpenHardwareMonitor.Hardware.CPU
         private static bool GetTimes(out long[] idle, out long[] total)
         {
             var informations = new
-                SystemProcessorPerformanceInformation[64];
+                NativeMethods.SystemProcessorPerformanceInformation[64];
 
-            var size = Marshal.SizeOf(typeof(SystemProcessorPerformanceInformation));
+            var size = Marshal.SizeOf(typeof(NativeMethods.SystemProcessorPerformanceInformation));
 
             idle = null;
             total = null;
 
-            IntPtr returnLength;
             if (NativeMethods.NtQuerySystemInformation(
-                    SystemInformationClass.SystemProcessorPerformanceInformation,
-                    informations, informations.Length * size, out returnLength) != 0)
+                    NativeMethods.SystemInformationClass.SystemProcessorPerformanceInformation,
+                    informations, informations.Length * size, out var returnLength) != 0)
                 return false;
 
             idle = new long[(int) returnLength / size];
@@ -88,10 +87,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
             if (idleTimes == null)
                 return;
 
-            long[] newIdleTimes;
-            long[] newTotalTimes;
-
-            if (!GetTimes(out newIdleTimes, out newTotalTimes))
+            if (!GetTimes(out var newIdleTimes, out var newTotalTimes))
                 return;
 
             for (var i = 0; i < Math.Min(newTotalTimes.Length, totalTimes.Length); i++)
@@ -139,36 +135,6 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
             totalTimes = newTotalTimes;
             idleTimes = newIdleTimes;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        protected struct SystemProcessorPerformanceInformation
-        {
-            public long IdleTime;
-            public long KernelTime;
-            public long UserTime;
-            public long Reserved0;
-            public long Reserved1;
-            public ulong Reserved2;
-        }
-
-        protected enum SystemInformationClass
-        {
-            SystemBasicInformation = 0,
-            SystemCpuInformation = 1,
-            SystemPerformanceInformation = 2,
-            SystemTimeOfDayInformation = 3,
-            SystemProcessInformation = 5,
-            SystemProcessorPerformanceInformation = 8
-        }
-
-        protected static class NativeMethods
-        {
-            [DllImport("ntdll.dll")]
-            public static extern int NtQuerySystemInformation(
-                SystemInformationClass informationClass,
-                [Out] SystemProcessorPerformanceInformation[] informations,
-                int structSize, out IntPtr returnLength);
         }
     }
 }

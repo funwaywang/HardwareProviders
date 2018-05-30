@@ -14,7 +14,7 @@ namespace OpenHardwareMonitor.Hardware.RAM
     {
         private readonly Hardware[] hardware;
 
-        public RAMGroup(ISettings settings)
+        public RAMGroup()
         {
             hardware = new Hardware[] {new GenericRAM("Generic Memory")};
         }

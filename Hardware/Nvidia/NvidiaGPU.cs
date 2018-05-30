@@ -33,7 +33,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
         private readonly Sensor[] temperatures;
 
         public NvidiaGPU(int adapterIndex, NvPhysicalGpuHandle handle,
-            NvDisplayHandle? displayHandle, ISettings settings)
+            NvDisplayHandle? displayHandle)
             : base(GetName(handle), new Identifier("nvidiagpu",
                 adapterIndex.ToString(CultureInfo.InvariantCulture)))
         {
@@ -103,7 +103,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
             var coolerSettings = GetCoolerSettings();
             if (coolerSettings.Count > 0)
             {
-                fanControl = new Control(control, settings,
+                fanControl = new Control(control,
                     coolerSettings.Cooler[0].DefaultMin,
                     coolerSettings.Cooler[0].DefaultMax);
                 fanControl.ControlModeChanged += ControlModeChanged;

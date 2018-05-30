@@ -19,7 +19,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
         private readonly List<Hardware> hardware = new List<Hardware>();
         private readonly StringBuilder report = new StringBuilder();
 
-        public NvidiaGroup(ISettings settings)
+        public NvidiaGroup()
         {
             if (!NVAPI.IsAvailable)
                 return;
@@ -87,7 +87,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
             for (var i = 0; i < count; i++)
             {
                 displayHandles.TryGetValue(handles[i], out var displayHandle);
-                hardware.Add(new NvidiaGPU(i, handles[i], displayHandle, settings));
+                hardware.Add(new NvidiaGPU(i, handles[i], displayHandle));
             }
 
             report.AppendLine();

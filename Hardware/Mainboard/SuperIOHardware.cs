@@ -39,7 +39,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
         private readonly List<Sensor> voltages = new List<Sensor>();
 
         public SuperIOHardware(Mainboard mainboard, ISuperIO superIO,
-            Manufacturer manufacturer, Model model, ISettings settings)
+            Manufacturer manufacturer, Model model)
             : base(ChipName.GetName(superIO.Chip), new Identifier("lpc",
                 superIO.Chip.ToString().ToLowerInvariant()))
         {
@@ -54,14 +54,14 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
             CreateVoltageSensors(superIO, voltages);
             CreateTemperatureSensors(superIO, temperatures);
             CreateFanSensors(superIO, fans);
-            CreateControlSensors(superIO, settings, controls);
+            CreateControlSensors(superIO, controls);
         }
 
         public override HardwareType HardwareType => HardwareType.SuperIO;
 
         public override IHardware Parent => mainboard;
 
-        private void CreateControlSensors(ISuperIO superIO, ISettings settings, IEnumerable<Ctrl> c)
+        private void CreateControlSensors(ISuperIO superIO, IEnumerable<Ctrl> c)
         {
             foreach (var ctrl in c)
             {
@@ -70,7 +70,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                 {
                     var sensor = new Sensor(ctrl.Name, index, SensorType.Control,
                         this);
-                    var control = new Control(sensor, settings, 0, 100);
+                    var control = new Control(sensor, 0, 100);
                     control.ControlModeChanged += cc =>
                     {
                         switch (cc.ControlMode)

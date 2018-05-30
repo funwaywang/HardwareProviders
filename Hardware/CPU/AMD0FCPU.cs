@@ -31,7 +31,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
         private readonly byte thermSenseCoreSelCPU0;
         private readonly byte thermSenseCoreSelCPU1;
 
-        public AMD0FCPU(int processorIndex, CPUID[][] cpuid, ISettings settings)
+        public AMD0FCPU(int processorIndex, CPUID[][] cpuid)
             : base(processorIndex, cpuid)
         {
             var offset = -49.0f;
@@ -141,8 +141,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 {
                     Thread.Sleep(1);
 
-                    uint eax, edx;
-                    if (Ring0.RdmsrTx(FIDVID_STATUS, out eax, out edx,
+                    if (Ring0.RdmsrTx(FIDVID_STATUS, out var eax, out _,
                         1UL << cpuid[i][0].Thread))
                     {
                         // CurrFID can be found in eax bits 0-5, MaxFID in 16-21

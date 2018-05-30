@@ -156,15 +156,12 @@ namespace OpenHardwareMonitor.Hardware.CPU
             var mask = ThreadAffinity.Set(1UL << cpuid[0][0].Thread);
 
             // disable core performance boost  
-            uint hwcrEax, hwcrEdx;
-            Ring0.Rdmsr(HWCR, out hwcrEax, out hwcrEdx);
+            Ring0.Rdmsr(HWCR, out var hwcrEax, out var hwcrEdx);
             if (corePerformanceBoostSupport)
                 Ring0.Wrmsr(HWCR, hwcrEax | (1 << 25), hwcrEdx);
 
-            uint ctlEax, ctlEdx;
-            Ring0.Rdmsr(PERF_CTL_0, out ctlEax, out ctlEdx);
-            uint ctrEax, ctrEdx;
-            Ring0.Rdmsr(PERF_CTR_0, out ctrEax, out ctrEdx);
+            Ring0.Rdmsr(PERF_CTL_0, out var ctlEax, out var ctlEdx);
+            Ring0.Rdmsr(PERF_CTR_0, out var ctrEax, out var ctrEdx);
 
             timeStampCounterMultiplier = estimateTimeStampCounterMultiplier();
 
@@ -214,7 +211,6 @@ namespace OpenHardwareMonitor.Hardware.CPU
             Ring0.Wrmsr(PERF_CTR_0, 0, 0);
 
             var ticks = (long) (timeWindow * Stopwatch.Frequency);
-            uint lsbBegin, msbBegin, lsbEnd, msbEnd;
 
             var timeBegin = Stopwatch.GetTimestamp() +
                             (long) Math.Ceiling(0.001 * ticks);
@@ -223,13 +219,13 @@ namespace OpenHardwareMonitor.Hardware.CPU
             {
             }
 
-            Ring0.Rdmsr(PERF_CTR_0, out lsbBegin, out msbBegin);
+            Ring0.Rdmsr(PERF_CTR_0, out var lsbBegin, out var msbBegin);
 
             while (Stopwatch.GetTimestamp() < timeEnd)
             {
             }
 
-            Ring0.Rdmsr(PERF_CTR_0, out lsbEnd, out msbEnd);
+            Ring0.Rdmsr(PERF_CTR_0, out var lsbEnd, out var msbEnd);
             Ring0.Rdmsr(COFVID_STATUS, out eax, out edx);
             var coreMultiplier = GetCoreMultiplier(eax);
 
@@ -450,12 +446,11 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 {
                     Thread.Sleep(1);
 
-                    uint curEax, curEdx;
-                    if (Ring0.RdmsrTx(COFVID_STATUS, out curEax, out curEdx,
+                    uint curEdx;
+                    if (Ring0.RdmsrTx(COFVID_STATUS, out var curEax, out curEdx,
                         1UL << cpuid[i][0].Thread))
                     {
-                        double multiplier;
-                        multiplier = GetCoreMultiplier(curEax);
+                        var multiplier = GetCoreMultiplier(curEax);
 
                         coreClocks[i].Value =
                             (float) (multiplier * TimeStampCounterFrequency /
@@ -479,7 +474,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
         public override void Close()
         {
-            if (temperatureStream != null) temperatureStream.Close();
+            temperatureStream?.Close();
             base.Close();
         }
     }

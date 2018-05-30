@@ -45,7 +45,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
                         switch (threads[0].Family)
                         {
                             case 0x0F:
-                                hardware.Add(new AMD0FCPU(index, coreThreads, settings));
+                                hardware.Add(new AMD0FCPU(index, coreThreads));
                                 break;
                             case 0x10:
                             case 0x11:

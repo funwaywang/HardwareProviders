@@ -26,7 +26,7 @@ namespace OpenHardwareMonitor.Hardware.ATI
         private readonly Sensor temperature;
 
         public ATIGPU(string name, int adapterIndex, int busNumber,
-            int deviceNumber, ISettings settings)
+            int deviceNumber)
             : base(name, new Identifier("atigpu",
                 adapterIndex.ToString(CultureInfo.InvariantCulture)))
         {
@@ -50,7 +50,7 @@ namespace OpenHardwareMonitor.Hardware.ATI
                 afsi.MinPercent = 0;
             }
 
-            fanControl = new Control(controlSensor, settings, afsi.MinPercent,
+            fanControl = new Control(controlSensor, afsi.MinPercent,
                 afsi.MaxPercent);
             fanControl.ControlModeChanged += ControlModeChanged;
             fanControl.SoftwareControlValueChanged +=
