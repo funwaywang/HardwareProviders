@@ -92,7 +92,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
 
         public override HardwareType HardwareType => HardwareType.HDD;
 
-        public static AbstractHarddrive CreateInstance(ISmart smart, int driveIndex, ISettings settings)
+        public static AbstractHarddrive CreateInstance(ISmart smart, int driveIndex)
         {
             var deviceHandle = smart.OpenDrive(driveIndex);
 

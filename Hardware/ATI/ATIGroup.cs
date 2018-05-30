@@ -20,7 +20,7 @@ namespace OpenHardwareMonitor.Hardware.ATI
         private readonly List<ATIGPU> hardware = new List<ATIGPU>();
         private readonly StringBuilder report = new StringBuilder();
 
-        public ATIGroup(ISettings settings)
+        public ATIGroup()
         {
             try
             {

@@ -21,14 +21,14 @@ namespace OpenHardwareMonitor.Hardware.HDD
         private readonly List<AbstractHarddrive> hardware =
             new List<AbstractHarddrive>();
 
-        public HarddriveGroup(ISettings settings)
+        public HarddriveGroup()
         {
             ISmart smart = new WindowsSmart();
 
             for (var drive = 0; drive < MAX_DRIVES; drive++)
             {
                 var instance =
-                    AbstractHarddrive.CreateInstance(smart, drive, settings);
+                    AbstractHarddrive.CreateInstance(smart, drive);
                 if (instance != null) hardware.Add(instance);
             }
         }

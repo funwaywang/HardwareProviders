@@ -133,7 +133,7 @@ namespace OpenHardwareMonitor.GUI {
       treeModel.Nodes.Add(root);
       treeView.Model = treeModel;
 
-      this.computer = new Computer(settings);
+      this.computer = new Computer();
 
       systemTray = new SystemTray(computer, settings, unitManager);
       systemTray.HideShowCommand += hideShowClick;

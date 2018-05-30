@@ -27,7 +27,6 @@ namespace OpenHardwareMonitor.Hardware
     public class Computer : IComputer
     {
         private readonly List<IGroup> groups = new List<IGroup>();
-        private readonly ISettings settings;
         private bool cpuEnabled;
         private bool fanControllerEnabled;
         private bool gpuEnabled;
@@ -37,18 +36,6 @@ namespace OpenHardwareMonitor.Hardware
 
         private bool open;
         private bool ramEnabled;
-
-        private SMBIOS smbios;
-
-        public Computer()
-        {
-            settings = new Settings();
-        }
-
-        public Computer(ISettings settings)
-        {
-            this.settings = settings ?? new Settings();
-        }
 
         public bool MainboardEnabled
         {
@@ -60,7 +47,7 @@ namespace OpenHardwareMonitor.Hardware
                 if (open && value != mainboardEnabled)
                 {
                     if (value)
-                        Add(new MainboardGroup(smbios, settings));
+                        Add(new MainboardGroup());
                     else
                         RemoveType<MainboardGroup>();
                 }
@@ -79,7 +66,7 @@ namespace OpenHardwareMonitor.Hardware
                 if (open && value != cpuEnabled)
                 {
                     if (value)
-                        Add(new CPUGroup(settings));
+                        Add(new CPUGroup());
                     else
                         RemoveType<CPUGroup>();
                 }
@@ -118,7 +105,7 @@ namespace OpenHardwareMonitor.Hardware
                 {
                     if (value)
                     {
-                        Add(new ATIGroup(settings));
+                        Add(new ATIGroup());
                         Add(new NvidiaGroup());
                     }
                     else
@@ -167,7 +154,7 @@ namespace OpenHardwareMonitor.Hardware
                 if (open && value != hddEnabled)
                 {
                     if (value)
-                        Add(new HarddriveGroup(settings));
+                        Add(new HarddriveGroup());
                     else
                         RemoveType<HarddriveGroup>();
                 }
@@ -313,23 +300,21 @@ namespace OpenHardwareMonitor.Hardware
             if (open)
                 return;
 
-            smbios = new SMBIOS();
-
             Ring0.Open();
             Opcode.Open();
 
             if (mainboardEnabled)
-                Add(new MainboardGroup(smbios, settings));
+                Add(new MainboardGroup());
 
             if (cpuEnabled)
-                Add(new CPUGroup(settings));
+                Add(new CPUGroup());
 
             if (ramEnabled)
                 Add(new RAMGroup());
 
             if (gpuEnabled)
             {
-                Add(new ATIGroup(settings));
+                Add(new ATIGroup());
                 Add(new NvidiaGroup());
             }
 
@@ -340,7 +325,7 @@ namespace OpenHardwareMonitor.Hardware
             }
 
             if (hddEnabled)
-                Add(new HarddriveGroup(settings));
+                Add(new HarddriveGroup());
 
             open = true;
         }
@@ -430,30 +415,7 @@ namespace OpenHardwareMonitor.Hardware
             Opcode.Close();
             Ring0.Close();
 
-            smbios = null;
-
             open = false;
-        }
-
-        private class Settings : ISettings
-        {
-            public bool Contains(string name)
-            {
-                return false;
-            }
-
-            public void SetValue(string name, string value)
-            {
-            }
-
-            public string GetValue(string name, string value)
-            {
-                return value;
-            }
-
-            public void Remove(string name)
-            {
-            }
         }
     }
 }

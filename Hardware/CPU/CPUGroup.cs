@@ -21,7 +21,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
         private readonly CPUID[][][] threads;
 
-        public CPUGroup(ISettings settings)
+        public CPUGroup()
         {
             var processorThreads = GetProcessorThreads();
             this.threads = new CPUID[processorThreads.Length][][];

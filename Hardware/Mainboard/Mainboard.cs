@@ -18,16 +18,12 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
     {
         private readonly LMSensors lmSensors;
         private readonly LPCIO lpcio;
-        private readonly string name;
-        private readonly ISettings settings;
         private readonly SMBIOS smbios;
         private readonly Hardware[] superIOHardware;
-        private string customName;
 
-        public Mainboard(SMBIOS smbios, ISettings settings)
+        public Mainboard()
         {
-            this.settings = settings;
-            this.smbios = smbios;
+            smbios = new SMBIOS();
 
             var manufacturer = smbios.Board == null
                 ? Manufacturer.Unknown
@@ -39,29 +35,20 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
             {
                 if (!string.IsNullOrEmpty(smbios.Board.ProductName))
                 {
-                    if (manufacturer == Manufacturer.Unknown)
-                        name = smbios.Board.ProductName;
-                    else
-                        name = manufacturer + " " +
-                               smbios.Board.ProductName;
+                    Name = manufacturer == Manufacturer.Unknown ? smbios.Board.ProductName : $"{manufacturer} {smbios.Board.ProductName}";
                 }
                 else
                 {
-                    name = manufacturer.ToString();
+                    Name = manufacturer.ToString();
                 }
             }
             else
             {
-                name = Manufacturer.Unknown.ToString();
+                Name = Manufacturer.Unknown.ToString();
             }
 
-            customName = settings.GetValue(
-                new Identifier(Identifier, "name").ToString(), name);
-
-            ISuperIO[] superIO;
-
             lpcio = new LPCIO();
-            superIO = lpcio.SuperIO;
+            var superIO = lpcio.SuperIO;
 
             superIOHardware = new Hardware[superIO.Length];
             for (var i = 0; i < superIO.Length; i++)
@@ -69,19 +56,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                     manufacturer, model);
         }
 
-        public string Name
-        {
-            get => customName;
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                    customName = value;
-                else
-                    customName = name;
-                settings.SetValue(new Identifier(Identifier, "name").ToString(),
-                    customName);
-            }
-        }
+        public string Name { get; set; }
 
         public Identifier Identifier => new Identifier("mainboard");
 
