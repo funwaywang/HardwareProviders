@@ -70,7 +70,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
                 }
 
                 temperatures[i] = new Sensor(name, i, SensorType.Temperature, this,
-                    new ParameterDescription[0]);
+                    new Parameter[0]);
                 ActivateSensor(temperatures[i]);
             }
 

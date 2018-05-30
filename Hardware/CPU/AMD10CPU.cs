@@ -64,7 +64,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 "Core" + (coreCount > 1 ? " #1 - #" + coreCount : ""), 0,
                 SensorType.Temperature, this, new[]
                 {
-                    new ParameterDescription("Offset [°C]", "Temperature offset.", 0)
+                    new Parameter("Offset [°C]", "Temperature offset.", 0)
                 });
 
             switch (family)

@@ -75,7 +75,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
         public SmartAttribute(byte identifier, string name,
             RawValueConversion rawValueConversion, SensorType? sensorType,
             int sensorChannel, string sensorName, bool defaultHiddenSensor = false,
-            ParameterDescription[] parameterDescriptions = null)
+            Parameter[] parameterDescriptions = null)
         {
             Identifier = identifier;
             Name = name;
@@ -102,7 +102,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
 
         public bool DefaultHiddenSensor { get; }
 
-        public ParameterDescription[] ParameterDescriptions { get; }
+        public Parameter[] ParameterDescriptions { get; }
 
         public bool HasRawValueConversion => rawValueConversion != null;
 

@@ -12,14 +12,21 @@ using System;
 
 namespace OpenHardwareMonitor.Hardware
 {
-    public struct ParameterDescription
+    public class Parameter : IParameter
     {
-        public ParameterDescription(string name, string description,
-            float defaultValue)
+        public Parameter(string name, string description, float defaultValue)
         {
             Name = name;
             Description = description;
             DefaultValue = defaultValue;
+        }
+
+        public Parameter(Parameter description)
+        {
+            Name = description.Name;
+            Description = description.Description;
+            DefaultValue = description.DefaultValue;
+            Value = description.DefaultValue;
         }
 
         public string Name { get; }
@@ -27,21 +34,6 @@ namespace OpenHardwareMonitor.Hardware
         public string Description { get; }
 
         public float DefaultValue { get; }
-    }
-
-    internal class Parameter : IParameter
-    {
-        private readonly ParameterDescription description;
-
-        public Parameter(ParameterDescription description)
-        {
-            this.description = description;
-            Value = description.DefaultValue;
-        }
-
-        public string Name => description.Name;
-
-        public string Description => description.Description;
 
         public float Value { get; set; }
 

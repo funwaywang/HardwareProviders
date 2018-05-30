@@ -131,7 +131,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                     var sensor = new Sensor(temperature.Name, temperature.Index,
                         SensorType.Temperature, this, new[]
                         {
-                            new ParameterDescription("Offset [°C]", "Temperature offset.", 0)
+                            new Parameter("Offset [°C]", "Temperature offset.", 0)
                         });
                     temperatures.Add(sensor);
                 }
@@ -146,11 +146,11 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
                     var sensor = new Sensor(voltage.Name, voltage.Index,
                         voltage.Hidden, SensorType.Voltage, this, new[]
                         {
-                            new ParameterDescription("Ri [kΩ]", "Input resistance.\n" +
+                            new Parameter("Ri [kΩ]", "Input resistance.\n" +
                                                                 formula, voltage.Ri),
-                            new ParameterDescription("Rf [kΩ]", "Reference resistance.\n" +
+                            new Parameter("Rf [kΩ]", "Reference resistance.\n" +
                                                                 formula, voltage.Rf),
-                            new ParameterDescription("Vf [V]", "Reference voltage.\n" +
+                            new Parameter("Vf [V]", "Reference voltage.\n" +
                                                                formula, voltage.Vf)
                         });
                     voltages.Add(sensor);

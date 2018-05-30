@@ -48,7 +48,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
 
             var parameter = new[]
             {
-                new ParameterDescription("Offset [°C]", "Temperature offset.", 0)
+                new Parameter("Offset [°C]", "Temperature offset.", 0)
             };
             var offset = 0;
             for (var i = 0; i < digitalTemperatures.Length; i++)
@@ -76,7 +76,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
                 sensorhubFlows[i] = new Sensor("Flowmeter " + (i + 1),
                     i, SensorType.Flow, this, new[]
                     {
-                        new ParameterDescription("Impulse Rate",
+                        new Parameter("Impulse Rate",
                             "The impulse rate of the flowmeter in pulses/L", 509)
                     });
 
@@ -236,7 +236,7 @@ namespace OpenHardwareMonitor.Hardware.TBalancer
                         fans[i] = new Sensor("Fan Channel " + i, i, SensorType.Fan,
                             this, new[]
                             {
-                                new ParameterDescription("MaxRPM",
+                                new Parameter("MaxRPM",
                                     "Maximum revolutions per minute (RPM) of the fan.", maxRPM)
                             });
 

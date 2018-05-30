@@ -89,7 +89,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
                     SensorType.Temperature, 0, SmartNames.Temperature, false,
                     new[]
                     {
-                        new ParameterDescription("Offset [°C]",
+                        new Parameter("Offset [°C]",
                             "Temperature offset of the thermal sensor.\n" +
                             "Temperature = Value + Offset.", 0)
                     }),
@@ -102,7 +102,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
                     SensorType.Temperature, 0, SmartNames.Temperature, false,
                     new[]
                     {
-                        new ParameterDescription("Offset [°C]",
+                        new Parameter("Offset [°C]",
                             "Temperature offset of the thermal sensor.\n" +
                             "Temperature = Value + Offset.", 0)
                     }),
@@ -115,7 +115,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
                     SensorType.Temperature, 0, "Temperature", false,
                     new[]
                     {
-                        new ParameterDescription("Offset [°C]",
+                        new Parameter("Offset [°C]",
                             "Temperature offset of the thermal sensor.\n" +
                             "Temperature = Value + Offset.", 0)
                     })
