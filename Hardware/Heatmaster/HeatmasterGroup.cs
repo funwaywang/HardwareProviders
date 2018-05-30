@@ -16,7 +16,6 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using Microsoft.Win32;
-using OperatingSystem = OpenHardwareMonitor.Software.OperatingSystem;
 
 namespace OpenHardwareMonitor.Hardware.Heatmaster
 {
@@ -27,9 +26,6 @@ namespace OpenHardwareMonitor.Hardware.Heatmaster
 
         public HeatmasterGroup(ISettings settings)
         {
-            // No implementation for Heatmaster on Unix systems
-            if (OperatingSystem.IsLinux) return;
-
             var portNames = GetRegistryPortNames();
             for (var i = 0; i < portNames.Length; i++)
             {

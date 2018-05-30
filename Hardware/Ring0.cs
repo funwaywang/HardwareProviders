@@ -15,7 +15,6 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
-using OperatingSystem = OpenHardwareMonitor.Software.OperatingSystem;
 
 namespace OpenHardwareMonitor.Hardware
 {
@@ -114,7 +113,7 @@ namespace OpenHardwareMonitor.Hardware
         private static bool ExtractDriver(string fileName)
         {
             var resourceName = "OpenHardwareMonitor.Hardware." +
-                               (OperatingSystem.Is64Bit ? "WinRing0x64.sys" : "WinRing0.sys");
+                               (Environment.Is64BitOperatingSystem ? "WinRing0x64.sys" : "WinRing0.sys");
 
             var names = GetAssembly().GetManifestResourceNames();
             byte[] buffer = null;
@@ -163,9 +162,6 @@ namespace OpenHardwareMonitor.Hardware
 
         public static void Open()
         {
-            // no implementation for unix systems
-            if (OperatingSystem.IsLinux) return;
-
             if (driver != null)
                 return;
 

@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management;
 using System.Text;
-using OperatingSystem = OpenHardwareMonitor.Software.OperatingSystem;
 
 namespace OpenHardwareMonitor.Hardware
 {
@@ -26,135 +25,109 @@ namespace OpenHardwareMonitor.Hardware
 
         public SMBIOS()
         {
-            if (OperatingSystem.IsLinux)
+            var structureList = new List<Structure>();
+            var memoryDeviceList = new List<MemoryDevice>();
+
+            raw = null;
+            byte majorVersion = 0;
+            byte minorVersion = 0;
+            try
             {
-                raw = null;
-                table = null;
+                ManagementObjectCollection collection;
+                using (var searcher =
+                    new ManagementObjectSearcher("root\\WMI",
+                        "SELECT * FROM MSSMBios_RawSMBiosTables"))
+                {
+                    collection = searcher.Get();
+                }
 
-                var boardVendor = ReadSysFS("/sys/class/dmi/id/board_vendor");
-                var boardName = ReadSysFS("/sys/class/dmi/id/board_name");
-                var boardVersion = ReadSysFS("/sys/class/dmi/id/board_version");
-                Board = new BaseBoardInformation(
-                    boardVendor, boardName, boardVersion, null);
-
-                var systemVendor = ReadSysFS("/sys/class/dmi/id/sys_vendor");
-                var productName = ReadSysFS("/sys/class/dmi/id/product_name");
-                var productVersion = ReadSysFS("/sys/class/dmi/id/product_version");
-                System = new SystemInformation(systemVendor,
-                    productName, productVersion, null, null);
-
-                var biosVendor = ReadSysFS("/sys/class/dmi/id/bios_vendor");
-                var biosVersion = ReadSysFS("/sys/class/dmi/id/bios_version");
-                BIOS = new BIOSInformation(biosVendor, biosVersion);
-
-                MemoryDevices = new MemoryDevice[0];
+                foreach (ManagementObject mo in collection)
+                {
+                    raw = (byte[]) mo["SMBiosData"];
+                    majorVersion = (byte) mo["SmbiosMajorVersion"];
+                    minorVersion = (byte) mo["SmbiosMinorVersion"];
+                    break;
+                }
             }
-            else
+            catch
             {
-                var structureList = new List<Structure>();
-                var memoryDeviceList = new List<MemoryDevice>();
+            }
 
-                raw = null;
-                byte majorVersion = 0;
-                byte minorVersion = 0;
-                try
+            if (majorVersion > 0 || minorVersion > 0)
+                version = new Version(majorVersion, minorVersion);
+
+            if (raw != null && raw.Length > 0)
+            {
+                var offset = 0;
+                var type = raw[offset];
+                while (offset + 4 < raw.Length && type != 127)
                 {
-                    ManagementObjectCollection collection;
-                    using (var searcher =
-                        new ManagementObjectSearcher("root\\WMI",
-                            "SELECT * FROM MSSMBios_RawSMBiosTables"))
-                    {
-                        collection = searcher.Get();
-                    }
+                    type = raw[offset];
+                    int length = raw[offset + 1];
+                    var handle = (ushort) ((raw[offset + 2] << 8) | raw[offset + 3]);
 
-                    foreach (ManagementObject mo in collection)
-                    {
-                        raw = (byte[]) mo["SMBiosData"];
-                        majorVersion = (byte) mo["SmbiosMajorVersion"];
-                        minorVersion = (byte) mo["SmbiosMinorVersion"];
+                    if (offset + length > raw.Length)
                         break;
-                    }
-                }
-                catch
-                {
-                }
+                    var data = new byte[length];
+                    Array.Copy(raw, offset, data, 0, length);
+                    offset += length;
 
-                if (majorVersion > 0 || minorVersion > 0)
-                    version = new Version(majorVersion, minorVersion);
+                    var stringsList = new List<string>();
+                    if (offset < raw.Length && raw[offset] == 0)
+                        offset++;
 
-                if (raw != null && raw.Length > 0)
-                {
-                    var offset = 0;
-                    var type = raw[offset];
-                    while (offset + 4 < raw.Length && type != 127)
+                    while (offset < raw.Length && raw[offset] != 0)
                     {
-                        type = raw[offset];
-                        int length = raw[offset + 1];
-                        var handle = (ushort) ((raw[offset + 2] << 8) | raw[offset + 3]);
-
-                        if (offset + length > raw.Length)
-                            break;
-                        var data = new byte[length];
-                        Array.Copy(raw, offset, data, 0, length);
-                        offset += length;
-
-                        var stringsList = new List<string>();
-                        if (offset < raw.Length && raw[offset] == 0)
-                            offset++;
-
+                        var sb = new StringBuilder();
                         while (offset < raw.Length && raw[offset] != 0)
                         {
-                            var sb = new StringBuilder();
-                            while (offset < raw.Length && raw[offset] != 0)
-                            {
-                                sb.Append((char) raw[offset]);
-                                offset++;
-                            }
-
+                            sb.Append((char) raw[offset]);
                             offset++;
-                            stringsList.Add(sb.ToString());
                         }
 
                         offset++;
-                        switch (type)
-                        {
-                            case 0x00:
-                                BIOS = new BIOSInformation(
-                                    type, handle, data, stringsList.ToArray());
-                                structureList.Add(BIOS);
-                                break;
-                            case 0x01:
-                                System = new SystemInformation(
-                                    type, handle, data, stringsList.ToArray());
-                                structureList.Add(System);
-                                break;
-                            case 0x02:
-                                Board = new BaseBoardInformation(
-                                    type, handle, data, stringsList.ToArray());
-                                structureList.Add(Board);
-                                break;
-                            case 0x04:
-                                Processor = new ProcessorInformation(
-                                    type, handle, data, stringsList.ToArray());
-                                structureList.Add(Processor);
-                                break;
-                            case 0x11:
-                                var m = new MemoryDevice(
-                                    type, handle, data, stringsList.ToArray());
-                                memoryDeviceList.Add(m);
-                                structureList.Add(m);
-                                break;
-                            default:
-                                structureList.Add(new Structure(
-                                    type, handle, data, stringsList.ToArray()));
-                                break;
-                        }
+                        stringsList.Add(sb.ToString());
+                    }
+
+                    offset++;
+                    switch (type)
+                    {
+                        case 0x00:
+                            BIOS = new BIOSInformation(
+                                type, handle, data, stringsList.ToArray());
+                            structureList.Add(BIOS);
+                            break;
+                        case 0x01:
+                            System = new SystemInformation(
+                                type, handle, data, stringsList.ToArray());
+                            structureList.Add(System);
+                            break;
+                        case 0x02:
+                            Board = new BaseBoardInformation(
+                                type, handle, data, stringsList.ToArray());
+                            structureList.Add(Board);
+                            break;
+                        case 0x04:
+                            Processor = new ProcessorInformation(
+                                type, handle, data, stringsList.ToArray());
+                            structureList.Add(Processor);
+                            break;
+                        case 0x11:
+                            var m = new MemoryDevice(
+                                type, handle, data, stringsList.ToArray());
+                            memoryDeviceList.Add(m);
+                            structureList.Add(m);
+                            break;
+                        default:
+                            structureList.Add(new Structure(
+                                type, handle, data, stringsList.ToArray()));
+                            break;
                     }
                 }
-
-                MemoryDevices = memoryDeviceList.ToArray();
-                table = structureList.ToArray();
             }
+
+            MemoryDevices = memoryDeviceList.ToArray();
+            table = structureList.ToArray();
         }
 
         public BIOSInformation BIOS { get; }

@@ -10,7 +10,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using OperatingSystem = OpenHardwareMonitor.Software.OperatingSystem;
 
 namespace OpenHardwareMonitor.Hardware
 {
@@ -20,19 +19,6 @@ namespace OpenHardwareMonitor.Hardware
         {
             if (mask == 0)
                 return 0;
-
-            if (OperatingSystem.IsLinux)
-            {
-                // Unix
-                ulong result = 0;
-                if (NativeMethods.sched_getaffinity(0, (IntPtr) Marshal.SizeOf(result),
-                        ref result) != 0)
-                    return 0;
-                if (NativeMethods.sched_setaffinity(0, (IntPtr) Marshal.SizeOf(mask),
-                        ref mask) != 0)
-                    return 0;
-                return result;
-            } // Windows
 
             UIntPtr uIntPtrMask;
             try

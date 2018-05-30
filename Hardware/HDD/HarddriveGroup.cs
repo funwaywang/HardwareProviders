@@ -11,7 +11,6 @@
 */
 
 using System.Collections.Generic;
-using OpenHardwareMonitor.Software;
 
 namespace OpenHardwareMonitor.Hardware.HDD
 {
@@ -24,8 +23,6 @@ namespace OpenHardwareMonitor.Hardware.HDD
 
         public HarddriveGroup(ISettings settings)
         {
-            if (OperatingSystem.IsLinux) return;
-
             ISmart smart = new WindowsSmart();
 
             for (var drive = 0; drive < MAX_DRIVES; drive++)

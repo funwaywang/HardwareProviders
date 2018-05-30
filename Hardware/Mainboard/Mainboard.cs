@@ -11,7 +11,6 @@
 using System;
 using System.Text;
 using OpenHardwareMonitor.Hardware.LPC;
-using OperatingSystem = OpenHardwareMonitor.Software.OperatingSystem;
 
 namespace OpenHardwareMonitor.Hardware.Mainboard
 {
@@ -61,16 +60,8 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
 
             ISuperIO[] superIO;
 
-            if (OperatingSystem.IsLinux)
-            {
-                lmSensors = new LMSensors();
-                superIO = lmSensors.SuperIO;
-            }
-            else
-            {
-                lpcio = new LPCIO();
-                superIO = lpcio.SuperIO;
-            }
+            lpcio = new LPCIO();
+            superIO = lpcio.SuperIO;
 
             superIOHardware = new Hardware[superIO.Length];
             for (var i = 0; i < superIO.Length; i++)

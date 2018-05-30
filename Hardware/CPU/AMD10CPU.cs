@@ -15,7 +15,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
-using OperatingSystem = OpenHardwareMonitor.Software.OperatingSystem;
 
 namespace OpenHardwareMonitor.Hardware.CPU
 {
@@ -182,33 +181,6 @@ namespace OpenHardwareMonitor.Hardware.CPU
 
             // the file reader for lm-sensors support on Linux
             temperatureStream = null;
-
-            if (OperatingSystem.IsLinux)
-            {
-                var devicePaths = Directory.GetDirectories("/sys/class/hwmon/");
-                foreach (var path in devicePaths)
-                {
-                    string name = null;
-                    try
-                    {
-                        using (var reader = new StreamReader(path + "/device/name"))
-                        {
-                            name = reader.ReadLine();
-                        }
-                    }
-                    catch (IOException)
-                    {
-                    }
-
-                    switch (name)
-                    {
-                        case "k10temp":
-                            temperatureStream = new FileStream(path + "/device/temp1_input",
-                                FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                            break;
-                    }
-                }
-            }
 
             Update();
         }

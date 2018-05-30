@@ -8,8 +8,6 @@
 	
 */
 
-using OpenHardwareMonitor.Software;
-
 namespace OpenHardwareMonitor.Hardware.RAM
 {
     internal class RAMGroup : IGroup
@@ -18,14 +16,6 @@ namespace OpenHardwareMonitor.Hardware.RAM
 
         public RAMGroup(SMBIOS smbios, ISettings settings)
         {
-            // No implementation for RAM on Unix systems
-
-            if (OperatingSystem.IsLinux)
-            {
-                hardware = new Hardware[0];
-                return;
-            }
-
             hardware = new Hardware[] {new GenericRAM("Generic Memory", settings)};
         }
 
