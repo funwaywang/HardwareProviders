@@ -22,10 +22,7 @@ namespace OpenHardwareMonitor.Hardware.Mainboard
 
         public GigabyteTAMG(byte[] table)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
-
-            this.table = table;
+            this.table = table ?? throw new ArgumentNullException(nameof(table));
 
             var index = IndexOf(table, Encoding.ASCII.GetBytes("$HEALTH$"), 0);
 
