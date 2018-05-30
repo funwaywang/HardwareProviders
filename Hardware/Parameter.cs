@@ -18,22 +18,19 @@ namespace OpenHardwareMonitor.Hardware
         {
             Name = name;
             Description = description;
-            DefaultValue = defaultValue;
+            Value = defaultValue;
         }
 
         public Parameter(Parameter description)
         {
             Name = description.Name;
             Description = description.Description;
-            DefaultValue = description.DefaultValue;
-            Value = description.DefaultValue;
+            Value = description.Value;
         }
 
         public string Name { get; }
 
         public string Description { get; }
-
-        public float DefaultValue { get; }
 
         public float Value { get; set; }
 

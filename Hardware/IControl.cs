@@ -10,13 +10,6 @@
 
 namespace OpenHardwareMonitor.Hardware
 {
-    public enum ControlMode
-    {
-        Undefined,
-        Software,
-        Default
-    }
-
     public interface IControl
     {
         Identifier Identifier { get; }

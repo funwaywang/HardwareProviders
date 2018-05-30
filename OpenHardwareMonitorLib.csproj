@@ -32,6 +32,7 @@
     <Compile Include="Hardware\ATI\ATIGPU.cs" />
     <Compile Include="Hardware\ATI\ATIGroup.cs" />
     <Compile Include="Hardware\Control.cs" />
+    <Compile Include="Hardware\ControlMode.cs" />
     <Compile Include="Hardware\CPU\AMD17CPU.cs" />
     <Compile Include="Hardware\FirmwareTable.cs" />
     <Compile Include="Hardware\HDD\DebugSmart.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Hardware\LPC\NCT677X.cs" />
     <Compile Include="Hardware\Mainboard\GigabyteTAMG.cs" />
     <Compile Include="Hardware\Mainboard\Identification.cs" />
+    <Compile Include="Hardware\NativeMethods.cs" />
     <Compile Include="Hardware\Opcode.cs" />
     <Compile Include="Hardware\RAM\GenericRAM.cs" />
     <Compile Include="Hardware\RAM\RAMGroup.cs" />

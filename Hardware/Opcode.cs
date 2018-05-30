@@ -9,7 +9,6 @@
 */
 
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace OpenHardwareMonitor.Hardware
@@ -145,22 +144,6 @@ namespace OpenHardwareMonitor.Hardware
             0xC3 // ret  
         };
 
-        private static readonly byte[] CPUID_64_LINUX =
-        {
-            0x49, 0x89, 0xD2, // mov r10, rdx
-            0x49, 0x89, 0xCB, // mov r11, rcx
-            0x53, // push rbx
-            0x89, 0xF8, // mov eax, edi
-            0x89, 0xF1, // mov ecx, esi
-            0x0F, 0xA2, // cpuid
-            0x41, 0x89, 0x02, // mov dword ptr [r10], eax
-            0x41, 0x89, 0x1B, // mov dword ptr [r11], ebx
-            0x41, 0x89, 0x08, // mov dword ptr [r8], ecx
-            0x41, 0x89, 0x11, // mov dword ptr [r9], edx
-            0x5B, // pop rbx
-            0xC3 // ret
-        };
-
         public static void Open()
         {
             byte[] rdtscCode;
@@ -201,8 +184,7 @@ namespace OpenHardwareMonitor.Hardware
             Cpuid = null;
 
             // Windows
-            NativeMethods.VirtualFree(codeBuffer, UIntPtr.Zero,
-                FreeType.RELEASE);
+            NativeMethods.VirtualFree(codeBuffer, UIntPtr.Zero,FreeType.RELEASE);
         }
 
         public static bool CpuidTx(uint index, uint ecxValue,
@@ -221,19 +203,6 @@ namespace OpenHardwareMonitor.Hardware
 
             ThreadAffinity.Set(mask);
             return true;
-        }
-
-        private static class NativeMethods
-        {
-            private const string KERNEL = "kernel32.dll";
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            public static extern IntPtr VirtualAlloc(IntPtr lpAddress, UIntPtr dwSize,
-                AllocationType flAllocationType, MemoryProtection flProtect);
-
-            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-            public static extern bool VirtualFree(IntPtr lpAddress, UIntPtr dwSize,
-                FreeType dwFreeType);
         }
     }
 }
