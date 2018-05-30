@@ -123,7 +123,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
 
         public GenericHarddisk(ISmart smart, string name, string firmwareRevision,
             int index, ISettings settings)
-            : base(smart, name, firmwareRevision, index, smartAttributes, settings)
+            : base(smart, name, firmwareRevision, index, smartAttributes)
         {
         }
     }

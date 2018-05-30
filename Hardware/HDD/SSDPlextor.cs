@@ -28,8 +28,8 @@ namespace OpenHardwareMonitor.Hardware.HDD
             };
 
         public SSDPlextor(ISmart smart, string name, string firmwareRevision,
-            int index, ISettings settings)
-            : base(smart, name, firmwareRevision, index, smartAttributes, settings)
+            int index)
+            : base(smart, name, firmwareRevision, index, smartAttributes)
         {
         }
 

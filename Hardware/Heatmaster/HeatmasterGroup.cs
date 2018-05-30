@@ -24,7 +24,7 @@ namespace OpenHardwareMonitor.Hardware.Heatmaster
         private readonly List<Heatmaster> hardware = new List<Heatmaster>();
         private readonly StringBuilder report = new StringBuilder();
 
-        public HeatmasterGroup(ISettings settings)
+        public HeatmasterGroup()
         {
             var portNames = GetRegistryPortNames();
             for (var i = 0; i < portNames.Length; i++)

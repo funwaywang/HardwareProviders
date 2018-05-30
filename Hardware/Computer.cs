@@ -144,7 +144,7 @@ namespace OpenHardwareMonitor.Hardware
                     if (value)
                     {
                         Add(new TBalancerGroup(settings));
-                        Add(new HeatmasterGroup(settings));
+                        Add(new HeatmasterGroup());
                     }
                     else
                     {
@@ -336,7 +336,7 @@ namespace OpenHardwareMonitor.Hardware
             if (fanControllerEnabled)
             {
                 Add(new TBalancerGroup(settings));
-                Add(new HeatmasterGroup(settings));
+                Add(new HeatmasterGroup());
             }
 
             if (hddEnabled)

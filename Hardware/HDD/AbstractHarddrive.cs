@@ -50,7 +50,7 @@ namespace OpenHardwareMonitor.Hardware.HDD
 
         protected AbstractHarddrive(ISmart smart, string name,
             string firmwareRevision, int index,
-            IEnumerable<SmartAttribute> smartAttributes, ISettings settings)
+            IEnumerable<SmartAttribute> smartAttributes)
             : base(name, new Identifier("hdd",
                 index.ToString(CultureInfo.InvariantCulture)))
         {
