@@ -221,9 +221,25 @@
       <Project>{bcc43e58-e473-403e-a84d-63fedc723040}</Project>
       <Name>OxyPlot</Name>
     </ProjectReference>
+    <ProjectReference Include="HardwareProviders.Board\HardwareProviders.Board.csproj">
+      <Project>{6bdf83ef-6262-4ac2-8c18-aa5f9070491f}</Project>
+      <Name>HardwareProviders.Board</Name>
+    </ProjectReference>
+    <ProjectReference Include="HardwareProviders.Cooling\HardwareProviders.Cooling.csproj">
+      <Project>{9344a077-901e-416b-8c88-86e5ec36341e}</Project>
+      <Name>HardwareProviders.Cooling</Name>
+    </ProjectReference>
     <ProjectReference Include="HardwareProviders.CPU\HardwareProviders.CPU.csproj">
       <Project>{06ef7e8e-6d12-48b1-9884-513fd1329c4b}</Project>
       <Name>HardwareProviders.CPU</Name>
+    </ProjectReference>
+    <ProjectReference Include="HardwareProviders.GPU\HardwareProviders.GPU.csproj">
+      <Project>{dd6dcea1-4fd9-43dd-b353-151989f30e34}</Project>
+      <Name>HardwareProviders.GPU</Name>
+    </ProjectReference>
+    <ProjectReference Include="HardwareProviders.HDD\HardwareProviders.HDD.csproj">
+      <Project>{bf4ac67d-207a-4311-b8e1-b9174dfa2a2c}</Project>
+      <Name>HardwareProviders.HDD</Name>
     </ProjectReference>
     <ProjectReference Include="OpenHardwareMonitorLib.csproj">
       <Project>{B0397530-545A-471D-BB74-027AE456DF1A}</Project>
