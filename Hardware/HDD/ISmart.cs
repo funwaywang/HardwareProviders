@@ -9,27 +9,26 @@
 */
 
 using System;
-using System.Collections.Generic;
 
+namespace OpenHardwareMonitor.Hardware.HDD
+{
+    public interface ISmart
+    {
+        IntPtr InvalidHandle { get; }
 
-namespace OpenHardwareMonitor.Hardware.HDD {
-    public interface ISmart {
+        IntPtr OpenDrive(int driveNumber);
 
-    IntPtr OpenDrive(int driveNumber);
+        bool EnableSmart(IntPtr handle, int driveNumber);
 
-    bool EnableSmart(IntPtr handle, int driveNumber);
+        DriveAttributeValue[] ReadSmartData(IntPtr handle, int driveNumber);
 
-    DriveAttributeValue[] ReadSmartData(IntPtr handle, int driveNumber);
+        DriveThresholdValue[] ReadSmartThresholds(IntPtr handle, int driveNumber);
 
-    DriveThresholdValue[] ReadSmartThresholds(IntPtr handle, int driveNumber);
+        bool ReadNameAndFirmwareRevision(IntPtr handle, int driveNumber,
+            out string name, out string firmwareRevision);
 
-    bool ReadNameAndFirmwareRevision(IntPtr handle, int driveNumber,
-      out string name, out string firmwareRevision); 
+        void CloseHandle(IntPtr handle);
 
-    void CloseHandle(IntPtr handle);
-
-    IntPtr InvalidHandle { get; }
-
-    string[] GetLogicalDrives(int driveIndex);
-  }
+        string[] GetLogicalDrives(int driveIndex);
+    }
 }
