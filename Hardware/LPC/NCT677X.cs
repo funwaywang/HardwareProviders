@@ -273,7 +273,7 @@ namespace OpenHardwareMonitor.Hardware.LPC
                 return;
 
             if (index < 0 || index >= Controls.Length)
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             if (!Ring0.WaitIsaBusMutex(10))
                 return;

@@ -33,7 +33,7 @@ namespace OpenHardwareMonitor.Collections
         public RingCollection(int capacity)
         {
             if (capacity < 0)
-                throw new ArgumentOutOfRangeException("capacity");
+                throw new ArgumentOutOfRangeException(nameof(capacity));
             array = new T[capacity];
             head = 0;
             tail = 0;

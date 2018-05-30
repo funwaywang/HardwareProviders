@@ -27,7 +27,7 @@ namespace OpenHardwareMonitor.Hardware
             }
             catch (OverflowException)
             {
-                throw new ArgumentOutOfRangeException("mask");
+                throw new ArgumentOutOfRangeException(nameof(mask));
             }
 
             return (ulong) NativeMethods.SetThreadAffinityMask(

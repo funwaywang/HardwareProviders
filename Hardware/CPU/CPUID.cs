@@ -39,7 +39,7 @@ namespace OpenHardwareMonitor.Hardware.CPU
             uint eax, ebx, ecx, edx;
 
             if (thread >= 64)
-                throw new ArgumentOutOfRangeException("thread");
+                throw new ArgumentOutOfRangeException(nameof(thread));
             var mask = 1UL << thread;
 
             if (Opcode.CpuidTx(CPUID_0, 0,
@@ -79,12 +79,12 @@ namespace OpenHardwareMonitor.Hardware.CPU
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("thread");
+                    throw new ArgumentOutOfRangeException(nameof(thread));
                 }
             }
             else
             {
-                throw new ArgumentOutOfRangeException("thread");
+                throw new ArgumentOutOfRangeException(nameof(thread));
             }
 
             maxCpuid = Math.Min(maxCpuid, 1024);

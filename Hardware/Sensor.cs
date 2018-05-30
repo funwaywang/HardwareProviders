@@ -33,7 +33,7 @@ namespace OpenHardwareMonitor.Hardware
 
         public Sensor(string name, int index, SensorType sensorType,
             Hardware hardware) :
-            this(name, index, sensorType, hardware, (ParameterDescription[]) null)
+            this(name, index, sensorType, hardware, null)
         {
         }
 
@@ -134,7 +134,7 @@ namespace OpenHardwareMonitor.Hardware
         public void Accept(IVisitor visitor)
         {
             if (visitor == null)
-                throw new ArgumentNullException("visitor");
+                throw new ArgumentNullException(nameof(visitor));
             visitor.VisitSensor(this);
         }
 
