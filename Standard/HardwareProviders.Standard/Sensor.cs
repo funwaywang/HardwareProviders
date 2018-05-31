@@ -14,8 +14,34 @@ namespace HardwareProviders
 {
     public class Sensor
     {
+        static readonly Dictionary<SensorType, string> Units = new Dictionary<SensorType, string>
+        {
+            {SensorType.Voltage, "V"},
+            {SensorType.Clock, "MHz"},
+            {SensorType.Temperature, "°C"},
+            {SensorType.Load, "%"},
+            {SensorType.Fan, "RPM"},
+            {SensorType.Flow, "L/h"},
+            {SensorType.Control, "%"},
+            {SensorType.Level, "%"},
+            {SensorType.Factor, "1"},
+            {SensorType.Power, "W"},
+            {SensorType.Data, "GB"}
+        };
+
+        public SensorType SensorType { get; }
+
+        public string Name { get; set; }
+
+        public Parameter[] Parameters { get; }
+
+        public float? Value { get; set; }
+
+        public Control Control { get; set; }
+
         public Sensor(string name, SensorType sensorType) : this(name, sensorType, null)
         {
+
         }
 
         public Sensor(string name,SensorType sensorType, IReadOnlyList<Parameter> parameterDescriptions)
@@ -29,14 +55,6 @@ namespace HardwareProviders
             Name =  name;
         }
 
-        public SensorType SensorType { get; }
-
-        public string Name { get; set; }
-
-        public Parameter[] Parameters { get; }
-
-        public float? Value { get; set; }
-
-        public IControl Control { get; set; }
+        public override string ToString() => $"{Value} {Units[SensorType]}";
     }
 }

@@ -11,8 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Text;
+using System.Security.Permissions;
 using HardwareProviders.CPU.Internals;
 
 namespace HardwareProviders.CPU
@@ -46,35 +45,27 @@ namespace HardwareProviders.CPU
             Model = cpuid[0][0].Model;
             Stepping = cpuid[0][0].Stepping;
 
-            this.ProcessorIndex = processorIndex;
+            ProcessorIndex = processorIndex;
             CoreCount = cpuid.Length;
 
             // check if processor has MSRs
-            if (cpuid[0][0].Data.GetLength(0) > 1
-                && (cpuid[0][0].Data[1, 3] & 0x20) != 0)
-                HasModelSpecificRegisters = true;
-            else
-                HasModelSpecificRegisters = false;
+            HasModelSpecificRegisters = cpuid[0][0].Data.GetLength(0) > 1
+                                        && (cpuid[0][0].Data[1, 3] & 0x20) != 0;
 
             // check if processor has a TSC
-            if (cpuid[0][0].Data.GetLength(0) > 1
-                && (cpuid[0][0].Data[1, 3] & 0x10) != 0)
-                HasTimeStampCounter = true;
-            else
-                HasTimeStampCounter = false;
+            HasTimeStampCounter = cpuid[0][0].Data.GetLength(0) > 1
+                                  && (cpuid[0][0].Data[1, 3] & 0x10) != 0;
 
             // check if processor supports an invariant TSC 
-            if (cpuid[0][0].ExtData.GetLength(0) > 7
-                && (cpuid[0][0].ExtData[7, 3] & 0x100) != 0)
-                _isInvariantTimeStampCounter = true;
-            else
-                _isInvariantTimeStampCounter = false;
+            _isInvariantTimeStampCounter = cpuid[0][0].ExtData.GetLength(0) > 7
+                                           && (cpuid[0][0].ExtData[7, 3] & 0x100) != 0;
 
             TotalLoad = CoreCount > 1 ? new Sensor("CPU Total", SensorType.Load) : null;
+
             CoreLoads = new Sensor[CoreCount];
             for (var i = 0; i < CoreLoads.Length; i++)
-                CoreLoads[i] = new Sensor(CoreString(i),
-                    SensorType.Load);
+                CoreLoads[i] = new Sensor(CoreString(i), SensorType.Load);
+
             _cpuLoad = new CpuLoad(cpuid);
 
             if (HasTimeStampCounter)
@@ -172,8 +163,12 @@ namespace HardwareProviders.CPU
 
         protected virtual uint[] GetMsRs() => null;
 
+        
         public static IEnumerable<Cpu> Discover()
         {
+            Ring0.Open();
+            Opcode.Open();
+
             var processorThreads = GetProcessorThreads();
             var _threads = new Cpuid[processorThreads.Length][][];
 
@@ -320,14 +315,15 @@ namespace HardwareProviders.CPU
                 }
             }
 
-            if (_cpuLoad.IsAvailable)
-            {
-                _cpuLoad.Update();
-                for (var i = 0; i < CoreLoads.Length; i++)
-                    CoreLoads[i].Value = _cpuLoad.GetCoreLoad(i);
-                if (TotalLoad != null)
-                    TotalLoad.Value = _cpuLoad.GetTotalLoad();
-            }
+            if (!_cpuLoad.IsAvailable) return;
+
+            _cpuLoad.Update();
+
+            for (var i = 0; i < CoreLoads.Length; i++)
+                CoreLoads[i].Value = _cpuLoad.GetCoreLoad(i);
+
+            if (TotalLoad != null)
+                TotalLoad.Value = _cpuLoad.GetTotalLoad();
         }
     }
 }

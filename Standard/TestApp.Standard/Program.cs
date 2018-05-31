@@ -12,10 +12,6 @@ namespace TestApp.Standard
         [SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true)]
         private static void Main(string[] args)
         {
-            Ring0.Open();
-            Opcode.Open();
-
-
             var cpus = Cpu.Discover().ToArray();
 
             while (true)

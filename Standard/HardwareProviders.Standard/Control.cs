@@ -12,50 +12,20 @@ namespace HardwareProviders
 {
     public delegate void ControlEventHandler(Control control);
 
-    public class Control : IControl
+    public class Control
     {
-        private ControlMode mode;
-        private float softwareValue;
-
         public Control(float minSoftwareValue, float maxSoftwareValue)
         {
             MinSoftwareValue = minSoftwareValue;
             MaxSoftwareValue = maxSoftwareValue;
 
-            softwareValue = 0;
-            mode = ControlMode.Undefined;
+            SoftwareValue = 0;
+            ControlMode = ControlMode.Undefined;
         }
 
-        public ControlMode ControlMode
-        {
-            get => mode;
-            private set
-            {
-                if (mode != value)
-                {
-                    mode = value;
-                    ControlModeChanged?.Invoke(this);
-                }
-            }
-        }
+        public ControlMode ControlMode { get; private set; }
 
-        public float SoftwareValue
-        {
-            get => softwareValue;
-            private set
-            {
-                if (softwareValue != value)
-                {
-                    softwareValue = value;
-                    SoftwareControlValueChanged?.Invoke(this);
-                }
-            }
-        }
-
-        public void SetDefault()
-        {
-            ControlMode = ControlMode.Default;
-        }
+        public float SoftwareValue { get; private set; }
 
         public float MinSoftwareValue { get; }
 
@@ -66,8 +36,5 @@ namespace HardwareProviders
             ControlMode = ControlMode.Software;
             SoftwareValue = value;
         }
-
-        public event ControlEventHandler ControlModeChanged;
-        public event ControlEventHandler SoftwareControlValueChanged;
     }
 }
