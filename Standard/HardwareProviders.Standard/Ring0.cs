@@ -295,25 +295,7 @@ namespace HardwareProviders
                 }
         }
 
-        public static ulong ThreadAffinitySet(ulong mask)
-        {
-            return ThreadAffinity.Set(mask);
-        }
-
-        public static string GetReport()
-        {
-            if (report.Length > 0)
-            {
-                var r = new StringBuilder();
-                r.AppendLine("Ring0");
-                r.AppendLine();
-                r.Append(report);
-                r.AppendLine();
-                return r.ToString();
-            }
-
-            return null;
-        }
+        public static ulong ThreadAffinitySet(ulong mask) => ThreadAffinity.Set(mask);
 
         public static bool WaitIsaBusMutex(int millisecondsTimeout)
         {

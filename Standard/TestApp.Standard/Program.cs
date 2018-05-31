@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Permissions;
 using System.Threading.Tasks;
-using HardwareProviders;
 using HardwareProviders.CPU;
 
 namespace TestApp.Standard
