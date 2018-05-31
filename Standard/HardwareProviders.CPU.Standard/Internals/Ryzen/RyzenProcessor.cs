@@ -32,16 +32,11 @@ namespace HardwareProviders.CPU.Internals.Ryzen
             this.mainCpu = mainCpu;
             Nodes = new List<NumaNode>();
 
-            _packagePower = new Sensor("Package Power", mainCpu._sensorPower++, SensorType.Power, mainCpu);
-            _coreTemperatureTctl = new Sensor("Core (Tctl)", mainCpu._sensorTemperatures++, SensorType.Temperature, mainCpu);
-            _coreTemperatureTdie = new Sensor("Core (Tdie)", mainCpu._sensorTemperatures++, SensorType.Temperature, mainCpu);
-            _coreVoltage = new Sensor("Core (SVI2)", mainCpu._sensorVoltage++, SensorType.Voltage, mainCpu);
-            _socVoltage = new Sensor("SoC (SVI2)", mainCpu._sensorVoltage++, SensorType.Voltage, mainCpu);
-
-            mainCpu.ActivateSensor(_packagePower);
-            mainCpu.ActivateSensor(_coreTemperatureTctl);
-            mainCpu.ActivateSensor(_coreTemperatureTdie);
-            mainCpu.ActivateSensor(_coreVoltage);
+            _packagePower = new Sensor("Package Power", SensorType.Power);
+            _coreTemperatureTctl = new Sensor("Core (Tctl)", SensorType.Temperature);
+            _coreTemperatureTdie = new Sensor("Core (Tdie)", SensorType.Temperature);
+            _coreVoltage = new Sensor("Core (SVI2)", SensorType.Voltage);
+            _socVoltage = new Sensor("SoC (SVI2)", SensorType.Voltage);
         }
 
         public List<NumaNode> Nodes { get; }
@@ -164,7 +159,6 @@ namespace HardwareProviders.CPU.Internals.Ryzen
                 svi0PlaneXIddcor = smusvi0TelPlane1 & 0xff;
                 vcc = 1.550 - vidStep * svi0PlaneXVddcor;
                 _socVoltage.Value = (float) vcc;
-                mainCpu.ActivateSensor(_socVoltage);
             }
         }
 

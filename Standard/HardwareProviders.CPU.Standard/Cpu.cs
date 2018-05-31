@@ -36,8 +36,7 @@ namespace HardwareProviders.CPU
         private ulong _lastTimeStampCount;
 
         internal Cpu(int processorIndex, Cpuid[][] cpuid)
-            : base(cpuid[0][0].Name, CreateIdentifier(cpuid[0][0].Vendor,
-                processorIndex))
+            : base(cpuid[0][0].Name)
         {
             Cpuid = cpuid;
 
@@ -71,19 +70,12 @@ namespace HardwareProviders.CPU
             else
                 _isInvariantTimeStampCounter = false;
 
-            TotalLoad = CoreCount > 1 ? new Sensor("CPU Total", 0, SensorType.Load, this) : null;
+            TotalLoad = CoreCount > 1 ? new Sensor("CPU Total", SensorType.Load) : null;
             CoreLoads = new Sensor[CoreCount];
             for (var i = 0; i < CoreLoads.Length; i++)
-                CoreLoads[i] = new Sensor(CoreString(i), i + 1,
-                    SensorType.Load, this);
+                CoreLoads[i] = new Sensor(CoreString(i),
+                    SensorType.Load);
             _cpuLoad = new CpuLoad(cpuid);
-            if (_cpuLoad.IsAvailable)
-            {
-                foreach (var sensor in CoreLoads)
-                    ActivateSensor(sensor);
-                if (TotalLoad != null)
-                    ActivateSensor(TotalLoad);
-            }
 
             if (HasTimeStampCounter)
             {
@@ -112,11 +104,9 @@ namespace HardwareProviders.CPU
         public Sensor BusClock { get; protected set; }
         public Sensor[] CoreClocks { get; protected set; }
         public Sensor[] CoreTemperatures { get; protected set; }
-        public Sensor[] PowerSensors { get; protected set; }
+        public Sensor[] CorePowers { get; protected set; }
 
         public Vendor Vendor { get; }
-
-        public override HardwareType HardwareType => HardwareType.CPU;
 
         public bool HasModelSpecificRegisters { get; }
 
@@ -125,27 +115,6 @@ namespace HardwareProviders.CPU
         public double TimeStampCounterFrequency { get; private set; }
 
         protected string CoreString(int i) => CoreCount == 1 ? "CPU Core" : "CPU Core #" + (i + 1);
-
-        private static Identifier CreateIdentifier(Vendor vendor,
-            int processorIndex)
-        {
-            string s;
-            switch (vendor)
-            {
-                case Vendor.Amd:
-                    s = "amdcpu";
-                    break;
-                case Vendor.Intel:
-                    s = "intelcpu";
-                    break;
-                default:
-                    s = "genericcpu";
-                    break;
-            }
-
-            return new Identifier(s,
-                processorIndex.ToString(CultureInfo.InvariantCulture));
-        }
 
         private static void EstimateTimeStampCounterFrequency(out double frequency, out double error)
         {
@@ -202,8 +171,6 @@ namespace HardwareProviders.CPU
         }
 
         protected virtual uint[] GetMsRs() => null;
-
-        public override string GetReport() => "";
 
         public static IEnumerable<Cpu> Discover()
         {

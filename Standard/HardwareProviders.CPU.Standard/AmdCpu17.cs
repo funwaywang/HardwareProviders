@@ -81,8 +81,6 @@ namespace HardwareProviders.CPU
 
         protected override uint[] GetMsRs() => new[] {PerfCtl0, PerfCtr0, Hwcr, MsrPstate0, CofvidStatus};
 
-        public override string GetReport() => "";
-
         public override void Update()
         {
             base.Update();

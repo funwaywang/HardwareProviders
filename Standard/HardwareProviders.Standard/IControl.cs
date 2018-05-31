@@ -12,8 +12,6 @@ namespace HardwareProviders
 {
     public interface IControl
     {
-        Identifier Identifier { get; }
-
         ControlMode ControlMode { get; }
 
         float SoftwareValue { get; }

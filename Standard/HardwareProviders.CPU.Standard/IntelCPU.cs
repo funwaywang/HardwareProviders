@@ -253,8 +253,8 @@ namespace HardwareProviders.CPU
                 CoreTemperatures = new Sensor[CoreCount];
                 for (var i = 0; i < CoreTemperatures.Length; i++)
                 {
-                    CoreTemperatures[i] = new Sensor(CoreString(i), i,
-                        SensorType.Temperature, this, new[]
+                    CoreTemperatures[i] = new Sensor(CoreString(i),
+                        (SensorType) SensorType.Temperature, new[]
                         {
                             new Parameter(
                                 "TjMax [°C]", "TjMax temperature of the core sensor.\n" +
@@ -263,7 +263,6 @@ namespace HardwareProviders.CPU
                                 "Temperature slope of the digital thermal sensor.\n" +
                                 "Temperature = TjMax - TSlope * Value.", 1)
                         });
-                    ActivateSensor(CoreTemperatures[i]);
                 }
             }
             else
@@ -276,8 +275,7 @@ namespace HardwareProviders.CPU
                 (cpuid[0][0].Data[6, 0] & 0x40) != 0 &&
                 Microarchitecture != IntelMicroarchitecture.Unknown)
             {
-                PackageTemperature = new Sensor("CPU Package",
-                    CoreTemperatures.Length, SensorType.Temperature, this, new[]
+                PackageTemperature = new Sensor((string) "CPU Package", (SensorType) SensorType.Temperature, new[]
                     {
                         new Parameter(
                             "TjMax [°C]", "TjMax temperature of the package sensor.\n" +
@@ -286,17 +284,13 @@ namespace HardwareProviders.CPU
                             "Temperature slope of the digital thermal sensor.\n" +
                             "Temperature = TjMax - TSlope * Value.", 1)
                     });
-                ActivateSensor(PackageTemperature);
             }
 
-            BusClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
+            BusClock = new Sensor("Bus Speed", SensorType.Clock);
             CoreClocks = new Sensor[CoreCount];
             for (var i = 0; i < CoreClocks.Length; i++)
             {
-                CoreClocks[i] =
-                    new Sensor(CoreString(i), i + 1, SensorType.Clock, this);
-                if (HasTimeStampCounter && Microarchitecture != IntelMicroarchitecture.Unknown)
-                    ActivateSensor(CoreClocks[i]);
+                CoreClocks[i] = new Sensor(CoreString(i), SensorType.Clock);
             }
 
             if (Microarchitecture == IntelMicroarchitecture.SandyBridge ||
@@ -309,7 +303,7 @@ namespace HardwareProviders.CPU
                 Microarchitecture == IntelMicroarchitecture.KabyLake ||
                 Microarchitecture == IntelMicroarchitecture.ApolloLake)
             {
-                PowerSensors = new Sensor[_energyStatusMsRs.Length];
+                CorePowers = new Sensor[_energyStatusMsRs.Length];
                 _lastEnergyTime = new DateTime[_energyStatusMsRs.Length];
                 _lastEnergyConsumed = new uint[_energyStatusMsRs.Length];
 
@@ -333,9 +327,7 @@ namespace HardwareProviders.CPU
 
                         _lastEnergyTime[i] = DateTime.UtcNow;
                         _lastEnergyConsumed[i] = eax;
-                        PowerSensors[i] = new Sensor(_powerSensorLabels[i], i,
-                            SensorType.Power, this);
-                        ActivateSensor(PowerSensors[i]);
+                        CorePowers[i] = new Sensor(_powerSensorLabels[i],SensorType.Power);
                     }
             }
 
@@ -379,8 +371,6 @@ namespace HardwareProviders.CPU
                 MsrPp1EneryStatus
             };
         }
-
-        public override string GetReport() => "";
 
         public override void Update()
         {
@@ -476,31 +466,32 @@ namespace HardwareProviders.CPU
                 if (newBusClock > 0)
                 {
                     BusClock.Value = (float) newBusClock;
-                    ActivateSensor(BusClock);
                 }
             }
 
-            if (PowerSensors != null)
-                foreach (var sensor in PowerSensors)
-                {
-                    if (sensor == null)
-                        continue;
+            if (CorePowers == null) return;
 
-                    if (!Ring0.Rdmsr(_energyStatusMsRs[sensor.Index], out var eax, out _))
-                        continue;
+            for (var index = 0; index < CorePowers.Length; index++)
+            {
+                var sensor = CorePowers[index];
+                if (sensor == null)
+                    continue;
 
-                    var time = DateTime.UtcNow;
-                    var energyConsumed = eax;
-                    var deltaTime =
-                        (float) (time - _lastEnergyTime[sensor.Index]).TotalSeconds;
-                    if (deltaTime < 0.01)
-                        continue;
+                if (!Ring0.Rdmsr(_energyStatusMsRs[index], out var eax, out _))
+                    continue;
 
-                    sensor.Value = _energyUnitMultiplier * unchecked(
-                                       energyConsumed - _lastEnergyConsumed[sensor.Index]) / deltaTime;
-                    _lastEnergyTime[sensor.Index] = time;
-                    _lastEnergyConsumed[sensor.Index] = energyConsumed;
-                }
+                var time = DateTime.UtcNow;
+                var energyConsumed = eax;
+                var deltaTime =
+                    (float) (time - _lastEnergyTime[index]).TotalSeconds;
+                if (deltaTime < 0.01)
+                    continue;
+
+                sensor.Value = _energyUnitMultiplier * unchecked(energyConsumed - _lastEnergyConsumed[index]) /
+                               deltaTime;
+                _lastEnergyTime[index] = time;
+                _lastEnergyConsumed[index] = energyConsumed;
+            }
         }
     }
 }

@@ -7,12 +7,9 @@
   Copyright (C) 2009-2010 Michael Möller <mmoeller@openhardwaremonitor.org>
 	
 */
-
-using System;
-
 namespace HardwareProviders
 {
-    public class Parameter : IParameter
+    public class Parameter
     {
         public Parameter(string name, string description, float defaultValue)
         {
@@ -33,16 +30,5 @@ namespace HardwareProviders
         public string Description { get; }
 
         public float Value { get; set; }
-
-        public void Accept(IVisitor visitor)
-        {
-            if (visitor == null)
-                throw new ArgumentNullException(nameof(visitor));
-            visitor.VisitParameter(this);
-        }
-
-        public void Traverse(IVisitor visitor)
-        {
-        }
     }
 }

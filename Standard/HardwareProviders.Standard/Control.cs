@@ -17,17 +17,14 @@ namespace HardwareProviders
         private ControlMode mode;
         private float softwareValue;
 
-        public Control(ISensor sensor, float minSoftwareValue, float maxSoftwareValue)
+        public Control(float minSoftwareValue, float maxSoftwareValue)
         {
-            Identifier = new Identifier(sensor.Identifier, "control");
             MinSoftwareValue = minSoftwareValue;
             MaxSoftwareValue = maxSoftwareValue;
 
             softwareValue = 0;
             mode = ControlMode.Undefined;
         }
-
-        public Identifier Identifier { get; }
 
         public ControlMode ControlMode
         {

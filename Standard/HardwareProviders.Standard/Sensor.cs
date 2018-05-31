@@ -8,100 +8,35 @@
 	
 */
 
-using System;
-using System.Globalization;
-using HardwareProviders.Collections;
+using System.Collections.Generic;
 
 namespace HardwareProviders
 {
-    public class Sensor : ISensor
+    public class Sensor
     {
-        private readonly Hardware hardware;
-        private readonly ReadOnlyArray<IParameter> parameters;
-        private float? currentValue;
-
-        public Sensor(string name, int index, SensorType sensorType,
-            Hardware hardware) :
-            this(name, index, sensorType, hardware, null)
+        public Sensor(string name, SensorType sensorType) : this(name, sensorType, null)
         {
         }
 
-        public Sensor(string name, int index, SensorType sensorType,
-            Hardware hardware, Parameter[] parameterDescriptions) :
-            this(name, index, false, sensorType, hardware,
-                parameterDescriptions)
+        public Sensor(string name,SensorType sensorType, IReadOnlyList<Parameter> parameterDescriptions)
         {
-        }
-
-        public Sensor(string name, int index, bool defaultHidden,
-            SensorType sensorType, Hardware hardware,
-            Parameter[] parameterDescriptions)
-        {
-            Index = index;
-            IsDefaultHidden = defaultHidden;
             SensorType = sensorType;
-            this.hardware = hardware;
-            var parameters = new Parameter[parameterDescriptions?.Length ?? 0];
+            var parameters = new Parameter[parameterDescriptions?.Count ?? 0];
             for (var i = 0; i < parameters.Length; i++)
                 parameters[i] = new Parameter(parameterDescriptions[i]);
-            this.parameters = parameters;
+            Parameters = parameters;
 
             Name =  name;
         }
 
         public SensorType SensorType { get; }
 
-        public Identifier Identifier => new Identifier(hardware.Identifier,
-            SensorType.ToString().ToLowerInvariant(),
-            Index.ToString(CultureInfo.InvariantCulture));
-
         public string Name { get; set; }
 
-        public int Index { get; }
+        public Parameter[] Parameters { get; }
 
-        public bool IsDefaultHidden { get; }
-
-        public IReadOnlyArray<IParameter> Parameters => parameters;
-
-        public float? Value
-        {
-            get => currentValue;
-            set
-            {
-                currentValue = value;
-                if (Min > value || !Min.HasValue)
-                    Min = value;
-                if (Max < value || !Max.HasValue)
-                    Max = value;
-            }
-        }
-
-        public float? Min { get; private set; }
-        public float? Max { get; private set; }
+        public float? Value { get; set; }
 
         public IControl Control { get; set; }
-
-        public void ResetMin()
-        {
-            Min = null;
-        }
-
-        public void ResetMax()
-        {
-            Max = null;
-        }
-
-        public void Accept(IVisitor visitor)
-        {
-            if (visitor == null)
-                throw new ArgumentNullException(nameof(visitor));
-            visitor.VisitSensor(this);
-        }
-
-        public void Traverse(IVisitor visitor)
-        {
-            foreach (var parameter in parameters)
-                parameter.Accept(visitor);
-        }
     }
 }

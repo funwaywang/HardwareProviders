@@ -57,8 +57,7 @@ namespace HardwareProviders.CPU
                 CoreTemperatures = new Sensor[CoreCount];
                 for (var i = 0; i < CoreCount; i++)
                     CoreTemperatures[i] =
-                        new Sensor("Core #" + (i + 1), i, SensorType.Temperature,
-                            this, new[]
+                        new Sensor("Core #" + (i + 1), (SensorType) SensorType.Temperature, new[]
                             {
                                 new Parameter("Offset [°C]",
                                     "Temperature offset of the thermal sensor.\n" +
@@ -73,14 +72,12 @@ namespace HardwareProviders.CPU
             _miscellaneousControlAddress = GetPciAddress(
                 MiscellaneousControlFunction, MiscellaneousControlDeviceId);
 
-            BusClock = new Sensor("Bus Speed", 0, SensorType.Clock, this);
+            BusClock = new Sensor("Bus Speed", SensorType.Clock);
             CoreClocks = new Sensor[CoreCount];
             for (var i = 0; i < CoreClocks.Length; i++)
             {
-                CoreClocks[i] = new Sensor(CoreString(i), i + 1, SensorType.Clock,
-                    this);
-                if (HasTimeStampCounter)
-                    ActivateSensor(CoreClocks[i]);
+                CoreClocks[i] = new Sensor(CoreString(i), SensorType.Clock);
+
             }
 
             Update();
@@ -90,8 +87,6 @@ namespace HardwareProviders.CPU
         {
             return new[] {FidvidStatus};
         }
-
-        public override string GetReport() => "";
 
         public override void Update()
         {
@@ -109,11 +104,6 @@ namespace HardwareProviders.CPU
                         {
                             CoreTemperatures[i].Value = ((value >> 16) & 0xFF) +
                                                          CoreTemperatures[i].Parameters[0].Value;
-                            ActivateSensor(CoreTemperatures[i]);
-                        }
-                        else
-                        {
-                            DeactivateSensor(CoreTemperatures[i]);
                         }
                     }
 
@@ -145,7 +135,6 @@ namespace HardwareProviders.CPU
 
             if (!(newBusClock > 0)) return;
             BusClock.Value = (float) newBusClock;
-            ActivateSensor(BusClock);
         }
     }
 }

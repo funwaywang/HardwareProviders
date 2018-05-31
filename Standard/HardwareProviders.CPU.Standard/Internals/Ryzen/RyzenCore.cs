@@ -29,15 +29,10 @@ namespace HardwareProviders.CPU.Internals.Ryzen
             Threads = new List<Cpuid>();
             CoreId = id;
             _hw = (AmdCpu17) hw;
-            _clock = new Sensor("Core #" + CoreId, _hw._sensorClock++, SensorType.Clock, _hw);
-            _multiplier = new Sensor("Core #" + CoreId, _hw._sensorMulti++, SensorType.Factor, _hw);
-            _power = new Sensor("Core #" + CoreId + " (SMU)", _hw._sensorPower++, SensorType.Power, _hw);
-            _vcore = new Sensor("Core #" + CoreId + " VID", _hw._sensorVoltage++, SensorType.Voltage, _hw);
-
-            _hw.ActivateSensor(_clock);
-            _hw.ActivateSensor(_multiplier);
-            _hw.ActivateSensor(_power);
-            _hw.ActivateSensor(_vcore);
+            _clock = new Sensor("Core #" + CoreId, SensorType.Clock);
+            _multiplier = new Sensor("Core #" + CoreId, SensorType.Factor);
+            _power = new Sensor("Core #" + CoreId + " (SMU)", SensorType.Power);
+            _vcore = new Sensor("Core #" + CoreId + " VID", SensorType.Voltage);
         }
 
         public int CoreId { get; }
