@@ -3,10 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>HardwareProviders.CPU</RootNamespace>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Matteo Fabbri</Authors>
+    <Description>Retrieves CPUs installed on the system and relatives bus, clocks, voltages and temperatures.
+For dotnet standard.</Description>
+    <Copyright>Matteo Fabbri 2018</Copyright>
+    <PackageLicenseUrl>https://github.com/matteofabbri/HardwareProviders/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/matteofabbri/HardwareProviders</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/matteofabbri/HardwareProviders</RepositoryUrl>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>hardware cpu monitor bus clock temperature core voltage model processor processors microarchitecture intel amd package power powers frequency cpuid</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\HardwareProviders.Standard\HardwareProviders.Standard.csproj" />
-  </ItemGroup>
 
 </Project>

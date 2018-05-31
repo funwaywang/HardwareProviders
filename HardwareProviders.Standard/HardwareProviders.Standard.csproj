@@ -4,6 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>HardwareProviders.Standard</AssemblyName>
     <RootNamespace>HardwareProviders</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Matteo Fabbri</Authors>
+    <Description>Base framework from HardwareProviders libraries. Contains utility for read and write directly on computer ports.
+For dotnet standard.</Description>
+    <Copyright>Matteo Fabbri</Copyright>
+    <PackageLicenseUrl>https://github.com/matteofabbri/HardwareProviders/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/matteofabbri/HardwareProviders</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/matteofabbri/HardwareProviders</RepositoryUrl>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageTags>wmi monitor hardware software license performance windows components Windows Management Instrumentation</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
