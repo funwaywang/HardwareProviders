@@ -10,9 +10,10 @@
 
 using System;
 using System.Text;
-using OpenHardwareMonitor.Hardware.LPC;
+using HardwareProviders.Board.LPC;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.Mainboard
+namespace HardwareProviders.Board
 {
     internal class Mainboard : IHardware
     {

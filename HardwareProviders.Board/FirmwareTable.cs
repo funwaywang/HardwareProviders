@@ -12,7 +12,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace OpenHardwareMonitor.Hardware
+namespace HardwareProviders.Board
 {
     internal static class FirmwareTable
     {

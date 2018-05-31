@@ -11,8 +11,9 @@
 using System;
 using System.Globalization;
 using System.Text;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.LPC
+namespace HardwareProviders.Board.LPC
 {
     internal class IT87XX : ISuperIO
     {

@@ -11,8 +11,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.Nvidia
+namespace HardwareProviders.GPU.Nvidia
 {
     public class NvidiaGroup : IGroup
     {
@@ -87,7 +88,7 @@ namespace OpenHardwareMonitor.Hardware.Nvidia
             for (var i = 0; i < count; i++)
             {
                 displayHandles.TryGetValue(handles[i], out var displayHandle);
-                hardware.Add(new NvidiaGPU(i, handles[i], displayHandle));
+                hardware.Add(new NvidiaGpu(i, handles[i], displayHandle));
             }
 
             report.AppendLine();

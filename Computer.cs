@@ -13,12 +13,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Security.Permissions;
+using HardwareProviders.Board;
 using HardwareProviders.CPU;
-using OpenHardwareMonitor.Hardware.ATI;
+using HardwareProviders.GPU.ATI;
+using HardwareProviders.GPU.Nvidia;
 using OpenHardwareMonitor.Hardware.HDD;
 using OpenHardwareMonitor.Hardware.Heatmaster;
-using OpenHardwareMonitor.Hardware.Mainboard;
-using OpenHardwareMonitor.Hardware.Nvidia;
 using OpenHardwareMonitor.Hardware.RAM;
 using OpenHardwareMonitor.Hardware.TBalancer;
 

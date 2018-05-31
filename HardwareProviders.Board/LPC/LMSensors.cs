@@ -13,7 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace OpenHardwareMonitor.Hardware.LPC
+namespace HardwareProviders.Board.LPC
 {
     internal class LMSensors
     {

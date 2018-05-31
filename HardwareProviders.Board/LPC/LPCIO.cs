@@ -13,8 +13,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Threading;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.LPC
+namespace HardwareProviders.Board.LPC
 {
     internal class LPCIO
     {

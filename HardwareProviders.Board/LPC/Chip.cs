@@ -8,7 +8,7 @@
 	
 */
 
-namespace OpenHardwareMonitor.Hardware.LPC
+namespace HardwareProviders.Board.LPC
 {
     internal enum Chip : ushort
     {

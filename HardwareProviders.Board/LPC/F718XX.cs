@@ -10,8 +10,9 @@
 
 using System.Globalization;
 using System.Text;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.LPC
+namespace HardwareProviders.Board.LPC
 {
     internal class F718XX : ISuperIO
     {

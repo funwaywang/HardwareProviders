@@ -12,7 +12,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace OpenHardwareMonitor.Hardware.ATI
+namespace HardwareProviders.GPU.ATI
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct ADLAdapterInfo

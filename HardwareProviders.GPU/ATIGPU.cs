@@ -10,37 +10,40 @@
 
 using System;
 using System.Globalization;
+using HardwareProviders.GPU.ATI;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.ATI
+namespace HardwareProviders.GPU
 {
-    internal sealed class ATIGPU : Hardware
+    public sealed class Atigpu : Hardware
     {
-        private readonly int adapterIndex;
-        private readonly Sensor controlSensor;
-        private readonly Sensor coreClock;
-        private readonly Sensor coreLoad;
-        private readonly Sensor coreVoltage;
-        private readonly Sensor fan;
-        private readonly Control fanControl;
-        private readonly Sensor memoryClock;
-        private readonly Sensor temperature;
+        private readonly int _adapterIndex;
 
-        public ATIGPU(string name, int adapterIndex, int busNumber,
+        public Sensor ControlSensor { get; }
+        public Sensor CoreClock { get; }
+        public Sensor CoreLoad { get; }
+        public Sensor CoreVoltage { get; }
+        public Sensor Fan { get; }
+        public Control FanControl { get; }
+        public Sensor MemoryClock { get; }
+        public Sensor Temperature { get; }
+
+        public Atigpu(string name, int adapterIndex, int busNumber,
             int deviceNumber)
             : base(name, new Identifier("atigpu",
                 adapterIndex.ToString(CultureInfo.InvariantCulture)))
         {
-            this.adapterIndex = adapterIndex;
+            this._adapterIndex = adapterIndex;
             BusNumber = busNumber;
             DeviceNumber = deviceNumber;
 
-            temperature = new Sensor("GPU Core", 0, SensorType.Temperature, this);
-            fan = new Sensor("GPU Fan", 0, SensorType.Fan, this);
-            coreClock = new Sensor("GPU Core", 0, SensorType.Clock, this);
-            memoryClock = new Sensor("GPU Memory", 1, SensorType.Clock, this);
-            coreVoltage = new Sensor("GPU Core", 0, SensorType.Voltage, this);
-            coreLoad = new Sensor("GPU Core", 0, SensorType.Load, this);
-            controlSensor = new Sensor("GPU Fan", 0, SensorType.Control, this);
+            Temperature = new Sensor("GPU Core", 0, SensorType.Temperature, this);
+            Fan = new Sensor("GPU Fan", 0, SensorType.Fan, this);
+            CoreClock = new Sensor("GPU Core", 0, SensorType.Clock, this);
+            MemoryClock = new Sensor("GPU Memory", 1, SensorType.Clock, this);
+            CoreVoltage = new Sensor("GPU Core", 0, SensorType.Voltage, this);
+            CoreLoad = new Sensor("GPU Core", 0, SensorType.Load, this);
+            ControlSensor = new Sensor("GPU Fan", 0, SensorType.Control, this);
 
             var afsi = new ADLFanSpeedInfo();
             if (ADL.ADL_Overdrive5_FanSpeedInfo_Get(adapterIndex, 0, ref afsi)
@@ -50,13 +53,13 @@ namespace OpenHardwareMonitor.Hardware.ATI
                 afsi.MinPercent = 0;
             }
 
-            fanControl = new Control(controlSensor, afsi.MinPercent,
+            FanControl = new Control(ControlSensor, afsi.MinPercent,
                 afsi.MaxPercent);
-            fanControl.ControlModeChanged += ControlModeChanged;
-            fanControl.SoftwareControlValueChanged +=
+            FanControl.ControlModeChanged += ControlModeChanged;
+            FanControl.SoftwareControlValueChanged +=
                 SoftwareControlValueChanged;
-            ControlModeChanged(fanControl);
-            controlSensor.Control = fanControl;
+            ControlModeChanged(FanControl);
+            ControlSensor.Control = FanControl;
             Update();
         }
 
@@ -75,7 +78,7 @@ namespace OpenHardwareMonitor.Hardware.ATI
                 adlf.SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_PERCENT;
                 adlf.Flags = ADL.ADL_DL_FANCTRL_FLAG_USER_DEFINED_SPEED;
                 adlf.FanSpeed = (int) control.SoftwareValue;
-                ADL.ADL_Overdrive5_FanSpeed_Set(adapterIndex, 0, ref adlf);
+                ADL.ADL_Overdrive5_FanSpeed_Set(_adapterIndex, 0, ref adlf);
             }
         }
 
@@ -98,102 +101,102 @@ namespace OpenHardwareMonitor.Hardware.ATI
 
         private void SetDefaultFanSpeed()
         {
-            ADL.ADL_Overdrive5_FanSpeedToDefault_Set(adapterIndex, 0);
+            ADL.ADL_Overdrive5_FanSpeedToDefault_Set(_adapterIndex, 0);
         }
 
         public override void Update()
         {
             var adlt = new ADLTemperature();
-            if (ADL.ADL_Overdrive5_Temperature_Get(adapterIndex, 0, ref adlt)
+            if (ADL.ADL_Overdrive5_Temperature_Get(_adapterIndex, 0, ref adlt)
                 == ADL.ADL_OK)
             {
-                temperature.Value = 0.001f * adlt.Temperature;
-                ActivateSensor(temperature);
+                Temperature.Value = 0.001f * adlt.Temperature;
+                ActivateSensor(Temperature);
             }
             else
             {
-                temperature.Value = null;
+                Temperature.Value = null;
             }
 
             var adlf = new ADLFanSpeedValue();
             adlf.SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_RPM;
-            if (ADL.ADL_Overdrive5_FanSpeed_Get(adapterIndex, 0, ref adlf)
+            if (ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf)
                 == ADL.ADL_OK)
             {
-                fan.Value = adlf.FanSpeed;
-                ActivateSensor(fan);
+                Fan.Value = adlf.FanSpeed;
+                ActivateSensor(Fan);
             }
             else
             {
-                fan.Value = null;
+                Fan.Value = null;
             }
 
             adlf = new ADLFanSpeedValue();
             adlf.SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_PERCENT;
-            if (ADL.ADL_Overdrive5_FanSpeed_Get(adapterIndex, 0, ref adlf)
+            if (ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf)
                 == ADL.ADL_OK)
             {
-                controlSensor.Value = adlf.FanSpeed;
-                ActivateSensor(controlSensor);
+                ControlSensor.Value = adlf.FanSpeed;
+                ActivateSensor(ControlSensor);
             }
             else
             {
-                controlSensor.Value = null;
+                ControlSensor.Value = null;
             }
 
             var adlp = new ADLPMActivity();
-            if (ADL.ADL_Overdrive5_CurrentActivity_Get(adapterIndex, ref adlp)
+            if (ADL.ADL_Overdrive5_CurrentActivity_Get(_adapterIndex, ref adlp)
                 == ADL.ADL_OK)
             {
                 if (adlp.EngineClock > 0)
                 {
-                    coreClock.Value = 0.01f * adlp.EngineClock;
-                    ActivateSensor(coreClock);
+                    CoreClock.Value = 0.01f * adlp.EngineClock;
+                    ActivateSensor(CoreClock);
                 }
                 else
                 {
-                    coreClock.Value = null;
+                    CoreClock.Value = null;
                 }
 
                 if (adlp.MemoryClock > 0)
                 {
-                    memoryClock.Value = 0.01f * adlp.MemoryClock;
-                    ActivateSensor(memoryClock);
+                    MemoryClock.Value = 0.01f * adlp.MemoryClock;
+                    ActivateSensor(MemoryClock);
                 }
                 else
                 {
-                    memoryClock.Value = null;
+                    MemoryClock.Value = null;
                 }
 
                 if (adlp.Vddc > 0)
                 {
-                    coreVoltage.Value = 0.001f * adlp.Vddc;
-                    ActivateSensor(coreVoltage);
+                    CoreVoltage.Value = 0.001f * adlp.Vddc;
+                    ActivateSensor(CoreVoltage);
                 }
                 else
                 {
-                    coreVoltage.Value = null;
+                    CoreVoltage.Value = null;
                 }
 
-                coreLoad.Value = Math.Min(adlp.ActivityPercent, 100);
-                ActivateSensor(coreLoad);
+                CoreLoad.Value = Math.Min(adlp.ActivityPercent, 100);
+                ActivateSensor(CoreLoad);
             }
             else
             {
-                coreClock.Value = null;
-                memoryClock.Value = null;
-                coreVoltage.Value = null;
-                coreLoad.Value = null;
+                CoreClock.Value = null;
+                MemoryClock.Value = null;
+                CoreVoltage.Value = null;
+                CoreLoad.Value = null;
             }
         }
 
         public override void Close()
         {
-            fanControl.ControlModeChanged -= ControlModeChanged;
-            fanControl.SoftwareControlValueChanged -=
+            FanControl.ControlModeChanged -= ControlModeChanged;
+            FanControl.SoftwareControlValueChanged -=
                 SoftwareControlValueChanged;
 
-            if (fanControl.ControlMode != ControlMode.Undefined)
+            if (FanControl.ControlMode != ControlMode.Undefined)
                 SetDefaultFanSpeed();
             base.Close();
         }

@@ -20,7 +20,7 @@ namespace TestAppp
             while (true)
             {
                 foreach (var cpu in cpus) cpu.Update();
-                Task.Delay(1000);
+                Task.Delay(1000).Wait();
             }
         }
     }

@@ -8,7 +8,7 @@
 	
 */
 
-namespace OpenHardwareMonitor.Hardware.Mainboard
+namespace HardwareProviders.Board
 {
     internal enum Model
     {

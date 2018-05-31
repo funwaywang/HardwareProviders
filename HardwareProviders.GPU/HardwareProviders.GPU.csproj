@@ -43,10 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ATI\ADL.cs" />
-    <Compile Include="ATI\ATIGPU.cs" />
+    <Compile Include="ATIGPU.cs" />
     <Compile Include="ATI\ATIGroup.cs" />
     <Compile Include="Nvidia\NVAPI.cs" />
-    <Compile Include="Nvidia\NvidiaGPU.cs" />
+    <Compile Include="NvidiaGPU.cs" />
     <Compile Include="Nvidia\NvidiaGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -12,12 +12,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using OpenHardwareMonitor.Hardware;
 
-namespace OpenHardwareMonitor.Hardware.ATI
+namespace HardwareProviders.GPU.ATI
 {
     public class ATIGroup : IGroup
     {
-        private readonly List<ATIGPU> hardware = new List<ATIGPU>();
+        private readonly List<Atigpu> hardware = new List<Atigpu>();
         private readonly StringBuilder report = new StringBuilder();
 
         public ATIGroup()
@@ -94,7 +95,7 @@ namespace OpenHardwareMonitor.Hardware.ATI
                                         }
 
                                     if (!found)
-                                        hardware.Add(new ATIGPU(
+                                        hardware.Add(new Atigpu(
                                             adapterInfo[i].AdapterName.Trim(),
                                             adapterInfo[i].AdapterIndex,
                                             adapterInfo[i].BusNumber,

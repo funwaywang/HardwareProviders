@@ -13,7 +13,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace OpenHardwareMonitor.Hardware.Nvidia
+namespace HardwareProviders.GPU.Nvidia
 {
     internal enum NvStatus
     {

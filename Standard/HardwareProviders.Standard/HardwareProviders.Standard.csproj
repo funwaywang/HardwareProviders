@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>HardwareProviders.Standard</AssemblyName>
+    <RootNamespace>HardwareProviders</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="WinRing0.sys" />
+    <None Remove="WinRing0x64.sys" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="WinRing0.sys" />
+    <EmbeddedResource Include="WinRing0x64.sys" />
+  </ItemGroup>
+
+</Project>

@@ -8,7 +8,9 @@
 	
 */
 
-namespace OpenHardwareMonitor.Hardware.LPC
+using OpenHardwareMonitor.Hardware;
+
+namespace HardwareProviders.Board.LPC
 {
     internal class LPCPort
     {

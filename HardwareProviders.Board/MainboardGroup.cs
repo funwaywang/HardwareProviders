@@ -8,7 +8,9 @@
 	
 */
 
-namespace OpenHardwareMonitor.Hardware.Mainboard
+using OpenHardwareMonitor.Hardware;
+
+namespace HardwareProviders.Board
 {
     public class MainboardGroup : IGroup
     {
