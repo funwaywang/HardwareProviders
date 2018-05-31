@@ -37,8 +37,6 @@ namespace HardwareProviders
 
         public float? Value { get; set; }
 
-        public Control Control { get; set; }
-
         public Sensor(string name, SensorType sensorType) : this(name, sensorType, null)
         {
 
