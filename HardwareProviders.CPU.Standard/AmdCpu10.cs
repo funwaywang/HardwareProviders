@@ -19,7 +19,7 @@ using HardwareProviders.CPU.Internals;
 
 namespace HardwareProviders.CPU
 {
-    internal sealed class AmdCpu10 : AmdCpu
+    public sealed class AmdCpu10 : AmdCpu
     {
         private const uint PerfCtl0 = 0xC0010000;
         private const uint PerfCtr0 = 0xC0010004;
@@ -54,7 +54,7 @@ namespace HardwareProviders.CPU
 
         private readonly double _timeStampCounterMultiplier;
 
-        public AmdCpu10(int processorIndex, Cpuid[][] cpuid)
+        internal AmdCpu10(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
 

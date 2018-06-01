@@ -14,7 +14,7 @@ using HardwareProviders.CPU.Internals;
 
 namespace HardwareProviders.CPU
 {
-    internal sealed class AmdCpu0 : AmdCpu
+    public class AmdCpu0 : AmdCpu
     {
         private const uint FidvidStatus = 0xC0010042;
 
@@ -27,7 +27,7 @@ namespace HardwareProviders.CPU
         private readonly byte _thermSenseCoreSelCpu0;
         private readonly byte _thermSenseCoreSelCpu1;
 
-        public AmdCpu0(int processorIndex, Cpuid[][] cpuid)
+        internal AmdCpu0(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
             var offset = -49.0f;

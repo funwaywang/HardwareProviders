@@ -14,7 +14,7 @@ using HardwareProviders.CPU.Internals;
 
 namespace HardwareProviders.CPU
 {
-    internal sealed class IntelCpu : Cpu
+    public class IntelCpu : Cpu
     {
         private const uint Ia32ThermStatusMsr = 0x019C;
         private const uint Ia32TemperatureTarget = 0x01A2;
@@ -44,7 +44,7 @@ namespace HardwareProviders.CPU
             MsrPp0EneryStatus, MsrPp1EneryStatus, MsrDramEnergyStatus
         };
 
-        public IntelCpu(int processorIndex, Cpuid[][] cpuid)
+        internal IntelCpu(int processorIndex, Cpuid[][] cpuid)
             : base(processorIndex, cpuid)
         {
             // set tjMax

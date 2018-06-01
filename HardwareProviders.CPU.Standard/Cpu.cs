@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Security.Permissions;
 using HardwareProviders.CPU.Internals;
 
 namespace HardwareProviders.CPU

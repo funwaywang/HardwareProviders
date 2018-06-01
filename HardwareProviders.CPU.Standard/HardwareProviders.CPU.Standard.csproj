@@ -14,6 +14,13 @@ For dotnet standard.</Description>
     <PackageReleaseNotes></PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>hardware cpu monitor bus clock temperature core voltage model processor processors microarchitecture intel amd package power powers frequency cpuid</PackageTags>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.2.0</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HardwareProviders.Standard" Version="1.0.0" />
+  </ItemGroup>
 
 </Project>
