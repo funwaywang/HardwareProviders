@@ -14,9 +14,12 @@ For Dotnet Standard and 4.6
 This project contains code extracted from [Open Hardware Monitor](https://github.com/openhardwaremonitor) and is released under the same  [license](https://github.com/matteofabbri/HardwareProviders/blob/master/LICENSE)
 
 
-## Usage
+## CPU libary Usage
 Retrieving information about the current state of CPUs is incredibly simple.
-TROUBLESHOOTING: Retrieving values from inside the CPU requires administrator permissions.
+
+TROUBLESHOOTING:
+Depending on Windows version you may need to run it as administrator to retrieve all values.
+
 
 
 ```csharp
