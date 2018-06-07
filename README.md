@@ -14,7 +14,7 @@ For Dotnet Standard and 4.6
 This project contains code extracted from [Open Hardware Monitor](https://github.com/openhardwaremonitor) and is released under the same  [license](https://github.com/matteofabbri/HardwareProviders/blob/master/LICENSE)
 
 
-## CPU libary Usage
+## CPU library Usage
 Retrieving information about the current state of CPUs is incredibly simple.
 
 TROUBLESHOOTING:
