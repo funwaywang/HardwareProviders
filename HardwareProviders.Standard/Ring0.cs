@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading;
