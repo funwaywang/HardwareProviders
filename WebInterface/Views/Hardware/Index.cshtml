@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Maddalena.Modules.Hardware.CpuModel>
+
+    @{
+        ViewData["Title"] = "Cpu live data";
+    }
+
+    <h2>CPU live data</h2>
+
+    <table class="table">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.Vendor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vendor)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.CorePowers)
+                </td>
+                <td>
+                    @foreach (var sensor in item.CorePowers)
+                    {
+                        @sensor?.ToString()
+                        <br />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.CoreTemperatures)
+                </td>
+                <td>
+                    @foreach (var sensor in item.CoreTemperatures)
+                    {
+                        @sensor.ToString()
+                        <br />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.CoreClocks)
+                </td>
+                <td>
+                    @foreach (var sensor in item.CoreClocks)
+                    {
+                        @sensor.ToString()
+                        <br />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.BusClock)
+                </td>
+                <td>
+                    @item.BusClock.ToString()
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.PackageTemperature)
+                </td>
+                <td>
+                    @item.PackageTemperature.ToString()
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.CoreLoads)
+                </td>
+                <td>
+                    @foreach (var sensor in item.CoreLoads)
+                    {
+                        @sensor.ToString()
+                        <br />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(modelItem => item.TotalLoad)
+                </td>
+                <td>
+                    @item.TotalLoad.ToString()
+                </td>
+            </tr>
+        }
+    </table>
