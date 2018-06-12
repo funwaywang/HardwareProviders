@@ -53,6 +53,6 @@ namespace HardwareProviders
             Name =  name;
         }
 
-        public override string ToString() => $"{Value} {Units[SensorType]}";
+        public override string ToString() => $"{Name} {Value} {Units[SensorType]}";
     }
 }
