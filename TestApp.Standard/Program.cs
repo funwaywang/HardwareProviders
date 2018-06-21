@@ -15,7 +15,7 @@ namespace TestApp.Standard
         [SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true)]
         private static void Main(string[] args)
         {
-            var cpus = Cpu.Discover().ToArray();
+            var cpus = new CpuCollection();
 
             while (true)
             {

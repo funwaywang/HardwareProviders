@@ -6,7 +6,7 @@ using HardwareProviders.CPU.Internals;
 
 namespace HardwareProviders.CPU
 {
-    class CpuCollection : IDisposable, IEnumerable<Cpu>
+    public class CpuCollection : IDisposable, IEnumerable<Cpu>
     {
         private readonly Timer _timer;
         private readonly List<Cpu> _list;

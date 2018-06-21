@@ -16,7 +16,7 @@ For dotnet standard.</Description>
     <PackageTags>hardware cpu monitor bus clock temperature core voltage model processor processors microarchitecture intel amd package power powers frequency cpuid</PackageTags>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.3.0</Version>
+    <Version>1.3.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
