@@ -37,6 +37,8 @@ namespace HardwareProviders
 
         public float? Value { get; set; }
 
+        public string Unit => Units[SensorType];
+
         public Sensor(string name, SensorType sensorType) : this(name, sensorType, null)
         {
 
@@ -53,6 +55,6 @@ namespace HardwareProviders
             Name =  name;
         }
 
-        public override string ToString() => $"{Name} {Value} {Units[SensorType]}";
+        public override string ToString() => $"{Name} {Value} {Unit}";
     }
 }
