@@ -9,7 +9,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using HardwareProviders.CPU.Internals;
 
@@ -84,7 +83,6 @@ namespace HardwareProviders.CPU
 
             TimeStampCounterFrequency = _estimatedTimeStampCounterFrequency;
         }
-
 
         public int CoreCount { get; protected set; }
 
@@ -161,126 +159,6 @@ namespace HardwareProviders.CPU
         }
 
         protected virtual uint[] GetMsRs() => null;
-
-        
-        public static IEnumerable<Cpu> Discover()
-        {
-            Ring0.Open();
-            Opcode.Open();
-
-            var processorThreads = GetProcessorThreads();
-            var _threads = new Cpuid[processorThreads.Length][][];
-
-            var index = 0;
-            foreach (var threads in processorThreads)
-            {
-                if (threads.Length == 0)
-                    continue;
-
-                var coreThreads = GroupThreadsByCore(threads);
-
-                _threads[index] = coreThreads;
-
-                switch (threads[0].Vendor)
-                {
-                    case Vendor.Intel:
-                        yield return new IntelCpu(index, coreThreads);
-                        break;
-                    case Vendor.Amd:
-                        switch (threads[0].Family)
-                        {
-                            case 0x0F:
-                                yield return new AmdCpu0(index, coreThreads);
-                                break;
-                            case 0x10:
-                            case 0x11:
-                            case 0x12:
-                            case 0x14:
-                            case 0x15:
-                            case 0x16:
-                                yield return new AmdCpu10(index, coreThreads);
-                                break;
-                            case 0x17:
-                                yield return new AmdCpu17(index, coreThreads);
-                                break;
-                            default:
-                                yield return new Cpu(index, coreThreads);
-                                break;
-                        }
-
-                        break;
-                    default:
-                        yield return new Cpu(index, coreThreads);
-                        break;
-                }
-
-                index++;
-            }
-        }
-
-        private static Cpuid[][] GetProcessorThreads()
-        {
-            var threads = new List<Cpuid>();
-            for (var i = 0; i < 64; i++)
-                try
-                {
-                    threads.Add(new Cpuid(i));
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                }
-
-            var processors =
-                new SortedDictionary<uint, List<Cpuid>>();
-            foreach (var thread in threads)
-            {
-                processors.TryGetValue(thread.ProcessorId, out var list);
-                if (list == null)
-                {
-                    list = new List<Cpuid>();
-                    processors.Add(thread.ProcessorId, list);
-                }
-
-                list.Add(thread);
-            }
-
-            var processorThreads = new Cpuid[processors.Count][];
-            var index = 0;
-            foreach (var list in processors.Values)
-            {
-                processorThreads[index] = list.ToArray();
-                index++;
-            }
-
-            return processorThreads;
-        }
-
-        private static Cpuid[][] GroupThreadsByCore(IEnumerable<Cpuid> threads)
-        {
-            var cores =
-                new SortedDictionary<uint, List<Cpuid>>();
-            foreach (var thread in threads)
-            {
-                cores.TryGetValue(thread.CoreId, out var coreList);
-                if (coreList == null)
-                {
-                    coreList = new List<Cpuid>();
-                    cores.Add(thread.CoreId, coreList);
-                }
-
-                coreList.Add(thread);
-            }
-
-            var coreThreads = new Cpuid[cores.Count][];
-            var index = 0;
-            foreach (var list in cores.Values)
-            {
-                coreThreads[index] = list.ToArray();
-                index++;
-            }
-
-            return coreThreads;
-        }
 
         public override void Update()
         {
