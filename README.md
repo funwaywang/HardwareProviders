@@ -39,21 +39,27 @@ namespace Maddalena
         {
             var cpus = new CpuCollection();
 
-            foreach (var cpu in cpus)
+            while (true)
             {
-                cpu.Update();
-                Console.WriteLine("CPU {0} by {1}", cpu.Name, cpu.Vendor);
+                //Read current values of every vpu
+                cpus.Update();
 
-                Console.WriteLine("Bus clock {0}", cpu.BusClock);
-                Console.WriteLine("Core temperatures {0}", SensorsToString(cpu.CoreTemperatures));
-                Console.WriteLine("Core powers {0}", SensorsToString(cpu.CorePowers));
-                Console.WriteLine("Core clocks {0}", SensorsToString(cpu.CoreClocks));
+                foreach (var cpu in cpus)
+                {
+                    Console.WriteLine("CPU {0} by {1}", cpu.Name, cpu.Vendor);
 
-                Console.WriteLine();
-                Console.WriteLine("Core loads {0}", SensorsToString(cpu.CoreLoads));
-                Console.WriteLine("Total load {0}", cpu.TotalLoad);
+                    Console.WriteLine("Bus clock {0}", cpu.BusClock);
+                    Console.WriteLine("Core temperatures {0}", SensorsToString(cpu.CoreTemperatures));
+                    Console.WriteLine("Core powers {0}", SensorsToString(cpu.CorePowers));
+                    Console.WriteLine("Core clocks {0}", SensorsToString(cpu.CoreClocks));
+
+                    Console.WriteLine();
+                    Console.WriteLine("Core loads {0}", SensorsToString(cpu.CoreLoads));
+                    Console.WriteLine("Total load {0}", cpu.TotalLoad);
+                }
+
+                Task.Delay(1000).Wait();
             }
         }
-    }
 }
 ```
