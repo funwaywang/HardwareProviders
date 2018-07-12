@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HardwareProviders;
+using HardwareProviders.CPU;
 
 namespace Maddalena
 {
@@ -36,10 +37,11 @@ namespace Maddalena
 
         public static void Main(string[] args)
         {
-            var cpus = HardwareProviders.CPU.Cpu.Discover();
+            var cpus = new CpuCollection();
 
             foreach (var cpu in cpus)
             {
+                cpu.Update();
                 Console.WriteLine("CPU {0} by {1}", cpu.Name, cpu.Vendor);
 
                 Console.WriteLine("Bus clock {0}", cpu.BusClock);
