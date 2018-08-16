@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7DE56519-4FC8-4A72-A143-098ACC4DE53C}</ProjectGuid>
+    <ProjectGuid>{9520805F-5F7A-492E-8B39-DF540CD33F86}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HardwareProviders.CPU</RootNamespace>
-    <AssemblyName>HardwareProviders.CPU</AssemblyName>
+    <RootNamespace>HardwareProviders.HDD</RootNamespace>
+    <AssemblyName>HardwareProviders.HDD</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Management.Instrumentation" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,21 +42,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AmdCpu.cs" />
-    <Compile Include="AmdCpu0.cs" />
-    <Compile Include="AmdCpu10.cs" />
-    <Compile Include="AmdCpu17.cs" />
-    <Compile Include="Cpu.cs" />
-    <Compile Include="CpuId.cs" />
-    <Compile Include="CpuLoad.cs" />
-    <Compile Include="IntelCpu.cs" />
-    <Compile Include="IntelMicroarchitecture.cs" />
+    <Compile Include="AbstractHarddrive.cs" />
+    <Compile Include="DebugSmart.cs" />
+    <Compile Include="DriveAttributeValue.cs" />
+    <Compile Include="DriveThresholdValue.cs" />
+    <Compile Include="HarddriveGroup.cs" />
+    <Compile Include="HDDGeneric.cs" />
+    <Compile Include="ISmart.cs" />
+    <Compile Include="NamePrefixAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ryzen\RyzenCore.cs" />
-    <Compile Include="Ryzen\RyzenCostants.cs" />
-    <Compile Include="Ryzen\RyzenNumaNode.cs" />
-    <Compile Include="Ryzen\RyzenProcessor.cs" />
-    <Compile Include="Vendor.cs" />
+    <Compile Include="RequireSmartAttribute.cs" />
+    <Compile Include="SmartAttribute.cs" />
+    <Compile Include="SmartNames.cs" />
+    <Compile Include="SSDIndilinx.cs" />
+    <Compile Include="SSDIntel.cs" />
+    <Compile Include="SSDMicron.cs" />
+    <Compile Include="SSDPlextor.cs" />
+    <Compile Include="SSDSamsung.cs" />
+    <Compile Include="SSDSandforce.cs" />
+    <Compile Include="SystemCall.cs" />
+    <Compile Include="WindowsSmart.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HardwareProviders\HardwareProviders.csproj">

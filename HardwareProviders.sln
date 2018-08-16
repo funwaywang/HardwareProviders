@@ -1,19 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareProviders.CPU.Standard", "HardwareProviders.CPU.Standard\HardwareProviders.CPU.Standard.csproj", "{AE722956-43D1-4C2C-BFB1-645E575BF412}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareProviders", "HardwareProviders\HardwareProviders.csproj", "{6CF39D75-A7D7-4546-B29A-888294DC3E38}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareProviders.Standard", "HardwareProviders.Standard\HardwareProviders.Standard.csproj", "{35D872CB-FAA7-48BE-BDE9-0E8B1095B2C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareProviders.Board", "HardwareProviders.Board\HardwareProviders.Board.csproj", "{E9106F5C-2B00-445B-A6B9-D74691B7483A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp.Standard", "TestApp.Standard\TestApp.Standard.csproj", "{1A191487-7831-4719-8C9E-48F95AE2A10F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareProviders.CPU", "HardwareProviders.CPU\HardwareProviders.CPU.csproj", "{7DE56519-4FC8-4A72-A143-098ACC4DE53C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareProviders", "HardwareProviders\HardwareProviders.csproj", "{B079083C-1965-4E33-B43F-988EBF95B649}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareProviders.CPU", "HardwareProviders.CPU\HardwareProviders.CPU.csproj", "{6F227CAD-066B-4829-A48E-0C403D9D1818}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebInterface", "WebInterface\WebInterface.csproj", "{C1DDDCB3-3B75-4433-8438-FF7F1CC29963}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareProviders.HDD", "HardwareProviders.HDD\HardwareProviders.HDD.csproj", "{9520805F-5F7A-492E-8B39-DF540CD33F86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,55 +17,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AE722956-43D1-4C2C-BFB1-645E575BF412}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE722956-43D1-4C2C-BFB1-645E575BF412}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE722956-43D1-4C2C-BFB1-645E575BF412}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE722956-43D1-4C2C-BFB1-645E575BF412}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35D872CB-FAA7-48BE-BDE9-0E8B1095B2C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35D872CB-FAA7-48BE-BDE9-0E8B1095B2C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35D872CB-FAA7-48BE-BDE9-0E8B1095B2C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35D872CB-FAA7-48BE-BDE9-0E8B1095B2C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A191487-7831-4719-8C9E-48F95AE2A10F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A191487-7831-4719-8C9E-48F95AE2A10F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A191487-7831-4719-8C9E-48F95AE2A10F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A191487-7831-4719-8C9E-48F95AE2A10F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B079083C-1965-4E33-B43F-988EBF95B649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B079083C-1965-4E33-B43F-988EBF95B649}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B079083C-1965-4E33-B43F-988EBF95B649}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B079083C-1965-4E33-B43F-988EBF95B649}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F227CAD-066B-4829-A48E-0C403D9D1818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F227CAD-066B-4829-A48E-0C403D9D1818}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F227CAD-066B-4829-A48E-0C403D9D1818}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F227CAD-066B-4829-A48E-0C403D9D1818}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1DDDCB3-3B75-4433-8438-FF7F1CC29963}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1DDDCB3-3B75-4433-8438-FF7F1CC29963}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1DDDCB3-3B75-4433-8438-FF7F1CC29963}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1DDDCB3-3B75-4433-8438-FF7F1CC29963}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CF39D75-A7D7-4546-B29A-888294DC3E38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CF39D75-A7D7-4546-B29A-888294DC3E38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CF39D75-A7D7-4546-B29A-888294DC3E38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CF39D75-A7D7-4546-B29A-888294DC3E38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9106F5C-2B00-445B-A6B9-D74691B7483A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9106F5C-2B00-445B-A6B9-D74691B7483A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9106F5C-2B00-445B-A6B9-D74691B7483A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9106F5C-2B00-445B-A6B9-D74691B7483A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DE56519-4FC8-4A72-A143-098ACC4DE53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DE56519-4FC8-4A72-A143-098ACC4DE53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DE56519-4FC8-4A72-A143-098ACC4DE53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DE56519-4FC8-4A72-A143-098ACC4DE53C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9520805F-5F7A-492E-8B39-DF540CD33F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9520805F-5F7A-492E-8B39-DF540CD33F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9520805F-5F7A-492E-8B39-DF540CD33F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9520805F-5F7A-492E-8B39-DF540CD33F86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6A8EF661-2BD7-498F-8FB9-28182B3B0BE5}
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = OpenHardwareMonitor.csproj
-		Policies = $0
-		$0.DotNetNamingPolicy = $1
-		$1.DirectoryNamespaceAssociation = None
-		$1.ResourceNamePolicy = FileFormatDefault
-		$0.TextStylePolicy = $3
-		$2.FileWidth = 120
-		$2.TabWidth = 2
-		$2.NoTabsAfterNonTabs = True
-		$2.inheritsSet = VisualStudio
-		$2.inheritsScope = text/plain
-		$2.scope = text/plain
-		$3.inheritsSet = null
-		$3.scope = text/x-csharp
-		$0.CSharpFormattingPolicy = $4
-		$4.inheritsSet = Mono
-		$4.inheritsScope = text/x-csharp
-		$4.scope = text/x-csharp
+		SolutionGuid = {38A51918-35AB-47B3-AC5C-EDE6ACC86F07}
 	EndGlobalSection
 EndGlobal

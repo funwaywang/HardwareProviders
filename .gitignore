@@ -3,3 +3,12 @@
 ################################################################################
 
 /.vs/HardwareProviders/v15
+/HardwareProviders/.vs/HardwareProviders/v15/Server/sqlite3
+/HardwareProviders/bin/Debug
+/HardwareProviders/obj/Debug
+/HardwareProviders.Board/bin/Debug
+/HardwareProviders.Board/obj/Debug
+/HardwareProviders.CPU/bin/Debug
+/HardwareProviders.CPU/obj/Debug
+/HardwareProviders.HDD/bin/Debug
+/HardwareProviders.HDD/obj/Debug
