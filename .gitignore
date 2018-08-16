@@ -1,6 +1,5 @@
-*.user
-*.suo
-Bin/
-Obj/
-.vs/
-packages/
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/HardwareProviders/v15
