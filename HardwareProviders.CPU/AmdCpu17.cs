@@ -5,6 +5,7 @@
 // Copyright (C) 2016-2017 Aqua Computer <https://github.com/aquacomputer, info@aqua-computer.de> 
 
 
+using System.Linq;
 using HardwareProviders.CPU.Ryzen;
 
 namespace HardwareProviders.CPU
@@ -24,7 +25,11 @@ namespace HardwareProviders.CPU
         public RyzenProcessor Processor { get; }
         public int NodesPerProcessor { get; }
 
+        public override Sensor[] CoreClocks => Processor.Nodes.SelectMany(node => node.Cores.Select(core => core.Clock)).ToArray();
 
+        public override Sensor[] CorePowers => Processor.Nodes.SelectMany(node => node.Cores.Select(core => core.Power)).ToArray();
+
+        public override Sensor[] CoreVoltages => Processor.Nodes.SelectMany(node => node.Cores.Select(core => core.Voltage)).ToArray();
 
         public AmdCpu17(int processorIndex, CpuId[][] cpuId)
             : base(processorIndex, cpuId)

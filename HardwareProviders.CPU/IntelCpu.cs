@@ -294,7 +294,7 @@ namespace HardwareProviders.CPU
                 IntelMicroarchitecture == IntelMicroarchitecture.KabyLake ||
                 IntelMicroarchitecture == IntelMicroarchitecture.ApolloLake)
             {
-                PowerSensors = new Sensor[energyStatusMSRs.Length];
+                CorePowers = new Sensor[energyStatusMSRs.Length];
                 lastEnergyTime = new DateTime[energyStatusMSRs.Length];
                 lastEnergyConsumed = new uint[energyStatusMSRs.Length];
 
@@ -317,9 +317,9 @@ namespace HardwareProviders.CPU
 
                         lastEnergyTime[i] = DateTime.UtcNow;
                         lastEnergyConsumed[i] = eax;
-                        PowerSensors[i] = new Sensor(powerSensorLabels[i], i,
+                        CorePowers[i] = new Sensor(powerSensorLabels[i], i,
                             SensorType.Power, this);
-                        ActivateSensor(PowerSensors[i]);
+                        ActivateSensor(CorePowers[i]);
                     }
             }
 
@@ -460,8 +460,8 @@ namespace HardwareProviders.CPU
                 }
             }
 
-            if (PowerSensors != null)
-                foreach (var sensor in PowerSensors)
+            if (CorePowers != null)
+                foreach (var sensor in CorePowers)
                 {
                     if (sensor == null)
                         continue;

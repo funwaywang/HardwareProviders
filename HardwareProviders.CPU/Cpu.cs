@@ -25,13 +25,12 @@ namespace HardwareProviders.CPU
         public Vendor Vendor { get; }
 
         public Sensor BusClock { get; protected set; }
-        public Sensor[] CoreClocks { get; protected set; }
+        public virtual Sensor PackageTemperature { get; protected set; }
 
-        public Sensor[] CoreTemperatures { get; protected set; }
-
-        public Sensor PackageTemperature { get; protected set; }
-
-        public Sensor[] PowerSensors { get; protected set; }
+        public virtual Sensor[] CoreClocks { get; protected set; }
+        public virtual Sensor[] CoreTemperatures { get; protected set; }
+        public virtual Sensor[] CorePowers { get; protected set; }
+        public virtual Sensor[] CoreVoltages { get; protected set; }
 
         public double EstimatedTimeStampCounterFrequency { get; set; }
         public double EstimatedTimeStampCounterFrequencyError { get; set; }
