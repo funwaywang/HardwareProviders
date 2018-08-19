@@ -161,8 +161,15 @@ namespace HardwareProviders
             0xC3 // ret
         };
 
+        public static bool IsOpen { get; private set; }
+
         public static void Open()
         {
+
+            if (IsOpen) return;
+
+            IsOpen = true;
+
             byte[] rdtscCode;
             byte[] cpuidCode;
             if (IntPtr.Size == 4)

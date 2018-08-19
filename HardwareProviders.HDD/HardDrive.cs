@@ -77,6 +77,7 @@ namespace HardwareProviders.HDD
 
         public static HardDrive[] Discover()
         {
+            EnsureHook();
             ISmart smart = new WindowsSmart();
 
             return Enumerable.Range(0, 32).Select(drive => CreateInstance(smart, drive))

@@ -165,7 +165,7 @@ namespace HardwareProviders
         public static void Open()
         {
             // no implementation for unix systems
-            if (OperatingSystem.IsLinux) return;
+            if (IsOpen || OperatingSystem.IsLinux) return;
 
             if (driver != null)
                 return;

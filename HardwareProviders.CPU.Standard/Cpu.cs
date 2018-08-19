@@ -120,6 +120,8 @@ namespace HardwareProviders.CPU
 
         public static Cpu[] Discover()
         {
+            EnsureHook();
+
             var cpus = new List<Cpu>();
             var processorThreads = GetCpuId();
             var threads = new CpuId[processorThreads.Length][][];

@@ -21,6 +21,11 @@ namespace HardwareProviders
         [SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true)]
         static Hardware()
         {
+            EnsureHook();
+        }
+
+        protected static void EnsureHook()
+        {
             Ring0.Open();
             Opcode.Open();
 
