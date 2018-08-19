@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F227CAD-066B-4829-A48E-0C403D9D1818}</ProjectGuid>
+    <ProjectGuid>{7DE56519-4FC8-4A72-A143-098ACC4DE53C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HardwareProviders.CPU</RootNamespace>
     <AssemblyName>HardwareProviders.CPU</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HardwareProviders, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HardwareProviders.1.0.0\lib\net452\HardwareProviders.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,48 +40,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\HardwareProviders.CPU.Standard\AmdCpu.cs">
-      <Link>AmdCpu</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\AmdCpu0.cs">
-      <Link>AmdCpu0</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\AmdCpu10.cs">
-      <Link>AmdCpu10</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\AmdCpu17.cs">
-      <Link>AmdCpu17</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\Cpu.cs">
-      <Link>Cpu</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\IntelCPU.cs">
-      <Link>IntelCPU</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\IntelMicroarchitecture.cs">
-      <Link>IntelMicroarchitecture</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\Internals\CPUID.cs">
-      <Link>Internals\CPUID</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\Internals\CPULoad.cs">
-      <Link>Internals\CPULoad</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\Internals\Ryzen\NumaNode.cs">
-      <Link>Internals\Ryzen\NumaNode</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\Internals\Ryzen\RyzenCore.cs">
-      <Link>Internals\Ryzen\RyzenCore</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\Internals\Ryzen\RyzenProcessor.cs">
-      <Link>Internals\Ryzen\RyzenProcessor</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.CPU.Standard\Vendor.cs">
-      <Link>Vendor</Link>
-    </Compile>
+    <Compile Include="AmdCpu.cs" />
+    <Compile Include="AmdCpu0.cs" />
+    <Compile Include="AmdCpu10.cs" />
+    <Compile Include="AmdCpu17.cs" />
+    <Compile Include="Cpu.cs" />
+    <Compile Include="CpuId.cs" />
+    <Compile Include="CpuLoad.cs" />
+    <Compile Include="IntelCpu.cs" />
+    <Compile Include="IntelMicroarchitecture.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ryzen\RyzenCore.cs" />
+    <Compile Include="Ryzen\RyzenCostants.cs" />
+    <Compile Include="Ryzen\RyzenNumaNode.cs" />
+    <Compile Include="Ryzen\RyzenProcessor.cs" />
+    <Compile Include="Vendor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\HardwareProviders\HardwareProviders.csproj">
+      <Project>{6cf39d75-a7d7-4546-b29a-888294dc3e38}</Project>
+      <Name>HardwareProviders</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

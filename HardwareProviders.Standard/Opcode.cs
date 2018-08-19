@@ -9,20 +9,13 @@
 */
 
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace HardwareProviders
 {
     public static class Opcode
     {
-        private const string KERNEL = "kernel32.dll";
-
-        [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-        public static extern IntPtr VirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
-
-        [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
-        public static extern bool VirtualFree(IntPtr lpAddress, UIntPtr dwSize, FreeType dwFreeType);
-
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate bool CpuidDelegate(uint index, uint ecxValue,
             out uint eax, out uint ebx, out uint ecx, out uint edx);
@@ -152,6 +145,22 @@ namespace HardwareProviders
             0xC3 // ret  
         };
 
+        private static readonly byte[] CPUID_64_LINUX =
+        {
+            0x49, 0x89, 0xD2, // mov r10, rdx
+            0x49, 0x89, 0xCB, // mov r11, rcx
+            0x53, // push rbx
+            0x89, 0xF8, // mov eax, edi
+            0x89, 0xF1, // mov ecx, esi
+            0x0F, 0xA2, // cpuid
+            0x41, 0x89, 0x02, // mov dword ptr [r10], eax
+            0x41, 0x89, 0x1B, // mov dword ptr [r11], ebx
+            0x41, 0x89, 0x08, // mov dword ptr [r8], ecx
+            0x41, 0x89, 0x11, // mov dword ptr [r9], edx
+            0x5B, // pop rbx
+            0xC3 // ret
+        };
+
         public static void Open()
         {
             byte[] rdtscCode;
@@ -164,13 +173,44 @@ namespace HardwareProviders
             else
             {
                 rdtscCode = RDTSC_64;
-                cpuidCode = CPUID_64_WINDOWS;
+                cpuidCode = OperatingSystem.IsLinux ? CPUID_64_LINUX : CPUID_64_WINDOWS;
             }
 
             size = (ulong) (rdtscCode.Length + cpuidCode.Length);
 
-            // Windows
-            codeBuffer = VirtualAlloc(IntPtr.Zero, (UIntPtr)size, AllocationType.COMMIT | AllocationType.RESERVE, MemoryProtection.EXECUTE_READWRITE);
+            if (OperatingSystem.IsLinux)
+            {
+                // Unix   
+                var assembly =
+                    Assembly.Load("Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
+
+                var syscall = assembly.GetType("Mono.Unix.Native.Syscall");
+                var mmap = syscall.GetMethod("mmap");
+
+                var mmapProts = assembly.GetType("Mono.Unix.Native.MmapProts");
+                var mmapProtsParam = Enum.ToObject(mmapProts,
+                    (int) mmapProts.GetField("PROT_READ").GetValue(null) |
+                    (int) mmapProts.GetField("PROT_WRITE").GetValue(null) |
+                    (int) mmapProts.GetField("PROT_EXEC").GetValue(null));
+
+                var mmapFlags = assembly.GetType("Mono.Unix.Native.MmapFlags");
+                var mmapFlagsParam = Enum.ToObject(mmapFlags,
+                    (int) mmapFlags.GetField("MAP_ANONYMOUS").GetValue(null) |
+                    (int) mmapFlags.GetField("MAP_PRIVATE").GetValue(null));
+
+                codeBuffer = (IntPtr) mmap.Invoke(null, new[]
+                {
+                    IntPtr.Zero,
+                    size, mmapProtsParam, mmapFlagsParam, -1, 0
+                });
+            }
+            else
+            {
+                // Windows
+                codeBuffer = NativeMethods.VirtualAlloc(IntPtr.Zero,
+                    (UIntPtr) size, AllocationType.COMMIT | AllocationType.RESERVE,
+                    MemoryProtection.EXECUTE_READWRITE);
+            }
 
             Marshal.Copy(rdtscCode, 0, codeBuffer, rdtscCode.Length);
 
@@ -189,8 +229,23 @@ namespace HardwareProviders
             Rdtsc = null;
             Cpuid = null;
 
-            // Windows
-            VirtualFree(codeBuffer, UIntPtr.Zero,FreeType.RELEASE);
+
+            if (OperatingSystem.IsLinux)
+            {
+                // Unix
+                var assembly =
+                    Assembly.Load("Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
+
+                var syscall = assembly.GetType("Mono.Unix.Native.Syscall");
+                var munmap = syscall.GetMethod("munmap");
+                munmap.Invoke(null, new object[] {codeBuffer, size});
+            }
+            else
+            {
+                // Windows
+                NativeMethods.VirtualFree(codeBuffer, UIntPtr.Zero,
+                    FreeType.RELEASE);
+            }
         }
 
         public static bool CpuidTx(uint index, uint ecxValue,
@@ -209,6 +264,19 @@ namespace HardwareProviders
 
             ThreadAffinity.Set(mask);
             return true;
+        }
+
+        private static class NativeMethods
+        {
+            private const string KERNEL = "kernel32.dll";
+
+            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
+            public static extern IntPtr VirtualAlloc(IntPtr lpAddress, UIntPtr dwSize,
+                AllocationType flAllocationType, MemoryProtection flProtect);
+
+            [DllImport(KERNEL, CallingConvention = CallingConvention.Winapi)]
+            public static extern bool VirtualFree(IntPtr lpAddress, UIntPtr dwSize,
+                FreeType dwFreeType);
         }
     }
 }

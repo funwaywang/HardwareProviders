@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B079083C-1965-4E33-B43F-988EBF95B649}</ProjectGuid>
+    <ProjectGuid>{6CF39D75-A7D7-4546-B29A-888294DC3E38}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HardwareProviders</RootNamespace>
     <AssemblyName>HardwareProviders</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,12 +23,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -40,33 +45,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\HardwareProviders.Standard\Hardware.cs">
-      <Link>Hardware</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.Standard\IOControlCode.cs">
-      <Link>IOControlCode</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.Standard\KernelDriver.cs">
-      <Link>KernelDriver</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.Standard\Opcode.cs">
-      <Link>Opcode</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.Standard\Parameter.cs">
-      <Link>Parameter</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.Standard\Ring0.cs">
-      <Link>Ring0</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.Standard\Sensor.cs">
-      <Link>Sensor</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.Standard\SensorType.cs">
-      <Link>SensorType</Link>
-    </Compile>
-    <Compile Include="..\HardwareProviders.Standard\ThreadAffinity.cs">
-      <Link>ThreadAffinity</Link>
-    </Compile>
+    <Compile Include="Hardware.cs" />
+    <Compile Include="Internals\IOControlCode.cs" />
+    <Compile Include="Internals\KernelDriver.cs" />
+    <Compile Include="Opcode.cs" />
+    <Compile Include="OperatingSystem.cs" />
+    <Compile Include="Parameter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ring0.cs" />
+    <Compile Include="Internals\RingCollection.cs" />
+    <Compile Include="Sensor.cs" />
+    <Compile Include="SensorType.cs" />
+    <Compile Include="SensorValue.cs" />
+    <Compile Include="Internals\SystemCall.cs" />
+    <Compile Include="ThreadAffinity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WinRing0.sys" />
+    <EmbeddedResource Include="WinRing0x64.sys" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

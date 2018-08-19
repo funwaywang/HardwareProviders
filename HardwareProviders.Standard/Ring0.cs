@@ -12,10 +12,11 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Security.Permissions;
 using System.Text;
 using System.Threading;
+using HardwareProviders.Internals;
+
+//SecurityIdentifier
 
 namespace HardwareProviders
 {
@@ -32,6 +33,10 @@ namespace HardwareProviders
 
         private static readonly IOControlCode
             IOCTL_OLS_GET_REFCOUNT = new IOControlCode(OLS_TYPE, 0x801,
+                IOControlCode.Access.Any);
+
+        private static IOControlCode
+            IOCTL_OLS_GET_DRIVER_VERSION = new IOControlCode(OLS_TYPE, 0x800,
                 IOControlCode.Access.Any);
 
         private static readonly IOControlCode
@@ -110,13 +115,13 @@ namespace HardwareProviders
         private static bool ExtractDriver(string fileName)
         {
             var resourceName = "HardwareProviders." +
-                               (Environment.Is64BitOperatingSystem ? "WinRing0x64.sys" : "WinRing0.sys");
+                               (OperatingSystem.Is64Bit ? "WinRing0x64.sys" : "WinRing0.sys");
 
             var names = GetAssembly().GetManifestResourceNames();
             byte[] buffer = null;
-            for (var i = 0; i < names.Length; i++)
-                if (names[i].Replace('\\', '.') == resourceName)
-                    using (var stream = GetAssembly().GetManifestResourceStream(names[i]))
+            foreach (var name in names)
+                if (name.Replace('\\', '.') == resourceName)
+                    using (var stream = GetAssembly().GetManifestResourceStream(name))
                     {
                         buffer = new byte[stream.Length];
                         stream.Read(buffer, 0, buffer.Length);
@@ -159,6 +164,9 @@ namespace HardwareProviders
 
         public static void Open()
         {
+            // no implementation for unix systems
+            if (OperatingSystem.IsLinux) return;
+
             if (driver != null)
                 return;
 
@@ -175,7 +183,8 @@ namespace HardwareProviders
                 fileName = GetTempFileName();
                 if (fileName != null && ExtractDriver(fileName))
                 {
-                    if (driver.Install(fileName, out var installError))
+                    string installError;
+                    if (driver.Install(fileName, out installError))
                     {
                         driver.Open();
 
@@ -248,11 +257,7 @@ namespace HardwareProviders
             {
                 try
                 {
-#if NETSTANDARD2_0
-          isaBusMutex = Mutex.OpenExisting(mutexName);
-#else
-                    isaBusMutex = Mutex.OpenExisting(mutexName, MutexRights.Synchronize);
-#endif
+                    isaBusMutex = Mutex.OpenExisting(mutexName);
                 }
                 catch
                 {
@@ -262,18 +267,16 @@ namespace HardwareProviders
 
         public static void Close()
         {
-            if (driver == null)
-                return;
+            if (driver != null)
+            {
+                uint refCount = 0;
+                driver.DeviceIOControl(IOCTL_OLS_GET_REFCOUNT, null, ref refCount);
+                driver.Close();
 
-            uint refCount = 0;
-            driver.DeviceIOControl(IOCTL_OLS_GET_REFCOUNT, null, ref refCount);
-
-            driver.Close();
-
-            if (refCount <= 1)
-                driver.Delete();
-
-            driver = null;
+                if (refCount <= 1)
+                    driver.Delete();
+                driver = null;
+            }
 
             if (isaBusMutex != null)
             {
@@ -358,11 +361,9 @@ namespace HardwareProviders
             if (driver == null)
                 return false;
 
-            var input = new WrmsrInput
-            {
-                Register = index,
-                Value = ((ulong) edx << 32) | eax
-            };
+            var input = new WrmsrInput();
+            input.Register = index;
+            input.Value = ((ulong) edx << 32) | eax;
 
             return driver.DeviceIOControl(IOCTL_OLS_WRITE_MSR, input);
         }
