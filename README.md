@@ -7,9 +7,7 @@ For Dotnet Standard and 4.6
 | ------------- | ------------- | ------------- | ------------- |
 | HardwareProviders  | Contains base classes and interface to read and write directly on pc ports  | ✓  | ✓
 | HardwareProviders.CPU  | Retrieves Intel and AMD processors installed and relative values | ✓  | ✓
-| HardwareProviders.GPU | Retrieves Nvidia and ATI graphic cards installed and relative values  | June 2018  | June 2018
-| HardwareProviders.Cooling | Retrieves installed cooling devices and fans  | June 2018  | June 2018
-| HardwareProviders.HDD | Retrieves hard drives and relative values  | July 2018  | July 2018
+| HardwareProviders.HDD | Retrieves hard drives and relative values   | ✓  | ✓
 
 This project contains code extracted from [Open Hardware Monitor](https://github.com/openhardwaremonitor) and is released under the same  [license](https://github.com/matteofabbri/HardwareProviders/blob/master/LICENSE)
 
@@ -23,34 +21,51 @@ Depending on Windows version you may need to run it as administrator to retrieve
 
 
 ```csharp
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using HardwareProviders;
+using HardwareProviders.Board;
+using HardwareProviders.CPU;
+using HardwareProviders.HDD;
+using System;
+using System.Linq;
 
-namespace Maddalena
+namespace TestApp
 {
-    public class Program
+    class Program
     {
-        static string SensorsToString(IEnumerable<Sensor> sensors) => string.Join(" ", sensors?.Select(x => x.ToString()) ?? new string[0]);
-
-        public static void Main(string[] args)
+        static void Print(Sensor[] sensors)
         {
-            var cpus = HardwareProviders.CPU.Cpu.Discover();
+            if(sensors.Any())
+            Console.WriteLine(string.Join(" ", sensors.Select(x => x.ToString())));
+        }
 
-            foreach (var cpu in cpus)
+        static void Main(string[] args)
+        {
+            var mainboard = new Mainboard();
+            Console.WriteLine(mainboard.Smbios.BIOS.Vendor);
+
+            var cpu = Cpu.Discover();
+
+            foreach (var item in cpu)
             {
-                Console.WriteLine("CPU {0} by {1}", cpu.Name, cpu.Vendor);
-
-                Console.WriteLine("Bus clock {0}", cpu.BusClock);
-                Console.WriteLine("Core temperatures {0}", SensorsToString(cpu.CoreTemperatures));
-                Console.WriteLine("Core powers {0}", SensorsToString(cpu.CorePowers));
-                Console.WriteLine("Core clocks {0}", SensorsToString(cpu.CoreClocks));
-
-                Console.WriteLine();
-                Console.WriteLine("Core loads {0}", SensorsToString(cpu.CoreLoads));
-                Console.WriteLine("Total load {0}", cpu.TotalLoad);
+                Print(item.CoreTemperatures);
+                Print(item.CoreClocks);
+                Print(item.CorePowers);
+                Print(item.CoreVoltages);
+                Print(item.CoreClocks);
             }
+
+            var hdd = HardDrive.Discover();
+
+            foreach (var item in hdd)
+            {
+                foreach(var smart in item.SmartSensors)
+                {
+                    Console.WriteLine(smart.Key.Name);
+                    Print(new[]{ smart.Value });
+                }
+            }
+            Console.ReadKey();
         }
     }
 }
