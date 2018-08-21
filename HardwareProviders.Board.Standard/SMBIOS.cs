@@ -33,14 +33,16 @@ namespace HardwareProviders.Board
                 var boardVendor = ReadSysFS("/sys/class/dmi/id/board_vendor");
                 var boardName = ReadSysFS("/sys/class/dmi/id/board_name");
                 var boardVersion = ReadSysFS("/sys/class/dmi/id/board_version");
+                var boardSerial = ReadSysFS("/sys/class/dmi/id/board_serial");
                 Board = new BaseBoardInformation(
-                    boardVendor, boardName, boardVersion, null);
+                    boardVendor, boardName, boardVersion, boardSerial);
 
                 var systemVendor = ReadSysFS("/sys/class/dmi/id/sys_vendor");
                 var productName = ReadSysFS("/sys/class/dmi/id/product_name");
                 var productVersion = ReadSysFS("/sys/class/dmi/id/product_version");
+                var productSerial = ReadSysFS("/sys/class/dmi/id/product_serial");
                 System = new SystemInformation(systemVendor,
-                    productName, productVersion, null, null);
+                    productName, productVersion, productSerial, null);
 
                 var biosVendor = ReadSysFS("/sys/class/dmi/id/bios_vendor");
                 var biosVersion = ReadSysFS("/sys/class/dmi/id/bios_version");
