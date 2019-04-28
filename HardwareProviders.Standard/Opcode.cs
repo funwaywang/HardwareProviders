@@ -8,8 +8,8 @@
 	
 */
 
+using Mono.Unix.Native;
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace HardwareProviders
@@ -165,8 +165,10 @@ namespace HardwareProviders
 
         public static void Open()
         {
-
-            if (IsOpen) return;
+            if (IsOpen)
+            {
+                return;
+            }
 
             IsOpen = true;
 
@@ -183,39 +185,23 @@ namespace HardwareProviders
                 cpuidCode = OperatingSystem.IsLinux ? CPUID_64_LINUX : CPUID_64_WINDOWS;
             }
 
-            size = (ulong) (rdtscCode.Length + cpuidCode.Length);
+            size = (ulong)(rdtscCode.Length + cpuidCode.Length);
 
             if (OperatingSystem.IsLinux)
             {
-                // Unix   
-                var assembly =
-                    Assembly.Load("Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
-
-                var syscall = assembly.GetType("Mono.Unix.Native.Syscall");
-                var mmap = syscall.GetMethod("mmap");
-
-                var mmapProts = assembly.GetType("Mono.Unix.Native.MmapProts");
-                var mmapProtsParam = Enum.ToObject(mmapProts,
-                    (int) mmapProts.GetField("PROT_READ").GetValue(null) |
-                    (int) mmapProts.GetField("PROT_WRITE").GetValue(null) |
-                    (int) mmapProts.GetField("PROT_EXEC").GetValue(null));
-
-                var mmapFlags = assembly.GetType("Mono.Unix.Native.MmapFlags");
-                var mmapFlagsParam = Enum.ToObject(mmapFlags,
-                    (int) mmapFlags.GetField("MAP_ANONYMOUS").GetValue(null) |
-                    (int) mmapFlags.GetField("MAP_PRIVATE").GetValue(null));
-
-                codeBuffer = (IntPtr) mmap.Invoke(null, new[]
-                {
+                // Unix 
+                codeBuffer = Syscall.mmap(
                     IntPtr.Zero,
-                    size, mmapProtsParam, mmapFlagsParam, -1, 0
-                });
+                    size,
+                    MmapProts.PROT_READ | MmapProts.PROT_WRITE | MmapProts.PROT_EXEC,
+                    MmapFlags.MAP_ANONYMOUS | MmapFlags.MAP_PRIVATE,
+                    -1, 0);
             }
             else
             {
                 // Windows
                 codeBuffer = NativeMethods.VirtualAlloc(IntPtr.Zero,
-                    (UIntPtr) size, AllocationType.COMMIT | AllocationType.RESERVE,
+                    (UIntPtr)size, AllocationType.COMMIT | AllocationType.RESERVE,
                     MemoryProtection.EXECUTE_READWRITE);
             }
 
@@ -224,7 +210,7 @@ namespace HardwareProviders
             Rdtsc = Marshal.GetDelegateForFunctionPointer(
                 codeBuffer, typeof(RdtscDelegate)) as RdtscDelegate;
 
-            var cpuidAddress = (IntPtr) ((long) codeBuffer + rdtscCode.Length);
+            var cpuidAddress = (IntPtr)((long)codeBuffer + rdtscCode.Length);
             Marshal.Copy(cpuidCode, 0, cpuidAddress, cpuidCode.Length);
 
             Cpuid = Marshal.GetDelegateForFunctionPointer(
@@ -240,12 +226,7 @@ namespace HardwareProviders
             if (OperatingSystem.IsLinux)
             {
                 // Unix
-                var assembly =
-                    Assembly.Load("Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
-
-                var syscall = assembly.GetType("Mono.Unix.Native.Syscall");
-                var munmap = syscall.GetMethod("munmap");
-                munmap.Invoke(null, new object[] {codeBuffer, size});
+                Syscall.munmap(codeBuffer, size);
             }
             else
             {

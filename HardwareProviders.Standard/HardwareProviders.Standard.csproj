@@ -26,4 +26,9 @@
     <EmbeddedResource Include="WinRing0x64.sys" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+    <PackageReference Include="System.Management" Version="4.5.0" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,14 @@
+D:\Codes\HardwareProviders\ConsoleTest\obj\Debug\netcoreapp2.2\ConsoleTest.csprojAssemblyReference.cache
+D:\Codes\HardwareProviders\ConsoleTest\obj\Debug\netcoreapp2.2\ConsoleTest.csproj.CoreCompileInputs.cache
+D:\Codes\HardwareProviders\ConsoleTest\obj\Debug\netcoreapp2.2\ConsoleTest.AssemblyInfoInputs.cache
+D:\Codes\HardwareProviders\ConsoleTest\obj\Debug\netcoreapp2.2\ConsoleTest.AssemblyInfo.cs
+D:\Codes\HardwareProviders\ConsoleTest\bin\Debug\netcoreapp2.2\ConsoleTest.deps.json
+D:\Codes\HardwareProviders\ConsoleTest\bin\Debug\netcoreapp2.2\ConsoleTest.runtimeconfig.json
+D:\Codes\HardwareProviders\ConsoleTest\bin\Debug\netcoreapp2.2\ConsoleTest.runtimeconfig.dev.json
+D:\Codes\HardwareProviders\ConsoleTest\bin\Debug\netcoreapp2.2\ConsoleTest.dll
+D:\Codes\HardwareProviders\ConsoleTest\bin\Debug\netcoreapp2.2\ConsoleTest.pdb
+D:\Codes\HardwareProviders\ConsoleTest\bin\Debug\netcoreapp2.2\HardwareProviders.Standard.dll
+D:\Codes\HardwareProviders\ConsoleTest\bin\Debug\netcoreapp2.2\HardwareProviders.Standard.pdb
+D:\Codes\HardwareProviders\ConsoleTest\obj\Debug\netcoreapp2.2\ConsoleTest.csproj.CopyComplete
+D:\Codes\HardwareProviders\ConsoleTest\obj\Debug\netcoreapp2.2\ConsoleTest.dll
+D:\Codes\HardwareProviders\ConsoleTest\obj\Debug\netcoreapp2.2\ConsoleTest.pdb
